@@ -1,20 +1,23 @@
+import { FieldError as FieldErrorPrimitive } from "@/components/ui/field";
 import { ActionState } from "@/components/shared/form/utils/to-action-state";
 
-interface FieldErrorProps {
-  actionState: ActionState;
+export interface FieldErrorProps {
+  actionState?: ActionState;
+  error?: string;
   id?: string;
   name: string;
 }
 
-const FieldError = ({ actionState, id, name }: FieldErrorProps) => {
-  const message = actionState.fieldErrors[name]?.[0];
-
-  if (!message) return null;
+const FieldError = ({ actionState, error, id, name }: FieldErrorProps) => {
+  const messages = [error, ...(actionState?.fieldErrors[name] ?? [])].filter(
+    (message): message is string => Boolean(message),
+  );
 
   return (
-    <span id={id} role="alert" className="text-red-500 text-sm -mt-2">
-      {message}
-    </span>
+    <FieldErrorPrimitive
+      id={id}
+      errors={messages.map((message) => ({ message }))}
+    />
   );
 };
 

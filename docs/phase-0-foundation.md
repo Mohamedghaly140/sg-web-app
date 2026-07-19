@@ -19,12 +19,12 @@
 
 ### 0.2 Wire the copied shared components
 
-- [ ] Audit every file under `components/shared/` and make the copied `Form`, `FormControl`, `SubmitButton`, `EmptyState`, `Spinner`, `RedirectToast`, `ActiveBadge`, and `PaymentStatusBadge` compile against the generated primitives. Adapt `FormControl` to the generated `Field` anatomy, and preserve `<ComponentName>Props`, kebab-case files, accessible field errors, semantic tokens, and `Lucide`-prefixed icon imports.
-- [ ] Create `lib/api/api-error.ts` with a serializable `ErrorCode`, normalized validation entries, and `ApiError(status, code, message, errors)`. Keep structured business-error payloads intact and branch on `code`, never response text.
-- [ ] Create `lib/api/redirect-on-auth-error.ts` so redirects are possible only for calls explicitly made in Auth mode. Public and Optional calls must return their errors to the caller, including `ACCOUNT_DISABLED`, rather than being converted into auth redirects.
-- [ ] Update the copied `ActionState` conversion utilities for Zod v4 (`z.flattenError`) and the new `ApiError` shape. They must preserve repeated form values and return errors instead of throwing; only `redirect()` and `notFound()` may escape a Server Action.
-- [ ] Create `actions/cookies.actions.ts` with server-only get, set, and delete helpers for the `toast` flash cookie used by `RedirectToast`. Mount Sonner's `Toaster` once so both forms and redirect feedback work.
-- [ ] Add a reusable shared `ConfirmDialog` composed from the generated `AlertDialog`; destructive actions in later phases must use it and its trigger must follow base-ui composition.
+- [x] Audit every file under `components/shared/` and make the copied `Form`, `FormControl`, `SubmitButton`, `EmptyState`, `Spinner`, `RedirectToast`, `ActiveBadge`, and `PaymentStatusBadge` compile against the generated primitives. Adapt `FormControl` to the generated `Field` anatomy, and preserve `<ComponentName>Props`, kebab-case files, accessible field errors, semantic tokens, and `Lucide`-prefixed icon imports.
+- [x] Create `lib/api/api-error.ts` with a serializable `ErrorCode`, normalized validation entries, and `ApiError(status, code, message, errors)`. Keep structured business-error payloads intact and branch on `code`, never response text.
+- [x] Create `lib/api/redirect-on-auth-error.ts` so redirects are possible only for calls explicitly made in Auth mode. Public and Optional calls must return their errors to the caller, including `ACCOUNT_DISABLED`, rather than being converted into auth redirects.
+- [x] Update the copied `ActionState` conversion utilities for Zod v4 (`z.flattenError`) and the new `ApiError` shape. They must preserve repeated form values and return errors instead of throwing; only `redirect()` and `notFound()` may escape a Server Action.
+- [x] Create `actions/cookies.actions.ts` with server-only get, set, and delete helpers for the `toast` flash cookie used by `RedirectToast`. Mount Sonner's `Toaster` once so both forms and redirect feedback work.
+- [x] Add a reusable shared `ConfirmDialog` composed from the generated `AlertDialog`; destructive actions in later phases must use it and its trigger must follow base-ui composition.
 
 ### 0.3 Environment, backend client, formatting, and cart session
 

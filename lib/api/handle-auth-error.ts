@@ -13,7 +13,7 @@ export function handleAuthError(error: unknown): never {
     throw error;
   }
 
-  redirectOnAuthError(error);
+  redirectOnAuthError(error, "required");
 
   switch (error.code) {
     case "RESOURCE_NOT_FOUND":

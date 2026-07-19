@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto, Noto_Sans } from "next/font/google";
+import { Toaster } from "sonner";
+import RedirectToast from "@/components/shared/redirect-toast";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +34,11 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", roboto.variable, notoSansHeading.variable)}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <RedirectToast />
+        <Toaster />
+      </body>
     </html>
   );
 }

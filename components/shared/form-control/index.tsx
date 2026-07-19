@@ -1,10 +1,10 @@
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldContent, FieldLabel } from "@/components/ui/field";
 import React from "react";
 import FieldError from "../form/field-error";
 import { ActionState } from "../form/utils/to-action-state";
 
-interface FormControlProps extends React.ComponentProps<"input"> {
+export interface FormControlProps extends React.ComponentProps<"input"> {
   label: string;
   name: string;
   actionState?: ActionState;
@@ -29,23 +29,25 @@ const FormControl = ({
   const errorId = `${name}-error`;
 
   return (
-    <div className="flex flex-col gap-y-2">
-      <Label htmlFor={name}>{label}</Label>
-      <Input
-        id={name}
-        name={name}
-        type={type}
-        {...restProps}
-        aria-invalid={hasError || undefined}
-        aria-describedby={hasError ? errorId : undefined}
-      />
-      {hasError ? (
-        <div id={errorId} className="flex flex-col gap-y-2">
-          {error && <p className="text-red-500">{error}</p>}
-          {actionState && <FieldError name={name} actionState={actionState} />}
-        </div>
-      ) : null}
-    </div>
+    <Field data-invalid={hasError || undefined}>
+      <FieldLabel htmlFor={name}>{label}</FieldLabel>
+      <FieldContent>
+        <Input
+          id={name}
+          name={name}
+          type={type}
+          {...restProps}
+          aria-invalid={hasError || undefined}
+          aria-describedby={hasError ? errorId : undefined}
+        />
+        <FieldError
+          id={errorId}
+          name={name}
+          error={error}
+          actionState={actionState}
+        />
+      </FieldContent>
+    </Field>
   );
 };
 

@@ -155,7 +155,7 @@ export async function updateProfileAction(
     revalidatePath("/account");
     return toActionState("SUCCESS", "Saved", formData);
   } catch (error) {
-    return fromErrorToActionState(error, formData);
+    return fromErrorToActionState(error, "required", formData);
   }
 }
 ```

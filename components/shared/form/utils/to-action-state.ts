@@ -1,6 +1,6 @@
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
-import { ZodError } from "zod";
-import { ApiError } from "@/lib/api/api-error";
+import { z, ZodError } from "zod";
+import { ApiError, getValidationErrors } from "@/lib/api/api-error";
 import { redirectOnAuthError } from "@/lib/api/redirect-on-auth-error";
 
 export type ActionState = {
@@ -37,9 +37,12 @@ const toPayload = (
 
 export const fromErrorToActionState = (
   error: unknown,
+  mode: "public" | "optional" | "required",
   formData?: FormData,
-  response?: Record<string, string | number>
+  response?: Record<string, string | number>,
 ): ActionState => {
+  redirectOnAuthError(error, mode);
+
   if (isClerkAPIResponseError(error)) {
     const message = error.errors[0]?.longMessage ?? error.errors[0]?.message ?? "An error occurred";
     return {
@@ -55,7 +58,7 @@ export const fromErrorToActionState = (
     return {
       status: "ERROR",
       message: "",
-      fieldErrors: error.flatten().fieldErrors,
+      fieldErrors: z.flattenError(error).fieldErrors,
       payload: toPayload(formData),
       timestamp: Date.now(),
       response,
@@ -63,15 +66,10 @@ export const fromErrorToActionState = (
   }
   if (error instanceof ApiError) {
     // Branch on `code`, never on `status` or `message` — two distinct 403s exist.
-    redirectOnAuthError(error);
-
     const apiResponse = { code: error.code, status: error.status, ...response };
 
-    if (error.code === "VALIDATION_ERROR" && error.errors) {
-      const fieldErrors: Record<string, string[]> = {};
-      for (const { field, message } of error.errors) {
-        (fieldErrors[field] ??= []).push(message);
-      }
+    const fieldErrors = getValidationErrors(error);
+    if (fieldErrors) {
       return {
         status: "ERROR",
         message: error.message,
@@ -117,7 +115,7 @@ export const fromErrorToActionState = (
     "ERROR",
     "An unknown error occurred",
     formData,
-    response
+    response,
   );
 };
 
@@ -125,7 +123,7 @@ export const toActionState = (
   status: ActionState["status"],
   message: string,
   formData?: FormData,
-  response?: Record<string, string | number | undefined | null>
+  response?: Record<string, string | number | undefined | null>,
 ): ActionState => {
   return {
     status,
