@@ -10,12 +10,12 @@
 
 ### 0.1 Complete the scaffold and shadcn baseline
 
-- [ ] Keep the existing Next.js 16.2.10 App Router scaffold with no `src/` directory, strict TypeScript, `@/*` mapped to the repository root, and Bun-only scripts; do not add a test runner.
-- [ ] Add the remaining runtime dependencies with Bun: `@clerk/nextjs`, `@tanstack/react-query`, `nuqs`, `server-only`, `sonner`, and `zod`. Keep the already-installed shadcn, `@base-ui/react`, `lucide-react`, Tailwind v4, and class utility packages.
-- [ ] Reconcile `components.json` to the `base-lyra` preset on `@base-ui/react`, RSC mode, Tailwind v4 CSS at `app/globals.css`, the existing `@/*` aliases, and Lucide icons. Inspect existing generated files before updating them.
-- [ ] Generate the shadcn primitives needed by the copied shared layer and first three phases, including `button`, `badge`, `input`, `label`, `field`, `card`, `separator`, `skeleton`, `alert`, `sheet`, `alert-dialog`, `select`, `toggle-group`, and `pagination`; use the generated base APIs, including `render` rather than Radix-only composition props.
-- [ ] Retain and verify `lib/utils.ts` as the single `cn()` helper. Add semantic `Badge` variants such as `success` and `warning` so copied status badges never require raw status colors.
-- [ ] Establish the required layout only: thin route files under `app/`; `features/<name>/{components,hooks,actions,queries,schema,types,index.tsx}`; `lib/{api,env,format,cart-session}`; `components/{ui,shared}`; and cross-cutting actions under `actions/`. Do not create empty feature placeholders.
+- [x] Keep the existing Next.js 16.2.10 App Router scaffold with no `src/` directory, strict TypeScript, `@/*` mapped to the repository root, and Bun-only scripts; do not add a test runner.
+- [x] Add the remaining runtime dependencies with Bun: `@clerk/nextjs`, `@tanstack/react-query`, `nuqs`, `server-only`, `sonner`, and `zod`. Keep the already-installed shadcn, `@base-ui/react`, `lucide-react`, Tailwind v4, and class utility packages.
+- [x] Reconcile `components.json` to the `base-lyra` preset on `@base-ui/react`, RSC mode, Tailwind v4 CSS at `app/globals.css`, the existing `@/*` aliases, and Lucide icons. Inspect existing generated files before updating them.
+- [x] Generate the shadcn primitives needed by the copied shared layer and first three phases, including `button`, `badge`, `input`, `label`, `field`, `card`, `separator`, `skeleton`, `alert`, `sheet`, `alert-dialog`, `select`, `toggle-group`, and `pagination`; use the generated base APIs, including `render` rather than Radix-only composition props.
+- [x] Retain and verify `lib/utils.ts` as the single `cn()` helper. Add semantic `Badge` variants such as `success` and `warning` so copied status badges never require raw status colors.
+- [x] Establish the required layout only: thin route files under `app/`; `features/<name>/{components,hooks,actions,queries,schema,types,index.tsx}`; `lib/{api,env,format,cart-session}`; `components/{ui,shared}`; and cross-cutting actions under `actions/`. Do not create empty feature placeholders.
 
 ### 0.2 Wire the copied shared components
 
