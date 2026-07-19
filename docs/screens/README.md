@@ -20,7 +20,7 @@ Navbar and footer are shared across every screen — see [`shared-shell.md`](./s
 |---|---|---|
 | Home | [home.md](./home.md) | drafted |
 | Products listing | — | not started |
-| Product detail | — | not started |
+| Product detail | [product-detail.md](./product-detail.md) | drafted |
 | Categories / category landing | — | not started |
 | Cart | — | not started |
 | Checkout | — | not started |
