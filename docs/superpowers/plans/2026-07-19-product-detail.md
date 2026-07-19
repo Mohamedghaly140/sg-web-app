@@ -29,7 +29,30 @@ Research confirmed Phase 0 is not actually finished despite the tracker: `lib/ap
 
 This was reviewed with `fable-advisor`, which approved folding both fixes into this plan as Task 1 (Badge) and Task 2 (apiFetch) rather than treating them as a separate blocking plan — nothing currently calls `apiFetch` (no `features/` directory exists yet), so there are zero existing callers to break. See that task for the specific correctness conditions the advisor flagged (Clerk `auth()` must not run on `"public"` calls, cache-metadata gating needs an unconditional assertion that never reads `process.env` outside `lib/env.ts`, non-JSON error bodies must not crash the parser, etc.).
 
+## Implementation Phases
+
+This plan splits into 4 phases along its actual dependency graph. Complete and verify each phase (`bunx tsc --noEmit && bun lint`, plus the phase's own check below) before starting the next. Phases 1 → 2 → 3 → 4 are strict dependencies at the phase level; **within Phase 3, Tasks 5, 6, 7, and 8 are mutually independent** (each depends only on Phase 2's types/components, not on each other) and can be built in parallel by separate implementers.
+
+| Phase | Tasks | Delivers | Depends on |
+|---|---|---|---|
+| 1 — Infrastructure prerequisites | 1–2 | `Badge` primitive; mode-aware `apiFetch` | none |
+| 2 — Data layer & shared presentational components | 3–4 | Product/review types, queries, reviews URL-state schema; `RatingSummary`, `PriceBlock`, `StockBadge`, `Breadcrumb`, `ProductCard` | Phase 1 |
+| 3 — Page sections and sub-features | 5–8 | `Gallery`, `VariantSelectors` (client islands); `ReviewsFeature` (list + pagination); `RelatedProducts` rail | Phase 2 |
+| 4 — Final integration | 9 | `ProductFeature`, `/products/[slug]` route, `not-found.tsx`, `error.tsx`, full browser DoD | Phase 3 |
+
+Verification per phase:
+- **Phase 1:** `bunx tsc --noEmit` shows no errors from `components/shared/active-badge.tsx`; `bun lint` clean.
+- **Phase 2:** `bunx tsc --noEmit && bun lint` clean — no browser check yet, nothing is routed.
+- **Phase 3:** `bunx tsc --noEmit && bun lint` clean for each of Tasks 5–8 as they land; still no browser check — `ProductFeature` doesn't exist until Phase 4 wires these pieces together.
+- **Phase 4:** the full manual browser Definition of Done in Task 9 Step 8 (this is the plan's final acceptance check).
+
+**Cross-plan note:** Phase 1 here (Tasks 1–2) and part of Phase 2 (Task 3 Step 1's types, Task 4 Steps 1/3/5 — `RatingSummary`, `StockBadge`, `ProductCard`) duplicate work also planned in `docs/superpowers/plans/2026-07-20-home-screen.md`'s own Phase 1/Phase 2. If that plan executes first, its Task 4 Step 4 adds a status note here identifying exactly which steps to skip and which existing files to reuse instead of recreating. Check for that note before starting Phase 1 of this plan.
+
 ---
+
+## Phase 1 — Infrastructure Prerequisites
+
+Unblocks every later phase: nothing else in this plan compiles or can fetch data until this lands.
 
 ### Task 1: Add the `Badge` primitive with semantic variants
 
@@ -307,6 +330,10 @@ git commit -m "fix: make apiFetch mode-aware per documented contract"
 ```
 
 ---
+
+## Phase 2 — Data Layer and Shared Presentational Components
+
+Reusable types, queries, and cards that Phase 3's page sections consume — none of this is routed or visible yet.
 
 ### Task 3: Product and review types, queries, and the reviews URL-state schema
 
@@ -705,6 +732,10 @@ git commit -m "feat: add rating summary, price block, stock badge, breadcrumb, p
 ```
 
 ---
+
+## Phase 3 — Page Sections and Sub-Features
+
+`Gallery`, `VariantSelectors`, `ReviewsFeature`, and `RelatedProducts` — Tasks 5–8 are mutually independent (each depends only on Phase 2, not on each other) and safe to dispatch to separate implementers in parallel. None of these are wired into a route until Phase 4.
 
 ### Task 5: Gallery client island
 
@@ -1175,6 +1206,10 @@ git commit -m "feat: add related products rail"
 ```
 
 ---
+
+## Phase 4 — Final Integration
+
+Composes every piece from Phases 2–3 into the live `/products/[slug]` route, plus not-found/error boundaries and the full browser Definition of Done.
 
 ### Task 9: Wire `ProductFeature`, the route, not-found, and metadata (final integration)
 
