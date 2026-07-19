@@ -1,49 +1,91 @@
 # Phase 0 — Foundation
 
-**Objective:** a running Expo app with the full infrastructure skeleton — navigation shell, API client with interceptors, query client, stores, theme tokens, shared components — such that every later phase only adds feature modules.
+**Objective:** a running SG Couture storefront shell with the complete web infrastructure: a server-only backend client, Clerk, TanStack Query, nuqs, the shared `ActionState` form system, cart-session cookie helpers, design tokens, and a responsive layout. Every later phase should add feature modules without changing these foundations.
 
-**Prerequisites:** backend reachable in a dev environment; Clerk publishable key (test instance); `docs/integration/storefront/` copied into the repo.
+**Prerequisites:** the backend is reachable in a development environment; a Clerk test instance supplies publishable and secret keys; `docs/integration/storefront/` is present and remains read-only.
 
-**API surface:** none consumed yet beyond a smoke call; this phase implements everything `01-conventions.md` §1–§3 describes.
+**API surface:** `GET /categories` is consumed only for the final smoke check. The infrastructure implements the auth modes, envelopes, errors, pagination metadata, decimal-string money, and 204 behavior in `docs/integration/storefront/00-conventions.md`.
 
 ## Tasks
 
-### 0.1 Project scaffold
-- [ ] `create-expo-app` (latest SDK, TypeScript template), strict `tsconfig`, path alias `@/* → src/*`.
-- [ ] ESLint + Prettier (expo config base); `bun run lint`, `typecheck`, `test` scripts.
-- [ ] `app.config.ts` reading `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`; `.env.example` committed.
-- [ ] Directory skeleton exactly as `00-architecture.md` — create empty feature folders with `index.ts` placeholders so structure is enforced from day one.
+### 0.1 Complete the scaffold and shadcn baseline
 
-### 0.2 Theme + shared components
-- [ ] `theme/tokens.ts` with placeholder scales: `colors`, `spacing (4-pt)`, `radii`, `typography` variants. Single export, typed `as const`. (Real design-system values replace contents later — shape must not change.)
-- [ ] Shared components: `Screen`, `Text`, `Button` (variants + `loading` prop that disables and shows spinner), `Skeleton`, `EmptyState`, `ErrorState({ error, onRetry })`.
-- [ ] `strings/strings.ts` with the initial `errorMessages: Record<ErrorCode, string>` covering the full generic + storefront code tables from the API conventions doc.
+- [ ] Keep the existing Next.js 16.2.10 App Router scaffold with no `src/` directory, strict TypeScript, `@/*` mapped to the repository root, and Bun-only scripts; do not add a test runner.
+- [ ] Add the remaining runtime dependencies with Bun: `@clerk/nextjs`, `@tanstack/react-query`, `nuqs`, `server-only`, `sonner`, and `zod`. Keep the already-installed shadcn, `@base-ui/react`, `lucide-react`, Tailwind v4, and class utility packages.
+- [ ] Reconcile `components.json` to the `base-lyra` preset on `@base-ui/react`, RSC mode, Tailwind v4 CSS at `app/globals.css`, the existing `@/*` aliases, and Lucide icons. Inspect existing generated files before updating them.
+- [ ] Generate the shadcn primitives needed by the copied shared layer and first three phases, including `button`, `badge`, `input`, `label`, `field`, `card`, `separator`, `skeleton`, `alert`, `sheet`, `alert-dialog`, `select`, `toggle-group`, and `pagination`; use the generated base APIs, including `render` rather than Radix-only composition props.
+- [ ] Retain and verify `lib/utils.ts` as the single `cn()` helper. Add semantic `Badge` variants such as `success` and `warning` so copied status badges never require raw status colors.
+- [ ] Establish the required layout only: thin route files under `app/`; `features/<name>/{components,hooks,actions,queries,schema,types,index.tsx}`; `lib/{api,env,format,cart-session}`; `components/{ui,shared}`; and cross-cutting actions under `actions/`. Do not create empty feature placeholders.
 
-### 0.3 API layer
-- [ ] `lib/api/envelope.ts` — `SuccessEnvelope<T>`, `PaginationMeta`, `Paginated<T> = { data: T[]; meta: PaginationMeta }`.
-- [ ] `lib/api/errors.ts` — `ApiError`, `ErrorCode` union, `isApiError`, `getStockErrors`, `getVariantErrors`, `getValidationErrors`. Unit tests against the exact JSON shapes in the API conventions doc.
-- [ ] `lib/api/client.ts` — axios instance; request interceptor (Clerk token via injected `getToken` — wire the actual function in Phase 3, accept an injectable provider now; `X-Cart-Session` from `cartSession` store); response interceptor (204 → `undefined`; unwrap envelope; normalize to `ApiError`, including non-envelope failures like network errors → synthetic `NETWORK_ERROR` code).
-- [ ] `lib/format/money.ts` + `formatDate` with unit tests (`"2400"`, `"2040.5"`, `"65.00"` all format correctly).
+### 0.2 Wire the copied shared components
 
-### 0.4 State infrastructure
-- [ ] `lib/query/queryClient.ts` with the retry/staleTime/focus policies from conventions §3; wire `focusManager` to `AppState`.
-- [ ] `stores/cartSession.ts` — `{ token: string | null }` + actions `hydrate()` (SecureStore read at app start), `setToken(t)` (store + persist), `clear()` (store + SecureStore delete). Unit-test the lifecycle with a mocked SecureStore.
-- [ ] `lib/storage/secureStorage.ts` typed wrapper (`getItem/setItem/deleteItem` with key constants: `CART_SESSION`, plus Clerk's own cache handled by Clerk).
-- [ ] `stores/ui.ts` empty shell (grows per phase).
+- [ ] Audit every file under `components/shared/` and make the copied `Form`, `FormControl`, `SubmitButton`, `EmptyState`, `Spinner`, `RedirectToast`, `ActiveBadge`, and `PaymentStatusBadge` compile against the generated primitives. Adapt `FormControl` to the generated `Field` anatomy, and preserve `<ComponentName>Props`, kebab-case files, accessible field errors, semantic tokens, and `Lucide`-prefixed icon imports.
+- [ ] Create `lib/api/api-error.ts` with a serializable `ErrorCode`, normalized validation entries, and `ApiError(status, code, message, errors)`. Keep structured business-error payloads intact and branch on `code`, never response text.
+- [ ] Create `lib/api/redirect-on-auth-error.ts` so redirects are possible only for calls explicitly made in Auth mode. Public and Optional calls must return their errors to the caller, including `ACCOUNT_DISABLED`, rather than being converted into auth redirects.
+- [ ] Update the copied `ActionState` conversion utilities for Zod v4 (`z.flattenError`) and the new `ApiError` shape. They must preserve repeated form values and return errors instead of throwing; only `redirect()` and `notFound()` may escape a Server Action.
+- [ ] Create `actions/cookies.actions.ts` with server-only get, set, and delete helpers for the `toast` flash cookie used by `RedirectToast`. Mount Sonner's `Toaster` once so both forms and redirect feedback work.
+- [ ] Add a reusable shared `ConfirmDialog` composed from the generated `AlertDialog`; destructive actions in later phases must use it and its trigger must follow base-ui composition.
 
-### 0.5 Navigation shell + providers
-- [ ] `src/app/_layout.tsx`: `ClerkProvider` (tokenCache via SecureStore) → `QueryClientProvider` → gesture/status-bar chrome. Call `cartSession.hydrate()` before first render (splash gate).
-- [ ] `(tabs)` layout with 4 placeholder tabs (Home, Categories, Cart, Account) rendering `EmptyState`s.
-- [ ] Deep-link scheme configured in `app.config.ts` (`sgcouture://`) — route table reserved for `orders/track/[token]` (used in Phase 6).
+### 0.3 Environment, backend client, formatting, and cart session
 
-### 0.6 Smoke verification
-- [ ] Temporary dev screen calls `GET /categories` through the full stack (client → envelope → query hook) and renders names; proves interceptors + envelope + query client end-to-end. Removed at phase end (Phase 1 replaces it).
+Implement this exact public API in `lib/api/http.ts`:
+
+```ts
+type ApiAuthMode = "public" | "optional" | "required";
+
+type ApiFetchOptions = {
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  body?: unknown;
+  auth?: ApiAuthMode;
+  cartSession?: boolean;
+  cache?: RequestCache;
+  next?: { revalidate?: number; tags?: string[] };
+  headers?: HeadersInit;
+};
+
+declare function apiFetch<T>(
+  path: string,
+  options?: ApiFetchOptions,
+): Promise<T>;
+```
+
+- [ ] Create a validated `lib/env.ts` singleton providing exactly `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and server-only `API_URL`. No other file may read `process.env` directly.
+- [ ] Create `lib/api/http.ts`, mark it `server-only`, and implement `apiFetch<T>()` against `${API_URL}/api/v1`. It must unwrap `{ status, message, data, meta? }`, preserve pagination metadata, map error envelopes to `ApiError`, return `undefined` for 204, and never send the backend origin to browser code.
+- [ ] Default `auth` to `"public"` and `cartSession` to `false`; map backend Public, Optional, and Auth modes to `"public"`, `"optional"`, and `"required"`. For Optional/Required, `apiFetch` obtains a fresh Clerk JWT per request with `await auth()` then `getToken()` and attaches it only server-side. For `cartSession: true`, `apiFetch` reads `sg_cart_session` itself and attaches `X-Cart-Session` when present. Reject caller-supplied `Authorization` and `X-Cart-Session` headers.
+- [ ] Default every backend request to `cache: "no-store"`. Allow per-call `next: { revalidate, tags }` passthrough only when `(auth ?? "public") === "public"` and `cartSession !== true`; add a development assertion that rejects any cache metadata on Optional, Required, or cart-aware calls even when no identity value is currently present.
+- [ ] Create `lib/format.ts` with decimal-string-safe `formatEGP()` and date formatting. Verify `"2400"`, `"2040.5"`, and `"65.00"` produce consistent EGP output without floating-point arithmetic.
+- [ ] Create `lib/cart-session.ts` around async `cookies()` with `getCartSession()`, `setCartSession()`, and `clearCartSession()`. The only cart cookie is `sg_cart_session`, set with `httpOnly: true`, `secure: true`, `sameSite: "lax"`, `path: "/"`, and `maxAge: 7 days`; `setCartSession()` must support re-writing the stored token so successful anonymous cart mutations can refresh that `maxAge`. Writes are legal only from Server Actions and Route Handlers.
+
+### 0.4 Providers and route protection
+
+- [ ] Create `app/providers.tsx` as a narrow Client Component and compose, inside `<body>`, `ClerkProvider` → `QueryClientProvider` → `NuqsAdapter` → application children, with one mounted `Toaster`.
+- [ ] Construct one browser `QueryClient` lazily with `useState`. Queries never retry 4xx `ApiError`s and retry other failures at most twice; mutations have `retry: 0`. Feature hooks own their stale-time and focus policies.
+- [ ] Create root `proxy.ts` with `clerkMiddleware` and a public-first `createRouteMatcher` that protects only `/account(.*)`. Keep catalog, cart, checkout, tracking, auth pages, and the two same-origin refetch handlers public at this layer; backend 401/403 responses remain authoritative.
+- [ ] Add a temporary Phase 0 Clerk sign-in/sign-out round trip through Header controls without moving JWT access into a Client Component. Dedicated catch-all auth pages and return-URL behavior are completed in Phase 3.
+
+### 0.5 Responsive storefront shell
+
+- [ ] Replace scaffold metadata and page chrome with the SG Couture root layout, keeping `app/` pages thin and Server Components by default.
+- [ ] Build a responsive Header with logo, links for Home, Products, and Categories, a cart-drawer placeholder with a badge slot, and Clerk signed-out/signed-in controls. Use `LucideShoppingBag`-style imports and accessible labels.
+- [ ] Build the Footer and stable main-content region so later route segments share the same shell without duplicating navigation.
+- [ ] Normalize `app/globals.css` to Tailwind v4 CSS-first `@theme` tokens for typography, spacing-facing semantic colors, radii, borders, focus, and storefront status variants. Components use semantic utilities and generated primitives rather than raw colors.
+- [ ] Add route-level loading, error, empty, and not-found foundations with the copied shared components and generated `Skeleton`/`Alert` primitives where appropriate.
+
+### 0.6 Live smoke verification
+
+- [ ] Replace the scaffold home page with a thin RSC page that renders a `HomeFeature`; its query calls `GET /categories` through Public `apiFetch` and renders live category names from the unwrapped payload.
+- [ ] Verify the smoke query through a normal navigation, hard refresh, new tab, and incognito window. Simulate a backend failure and confirm the route error/retry UI is usable without client-side page-data fetching.
+- [ ] Run `bun lint` and `bunx tsc --noEmit`, then audit client bundles and source for backend URLs, Clerk JWTs, and the cart token.
 
 ## Definition of Done
-- App boots on iOS + Android simulators; tabs navigate.
-- `lint`, `typecheck`, and unit tests green.
-- Smoke call renders live category names; killing the network shows `ErrorState` with retry working.
-- No component contains a raw color/spacing literal.
+
+- `bun dev` renders the responsive shell and live category names from `GET /categories`.
+- Hard refresh, new-tab navigation, and an incognito visit all render correctly.
+- Clerk sign-in and sign-out complete a round trip; `/account` is protected while the catalog shell remains public.
+- `bun lint` and `bunx tsc --noEmit` are green.
+- `process.env` appears only in `lib/env.ts`; no browser code can access `API_URL`, a Clerk JWT, or a cart-session token.
+- The copied shared form and feedback components compile and render against shadcn base-lyra on `@base-ui/react`.
 
 ## Out of scope
-Any real screen, auth UI, cart logic.
+
+Real catalog presentation beyond the live category smoke list, cart behavior, dedicated auth pages, merge behavior, profile editing, wishlist, checkout, and orders.

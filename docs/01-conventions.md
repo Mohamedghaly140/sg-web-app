@@ -1,110 +1,221 @@
 # 01 — App Conventions (read before any phase)
 
-Companion to the backend guide's `00-conventions.md`. That doc defines the wire contract; this one defines how this codebase consumes it. If they conflict, the backend doc wins.
+Companion to the backend guide's `00-conventions.md`. That guide defines the wire contract; this document defines how the Next.js storefront consumes it. If they conflict, the backend guide wins.
 
-## 1. API client
+## 1. `apiFetch` and `ApiError`
 
-One axios instance in `src/lib/api/client.ts`:
+All backend traffic uses the server-only `apiFetch` in `lib/api/http.ts`. The browser never contacts the backend directly.
 
-- `baseURL` = `${EXPO_PUBLIC_API_URL}/api/v1` from env (`.env` → `app.config.ts`). Never hardcode hosts.
-- **Request interceptor**
-  - Fetch a **fresh** Clerk token per request via `getToken()` and set `Authorization: Bearer …` when signed in. Never cache the JWT (contract requirement).
-  - If `cartSession` store holds a guest token, set `X-Cart-Session`. Attach it even when authenticated — that overlap is exactly what triggers the server-side merge.
-- **Response interceptor**
-  - `204` → resolve `undefined`. Never attempt JSON parsing on documented-204 routes (cart clear, wishlist remove, address delete, review delete).
-  - Success envelope → return `{ data, meta? }` unwrapped.
-  - Error → throw `ApiError`.
+```ts
+type ApiAuthMode = "public" | "optional" | "required";
 
-## 2. Errors
+type ApiFetchOptions = {
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  body?: unknown;
+  auth?: ApiAuthMode;
+  cartSession?: boolean;
+  cache?: RequestCache;
+  next?: { revalidate?: number; tags?: string[] };
+  headers?: HeadersInit;
+};
 
-`src/lib/api/errors.ts`:
+declare function apiFetch<T>(
+  path: string,
+  options?: ApiFetchOptions,
+): Promise<T>;
+```
+
+- `auth` defaults to `"public"`; `cartSession` defaults to `false`. The backend contract labels Public, Optional, and Auth map to `"public"`, `"optional"`, and `"required"` respectively.
+- Prefix `path` with `${API_URL}/api/v1`, where `API_URL` comes from the validated `lib/env.ts` singleton.
+- Serialize `body` as JSON and set the appropriate content type. Never pass browser cookies through to the backend.
+- For `auth: "optional"` or `auth: "required"`, `apiFetch` obtains a fresh Clerk token with `auth()` → `getToken()` for each request and attaches `Authorization: Bearer …` when appropriate. It never caches or exposes that JWT.
+- For `cartSession: true`, `apiFetch` reads `sg_cart_session` server-side and attaches it as `X-Cart-Session` when present. Use this option for cart CRUD, `POST /coupons/validate`, `POST /orders/guest`, and post-sign-in `GET /cart`.
+- Callers never set `Authorization` or `X-Cart-Session` through `headers`; those reserved identity headers are centralized in `apiFetch`.
+- Unwrap successful `{ status, message, data, meta? }` responses into the typed domain result. List wrappers retain the documented `meta` beside `data`.
+- Return `undefined` for `204 No Content` without attempting JSON parsing.
+- Convert error envelopes into `ApiError(status, code, message, errors)`. Branch on `code`, never on `message`; unknown future codes use generic fallback UI.
 
 ```ts
 export class ApiError extends Error {
   constructor(
     public status: number,
-    public code: ErrorCode | string, // branch on this, never on message
+    public code: string,
     message: string,
-    public errors?: unknown[],       // structured lines when documented
-  ) { super(message); }
+    public errors?: unknown,
+  ) {
+    super(message);
+  }
 }
 ```
 
-- `ErrorCode` is a union of every documented code (generic block + storefront block). Unknown codes fall through to a generic failure message — the API may add codes.
-- Typed narrowers for the two structured shapes:
-  - `getStockErrors(e): { productId; requested; available }[]` for `INSUFFICIENT_STOCK`
-  - `getVariantErrors(e): { productId; color; size; code }[]` for `INVALID_VARIANT`
-  - `getValidationErrors(e): { field; constraints }[]` for `VALIDATION_ERROR` (map dotted paths like `contact.email` to form fields)
-- **Global handlers** (registered once, in the query client's error hooks):
-  - `401 UNAUTHENTICATED` on an Auth route → prompt re-auth via Clerk, retry after.
-  - `403 ACCOUNT_DISABLED` → sign out + dedicated screen.
-  - `429 RATE_LIMITED` → toast with backoff messaging; never auto-retry mutations.
-- **Copy** lives in `src/strings/strings.ts` as an `errorCode → user message` map (one distinct message per coupon code, stock, variant, etc. — the API guide explicitly requires distinct copy per code).
+`apiFetch` defaults to `cache: "no-store"` and passes explicit `cache` and `next` options through to `fetch`. With `cacheComponents` disabled, Next.js 16 does not cache `fetch` by default; the explicit default documents intent. Caching, positive revalidation, and cache tags are permitted only when `(auth ?? "public") === "public"` and `cartSession !== true`. During development, assert and fail when any other option combination requests cache metadata, even when an Optional call currently has no signed-in user or a cart-aware call currently has no cookie; fetch cache keys do not partition safely on identity headers. Approved cached reads are public products, product detail, categories, category detail, and public reviews with 60–300 second revalidation and semantic tags.
 
-## 3. TanStack Query
+Keep typed error narrowers in the API layer:
 
-Defaults in `src/lib/query/queryClient.ts`:
+- `getStockErrors(error)` narrows `INSUFFICIENT_STOCK` to `{ productId; requested; available }[]`.
+- `getVariantErrors(error)` narrows `INVALID_VARIANT` to `{ productId; color; size; code }[]`.
+- `getValidationErrors(error)` narrows `VALIDATION_ERROR` entries and converts each `{ field, constraints }` entry into field messages. Nested fields retain dotted names such as `contact.email`.
 
-| Setting | Value | Reason |
-|---|---|---|
-| `retry` | custom: never retry `ApiError` with status 4xx; retry ≤ 2 for network/5xx | 4xx are contract answers, not transience |
-| `staleTime` | 60s catalog reads; 0 for cart/orders. Near-static data may override upward per feature (categories use 5 min — Phase 1) | catalog counts/stock are hints anyway |
-| `refetchOnWindowFocus` | on (screen focus via `focusManager` + AppState) | replaces polling — orders doc forbids polling loops |
-| mutations `retry` | 0 | throttled routes must not be hammered |
+The narrowers validate unknown input before returning it. Feature code must not cast `ApiError.errors` directly or parse the human-readable message.
 
-**Query key factories** — one `keys.ts` per feature, hierarchical:
+### Guest-cart response handling
+
+For every cart response processed by a Server Action or Route Handler, apply the **capture-whenever-present** rule: inspect for `sessionToken`, call `setCartSession` when present, remove the token field from the client-facing value, and only then return the typed cart. Do not assume it can only appear on the documented first `POST /cart/items`. The transport type may contain `sessionToken`; the shared client-facing `Cart` type must not.
+
+Also mirror the backend's sliding expiry after every successful anonymous cart-aware mutation: when the response omits `sessionToken` but the request used an existing `sg_cart_session`, call `setCartSession` again with that stored token to issue a fresh seven-day `maxAge`. A response token always wins; if neither a returned nor stored token exists, do nothing. Do not refresh after a failed call, a signed-in mutation, or a pure Server Component read. The three deletion events below take precedence, so successful merge, guest checkout, and anonymous clear delete rather than refresh the cookie.
+
+`lib/cart-session.ts` owns `getCartSession`, `setCartSession`, and `clearCartSession`. The `sg_cart_session` cookie is `httpOnly`, `secure`, `sameSite: "lax"`, `path: "/"`, and `maxAge: 7 days`. Cookie writes are legal only in Server Actions and Route Handlers, never Server Components. Delete `sg_cart_session` on exactly three events: successful merge from post-sign-in `GET /cart`, successful guest checkout through `POST /orders/guest`, and successful anonymous `DELETE /cart`. The token must never enter URLs, logs, analytics, action return values, or client-side JavaScript.
+
+## 2. Server Action result styles
+
+Form mutations for profile, addresses, reviews, and checkout live in `features/<name>/actions/`, one action per file. They return the existing `ActionState` type from `components/shared/form/utils/to-action-state.ts`:
 
 ```ts
-export const productKeys = {
-  all: ['products'] as const,
-  lists: () => [...productKeys.all, 'list'] as const,
-  list: (filters: ProductFilters) => [...productKeys.lists(), filters] as const,
-  detail: (slug: string) => [...productKeys.all, 'detail', slug] as const,
+type ActionState = {
+  status?: "SUCCESS" | "ERROR";
+  message: string;
+  payload?: Record<string, string | string[]>;
+  fieldErrors: Record<string, string[] | undefined>;
+  timestamp: number;
+  response?: Record<string, string | number | undefined | null>;
 };
 ```
 
-Same pattern: `categoryKeys`, `reviewKeys(productId)`, `cartKeys.current`, `wishlistKeys.all`, `addressKeys`, `orderKeys.list(filters)` / `orderKeys.detail(id)` / `orderKeys.guest(token)`, `profileKeys.me`.
+The canonical action is:
 
-**Cache update rules:**
+```ts
+"use server";
 
-- Cart mutations return the **complete cart** → `queryClient.setQueryData(cartKeys.current, cart)`. Do not invalidate-and-refetch; the response is authoritative.
-- Wishlist add/remove are idempotent → optimistic update with rollback on error.
-- Review create/update/delete → invalidate `reviewKeys(productId)` **and** `productKeys.detail(slug)` (aggregates recomputed server-side).
-- Checkout success → `setQueryData(cartKeys.current, emptyCart)` + invalidate `orderKeys.list`.
-- Pagination: `useInfiniteQuery` driven by `meta.hasNext` / `meta.page` for products, reviews, orders. Categories, wishlist, addresses, cart items are unpaginated — plain queries.
+export async function updateProfileAction(
+  _previousState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  try {
+    const input = updateProfileSchema.parse(Object.fromEntries(formData));
+    await apiFetch("/users/me", {
+      method: "PATCH",
+      body: input,
+      auth: "required",
+    });
+    revalidatePath("/account");
+    return toActionState("SUCCESS", "Saved", formData);
+  } catch (error) {
+    return fromErrorToActionState(error, formData);
+  }
+}
+```
 
-## 4. Money, dates, IDs
+- Zod schemas are strict request whitelists because unknown body fields return `422 VALIDATION_ERROR`. Never spread API response objects or raw form objects into request bodies.
+- `Object.fromEntries(formData)` is acceptable only for single-value inputs. For repeated values such as sizes, colors, or multi-select IDs, construct the input with `formData.getAll(name)` so values are not collapsed.
+- `fromErrorToActionState` preserves submitted values in `payload`, maps validation entries to `fieldErrors`, records API code/status in `response`, and always returns a fresh `timestamp` for feedback effects. During Phase 0, adapt the copied helper from its admin-shaped `{ field, message }` assumption to the storefront contract's `{ field, constraints }` entries by flattening validated constraint values into field messages.
+- Expected failures return `ActionState`; actions do not throw. Only Next control flow such as `redirect()` or `notFound()` may escape, and redirect calls must not be swallowed by the action's error conversion.
 
-- Money is a **decimal string with variable scale** (`"2400"` vs `"65.00"`). Rules:
-  - Display through `lib/format/money.ts` only (`formatMoney("2040.5") → "EGP 2,040.50"`).
-  - **No client arithmetic on money.** Totals, discounts, and fees always come from the server response being displayed. If a UI ever needs derived money (it shouldn't in v1), that's a design smell — surface it.
-  - Never `parseFloat` for anything other than final display formatting.
-- Dates: ISO UTC strings → format with a single `formatDate` helper; render in device locale/timezone.
-- IDs: treat all IDs as opaque strings. Display `humanOrderId` to users; use `id` in routes/API calls (orders doc).
+Client forms wire `useActionState` and render the shared `Form`, `FormControl`, and `SubmitButton`. `Form` observes the timestamp and emits success/error sonner feedback. `FormControl` composes the label/control with `FieldError`; `SubmitButton` uses `useFormStatus()` to disable itself and show pending state.
+
+For a successful mutation that navigates, set `setCookieByKey("toast", message)` and call `redirect()`. The mounted `RedirectToast` reads and deletes that flash cookie after navigation. Do not rely on a toast from UI that is about to unmount.
+
+Interactive cart and wishlist actions are the deliberate second style: a `useMutation` Server Action does not return `ActionState`. It returns the authoritative typed payload or a serializable error because the caller must update TanStack Query directly, and it never throws an expected API failure.
+
+```ts
+type InteractiveActionError = {
+  error: { code: string; message: string; errors?: unknown };
+};
+
+type CartActionResult = Cart | InteractiveActionError;
+```
+
+The mutation `onSuccess` must first branch on `"error" in result`; only a returned `Cart` is written with `queryClient.setQueryData(cartKeys.current, result)`. Wishlist actions use the equivalent typed result with their documented optimistic update and rollback.
+
+## 3. TanStack Query
+
+TanStack Query v5 exists for interactive client state only. If a Server Component can render it, TanStack Query must not own it.
+
+| Setting | Value | Reason |
+|---|---|---|
+| Query `retry` | Never for a 4xx `ApiError`; at most 2 for network/5xx failures | A 4xx response is a contract result, not transient failure |
+| Mutation `retry` | `0` | Prevent duplicate writes and throttle pressure |
+| Cart `staleTime` | `30_000` ms | Keeps drawer and badge coherent without excessive refetching |
+| Cart `refetchOnWindowFocus` | `true` | Reconciles interactive state when the customer returns |
+
+Use stable query-key factories:
+
+```ts
+export const cartKeys = {
+  all: ["cart"] as const,
+  current: ["cart", "current"] as const,
+};
+
+export const wishlistKeys = {
+  all: ["wishlist"] as const,
+  current: ["wishlist", "current"] as const,
+};
+```
+
+The root layout reads the cart server-side and passes it to the client cart boundary as `initialData`. `useCart()` refetches only through the same-origin `app/api/cart/route.ts`. Wishlist refetches only through `app/api/wishlist/route.ts`. These are the only Route Handlers for interactive refetch; page data never flows through them.
+
+Cache-update rules:
+
+- Cart mutations return the complete cart. On success, call `queryClient.setQueryData(cartKeys.current, cart)`; never invalidate and refetch the cart.
+- `syncCartAction` performs post-sign-in `GET /cart` with both identity headers, clears `sg_cart_session` only after success, and returns the merged cart for `setQueryData`.
+- Wishlist toggles are optimistic: cancel the current query, snapshot it, apply the toggle, restore the snapshot on error, and reconcile with the server result on success.
+- Coupon preview belongs to interactive state but never mutates cart totals locally; render only the server response from `POST /coupons/validate`.
+- Checkout success replaces `cartKeys.current` with the canonical empty-cart shape and the checkout action calls `revalidatePath("/account/orders")`. Do not derive the empty state by subtracting lines.
+
+Do not put catalog lists, product detail, categories, public review pages, profile, addresses, or orders in the query cache. Those reads belong in Server Components, with URL navigation or `router.refresh()` when a fresh render is required.
+
+## 4. Money, dates, and IDs
+
+- **Money:** values are decimal strings with variable scale, including `"2400"`, `"2040.5"`, and `"65.00"`. Display them only through `formatEGP()` in `lib/format.ts`. Perform zero client-side arithmetic: prices, discounts, shipping fees, cart totals, and order totals always come from the server response being shown.
+- **Dates:** values are ISO 8601 UTC strings. Central formatting helpers choose the storefront's display locale and timezone; feature components do not hand-roll date parsing.
+- **IDs:** treat every ID and token as opaque. Product/order records use cuid strings, Clerk users use Clerk IDs, guest cart tokens are UUIDs, and claim tokens are 64-character hex strings. Display only `humanOrderId` to customers; use record IDs in route segments and backend calls.
+
+Never validate an opaque identifier by guessed shape unless the request contract explicitly requires it. Never expose the guest cart UUID; the order claim token is carried only by its documented tracking/claim flow.
 
 ## 5. Auth modes in practice
 
-| Mode | App behavior |
-|---|---|
-| Public | Call freely; token attachment is harmless |
-| Optional | Call freely; interceptor decides what identity rides along |
-| Auth | Screen is gated: signed-out users see an inline sign-in prompt component (`<RequireAuth>`), not a hard redirect, so guests can still browse tabs |
+| Backend mode | Server request | Web handling |
+|---|---|---|
+| Public | Pass `auth: "public"` (or omit it); caching is allowed only with `cartSession: false` | Render for everyone. A Public failure never triggers an auth redirect. |
+| Optional | Pass `auth: "optional"`; `apiFetch` fetches a fresh token when signed in and omits it for guests; add `cartSession: true` when cart-aware | Keep the route public. Optional controls use inline `<RequireAuth>` only when the chosen action requires sign-in. |
+| Auth | Pass `auth: "required"`; `apiFetch` requires and attaches a fresh Clerk token; always `no-store` | `/account(.*)` is gated by `proxy.ts`; embedded Auth actions on public pages use inline `<RequireAuth>`. Backend 401/403 remains authoritative. |
 
-## 6. Styling
+The root `proxy.ts` uses `clerkMiddleware` to redirect signed-out visitors only for `/account(.*)`. All catalog, cart, checkout, and guest-order tracking routes are public. Sign-in and sign-up use catch-all pages inside the `(auth)` route group. The storefront defines no roles.
 
-- `StyleSheet.create` only; styles co-located with the component.
-- All values from `theme/tokens.ts` (placeholder scale now; real design-system tokens drop in later). No raw hex/px literals in components.
-- Shared primitives in `src/components/`: `Screen`, `Text` (typography variants), `Button` (loading/disabled states built in — throttled routes depend on this), `Skeleton`, `EmptyState`, `ErrorState` (takes an `ApiError`, renders mapped copy + retry).
+`redirectOnAuthError` is mode-aware: it may handle `UNAUTHENTICATED` only for Auth-mode calls. It must not redirect from Public or Optional paths. The copied admin helper currently applies the redirect unconditionally and must be corrected in Phase 0 before storefront actions use it.
 
-## 7. Naming & structure
+`ACCOUNT_DISABLED` is different from ordinary anonymous behavior. If a supplied Clerk token resolves to a disabled account, sign out and show the dedicated disabled-account screen, including when the originating endpoint was Optional.
 
-- Files: `kebab-case.ts`; components `PascalCase.tsx`; hooks `useThing.ts` exported from feature `hooks.ts`.
-- Feature API functions named after the endpoint intent: `getProducts`, `addCartItem`, `claimGuestOrder`.
-- Types: request DTOs `AddCartItemBody`, responses `Cart`, `Product`, `OrderDetail`, `OrderSummary` — defined next to the api.ts that uses them; shared shapes promoted only when a second feature needs them.
-- No barrel files inside `features/*` except a deliberate `index.ts` exporting the screens + public hooks.
+## 6. URL state with nuqs
+
+Filters, sorting, and pagination live in the URL. Each feature defines one `features/<name>/hooks/use-<name>-params.ts` module whose parsers feed both `createSearchParamsCache` on the server and `useQueryStates` in Client Components.
+
+- Client updates use `shallow: false` so the Server Component tree receives the new URL state.
+- Parameter names and formats match the backend wire contract exactly. Do not rename API fields for the URL.
+- CSV parameters such as sizes and colors remain CSV strings and pass through verbatim; do not silently convert them into a different URL shape.
+- Apply defaults and validation in the shared parser definition so server and client cannot drift.
+- Next.js 16 page `params` and `searchParams` are Promises; await them before reading or passing values to the server cache.
+
+Do not use component state as the source of truth for filters or pagination.
+
+## 7. UI conventions
+
+- shadcn components use the `base-lyra` style on `@base-ui/react`. Inspect the generated primitive before composing it; its parts and event APIs are not Radix APIs.
+- Tailwind v4 is CSS-first. Define design values in `@theme` within `app/globals.css`; do not add `tailwind.config.*` or scatter raw brand colors across features.
+- Prefer `components/shared/` before adding a feature-local duplicate: the form system, `FormControl`, `SubmitButton`, `FieldError`, `EmptyState`, `Spinner`, `RedirectToast`, and semantic badges already establish application behavior.
+- Import Lucide icons with the `Lucide` prefix: `import { LucideShoppingBag, LucideX } from "lucide-react"`. Never alias or import them as `ShoppingBag` or `X`.
+- Badge styling uses semantic variants only: `success`, `warning`, `info`, `destructive`, `secondary`, or `outline`. Do not apply literal color utility classes to badges.
+- Component prop types are named `<ComponentName>Props`, files are kebab-case, and each feature's default export is a named `<Name>Feature` Server Component.
+- Keep `app/` pages thin. Components, actions, queries, schemas, hooks, and types belong to their feature; `components/ui/` contains shadcn primitives only.
 
 ## 8. Testing baseline (applies to every phase)
 
-- Unit: `errors.ts` narrowers, `money.ts`, `cartSession` store lifecycle, per-feature api.ts response mapping (mocked axios).
-- Hooks: TanStack Query hooks with `@testing-library/react-native` + a test QueryClient (retries off).
-- Each phase's DoD lists the manual device checklist; automated coverage targets the logic above, not screenshots.
+There is no automated application test suite in the initial plan. Every phase must pass:
+
+```bash
+bun lint
+bunx tsc --noEmit
+```
+
+Each phase also carries a browser Definition of Done checklist. Exercise at least a hard refresh, a signed-out private session, and a second browser session where identity isolation matters. Cart-session checks must cover token capture, sign-in merge, guest checkout cleanup, anonymous clear cleanup, and confirmation that identity tokens never enter browser-visible payloads.
+
+Pure helpers such as `format.ts` and the structured-error narrowers may gain focused `bun test` coverage later. Until then, lint, type-checking, and the per-phase browser checklist are the required gates.

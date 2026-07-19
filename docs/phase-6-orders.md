@@ -1,56 +1,70 @@
 # Phase 6 — Orders (History, Detail, Guest Tracking, Claim, Cancel)
 
-**Objective:** the post-purchase surface: order history and detail for users, public guest tracking via the emailed token deep link, one-shot claiming of guest orders into an account, and self-cancel with correct state guards.
+**Objective:** deliver the post-purchase web experience: server-rendered order history and detail, public guest tracking through the emailed URL, one-shot claiming into an account, and guarded self-cancellation.
 
-**Prerequisites:** Phase 5 DoD (orders exist to display).
+**Prerequisites:** Phase 5 DoD (registered and guest orders exist to display).
 
 **API surface:** `GET /orders`, `GET /orders/:id`, `GET /orders/guest/:token`, `POST /orders/claim`, `POST /orders/:id/cancel`.
 
 ## Tasks
 
 ### 6.1 Order history
-- [ ] `useOrdersInfinite({status?})` — summary shape (`itemsCount` = distinct **lines**, not quantity sum; label it "items" carefully or show "N products"). Optional `OrderStatus` filter chips.
-- [ ] List rows: `humanOrderId`, status pill (one color/token per `OrderStatus`), total, date. Newest first (server order).
-- [ ] Refresh on screen focus + pull-to-refresh. **No polling loops** — explicit API rule.
+
+- [ ] Build `/account/orders` as a thin page around an `OrdersFeature` Server Component using the Auth-only, no-store `GET /orders` query. Hand-write the summary and pagination types; label `itemsCount` as distinct products/lines rather than summed quantity.
+- [ ] Define `features/orders/hooks/use-orders-params.ts` once for both nuqs server and client parsers. Keep `page`, `limit`, and optional `status` in exact API wire format, update with `shallow: false`, and await Next.js 16 `searchParams` before querying.
+- [ ] Render newest-first rows with `humanOrderId`, formatted total, date, and a shared semantic status badge covering `PENDING | PROCESSING | SHIPPED | DELIVERED | CANCELLED | REFUNDED`. Provide explicit refresh through RSC navigation/`router.refresh()` and never add a polling loop or client cache for orders.
+- [ ] Add server-rendered loading, empty, error, and pagination states that retain the status filter in the URL and never discard a successfully rendered page because a later refresh fails.
 
 ### 6.2 Order detail
-- [ ] `useOrder(id)` → full detail: line items with permanent price snapshots (copy note: prices shown are as-purchased), address-free totals block (`itemsSubtotal`, `discountApplied`, `shippingFees`, `totalOrderPrice` — displayed verbatim), status, `isPaid`, payment method.
-- [ ] 404 covers both "missing" and "someone else's" by design → generic not-found state, invalidate list.
 
-### 6.3 Guest tracking (public deep link)
-- [ ] Route `orders/track/[token]` — **Public**, no auth gate. Renders the full detail shape from `GET /orders/guest/:token`.
-- [ ] Deep linking: configure the app scheme + (if the storefront web domain hosts universal/app links later, note as follow-up) so the email link opens this screen with the token param. Token is throttled 10/60s → retry button, no auto-retry.
-- [ ] `404 CLAIM_TOKEN_INVALID` → single message per API doc: "This tracking link is invalid or has expired." Do not attempt to distinguish expired/consumed/unknown.
-- [ ] Never log the token; never echo it into analytics/navigation breadcrumbs.
+- [ ] Build `/account/orders/[id]` as an Auth-only `OrderDetailFeature` Server Component over `GET /orders/:id`; await the promised `params` and use the opaque record ID only in the route and API call.
+- [ ] Render permanent item price snapshots, status, `isPaid`, payment method, and `itemsSubtotal`, `discountApplied`, `shippingFees`, and `totalOrderPrice` exactly as server strings through `formatEGP()`. Per GAP-4, render no shipping address, contact, or notes because the detail response does not contain them.
+- [ ] Treat `RESOURCE_NOT_FOUND` as the same generic not-found state for missing and other-owner records, with no ownership disclosure and a link back to order history.
+
+### 6.3 Guest tracking
+
+- [ ] Build public `/orders/track/[token]` around `GET /orders/guest/:token`. Resolve the token only in the Server Component, force dynamic/no-store rendering, exclude the route from sitemap indexing, and use restrictive referrer handling.
+- [ ] Keep the claim token only in the required tracking path and server call. Never log it, attach it to analytics/error breadcrumbs, place it in navigation labels, or pass it to Client Components; redact the tracking path in observability tooling.
+- [ ] Render the same address-free order detail shape as 6.2. For `CLAIM_TOKEN_INVALID`, show only “This tracking link is invalid or has expired,” preserving the deliberate unknown/expired/consumed ambiguity.
+- [ ] Respect the 10/60s limit with no automatic retry. `RATE_LIMITED` keeps the page intact and offers a manual server refresh after the wait guidance.
 
 ### 6.4 Claim flow
-- [ ] On the tracking screen: signed-out → "Create an account to keep this order" → Clerk sign-up/sign-in → return with token intact (pass through navigation state, not URL history where avoidable).
-- [ ] Signed-in → `POST /orders/claim { token }` (validate 64-char length client-side first → avoids a pointless `VALIDATION_ERROR`).
-- [ ] Success (200): navigate to the owned `orders/[id]`, invalidate `orderKeys.list`. Token is consumed — the tracking URL is now dead; make the redirect replace history.
-- [ ] **Timeout-retry rule from the API doc:** if a claim request times out and the retry returns `404 CLAIM_TOKEN_INVALID`, treat it as "already claimed" → refetch order list, find the order, navigate. Encode this in the mutation's error handler with a "did we just time out?" flag.
-- [ ] Throttle 5/60s → button disabled in flight.
+
+- [ ] On the tracking page, signed-out customers see inline `<RequireAuth>` copy to sign in or create an account and return to the same tracking URL; do not hard-redirect the public page.
+- [ ] Bind the route token to `claimOrderAction` server-side rather than rendering it in a form field. Validate the documented exact 64-character length, then call `POST /orders/claim` with a fresh Clerk JWT; expected failures return `ActionState` and mutation retries remain disabled.
+- [ ] On success, call `revalidatePath("/account/orders")`, set a redirect toast cookie, and replace-navigate to `/account/orders/[id]` from the returned order ID. The consumed tracking URL is expected to become invalid.
+- [ ] If the first claim times out and the directly following retry returns `CLAIM_TOKEN_INVALID`, refresh `/account/orders` as the contract recommends but keep the public tracking copy generic unless a successful claim response identified the order. Never disclose whether another account consumed the token.
+- [ ] Preserve the form and show wait guidance on the 5/60s `RATE_LIMITED` response; do not automatically replay the one-shot mutation.
 
 ### 6.5 Self-cancel
-- [ ] Cancel button on order detail rendered **only when** `status === "PENDING" && !isPaid`; confirm dialog states stock returns and coupon use is released.
-- [ ] `POST /orders/:id/cancel` success → `setQueryData(orderKeys.detail(id), updated)` + invalidate list.
-- [ ] `409 INVALID_STATUS_TRANSITION` (admin moved it between render and tap — explicitly anticipated by the API doc) → refetch the order, show its current status, remove the button.
 
-### 6.6 Post-checkout handoff polish
-- [ ] Phase 5 confirmation screens now link: registered → `orders/[id]`; guest → explain the email tracking link (and, if the app is installed when tapped, it deep-links back here).
+- [ ] Render cancellation on the owned detail only when `status === "PENDING" && !isPaid`. Put the action behind `ConfirmDialog` with copy explaining that stock returns and coupon use is released.
+- [ ] Implement `cancelOrderAction` for `POST /orders/:id/cancel` with the shared ActionState form pipeline. On success, revalidate both `/account/orders` and `/account/orders/[id]` and render the returned `CANCELLED` state through the shared badge.
+- [ ] On `INVALID_STATUS_TRANSITION`, refresh the RSC detail, explain that the order state changed, and remove the action when it is no longer eligible. Treat `RESOURCE_NOT_FOUND` with the same generic not-found state as detail.
+
+### 6.6 Post-checkout handoff
+
+- [ ] Update Phase 5 handoffs: registered confirmation links to `/account/orders/[id]`; guest confirmation explains that the tracking URL was sent by email and never fabricates or displays the real token.
 
 ## Error handling matrix
 
 | Code | Where | UX |
 |---|---|---|
-| `CLAIM_TOKEN_INVALID` | track / claim | single invalid-or-expired message; claim-after-timeout special case → treat as claimed |
-| `INVALID_STATUS_TRANSITION` | cancel | refetch, show current status |
-| `RESOURCE_NOT_FOUND` | detail / cancel | generic not-found, invalidate list |
-| `RATE_LIMITED` | track / claim | wait message, manual retry |
+| `CLAIM_TOKEN_INVALID` | tracking / claim | One invalid-or-expired public message; after an immediately preceding timeout, refresh owned order history without disclosing token state |
+| `INVALID_STATUS_TRANSITION` | cancel | Refresh the RSC detail, show current status, and remove ineligible cancellation UI |
+| `RESOURCE_NOT_FOUND` | detail / cancel | Generic not-found state with no ownership disclosure |
+| `RATE_LIMITED` | tracking / claim | Preserve state, show wait guidance, and require manual retry |
 
 ## Definition of Done
-- Full loop on a clean device: guest checkout → email link → tracking screen → sign up → claim → order in history → detail → (seed a PENDING unpaid order) cancel succeeds; a PROCESSING order shows no cancel button and a forced cancel returns the handled 409.
-- Consumed token's tracking link shows the invalid/expired message.
-- Status filter, pagination, and focus-refresh verified; no interval timers exist anywhere in the orders feature.
+
+- Registered order history filters and paginates through URL state; hard refresh preserves the selected status/page and no interval-based polling exists.
+- Order detail renders permanent line snapshots and totals without client arithmetic or shipping-address UI, matching GAP-4.
+- Private-session guest flow passes: emailed tracking URL → public detail → inline sign-in → claim → owned detail/history; a consumed or invalid URL shows the same generic message.
+- A forced timeout followed by an invalid claim retry refreshes owned history while preserving the public ambiguity and never automatically submits again.
+- Cancellation succeeds for a seeded unpaid `PENDING` order; `PROCESSING` hides the action, and a second-browser status change forces the handled 409 refresh path.
+- Network, analytics, and error-report inspection shows the claim token only in its required browser path and backend server call, never in client JavaScript or telemetry.
+- `bun lint` and `bunx tsc --noEmit` pass.
 
 ## Out of scope
-Refund UX beyond displaying `REFUNDED` status; notifications (backend Phase 9).
+
+Refund actions beyond displaying `REFUNDED`; customer notifications until backend endpoints are documented.

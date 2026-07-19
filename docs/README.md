@@ -1,40 +1,42 @@
-# SG Couture Mobile — Development Plan
+# SG Couture Web Storefront — Development Plan
 
-> **Audience:** Claude Code (and human reviewers) implementing the SG Couture mobile app.
-> **Stack:** Expo (React Native) · Expo Router · TypeScript · Axios · TanStack Query v5 · Zustand · Clerk Expo · bare `StyleSheet` with design tokens.
-> **Backend contract:** the storefront API integration guide (`docs/integration/storefront/00-conventions.md` … `11-profile.md`). The server is the source of truth for prices, stock, discounts, shipping, and totals. **This plan never re-derives business rules — it references them.**
+> **Audience:** Claude Code, Codex, and human reviewers implementing the SG Couture customer-facing web storefront.
+> **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Bun · Tailwind v4 · shadcn (base-lyra/@base-ui) · Clerk (`@clerk/nextjs`) · TanStack Query v5 (interactive state only) · nuqs · Zod v4 · lucide-react.
+> **Backend contract:** the storefront API integration guide (`docs/integration/storefront/00-conventions.md` through `11-profile.md`) is vendored and read-only. The server is the source of truth for prices, stock, discounts, shipping, and totals; this plan references those rules instead of re-deriving them.
+> **Status tracker:** this file's phase table is the single source of truth for what has started and what exists.
 
 ## How to use this plan
 
-1. Read [`00-architecture.md`](./00-architecture.md) and [`01-conventions.md`](./01-conventions.md) once. Every phase assumes them.
-2. Execute phases **in order**. Each phase doc is a self-contained work order: objective, prerequisites, task breakdown, error handling, and acceptance criteria.
-3. Do not start a phase until the previous phase's **Definition of Done** is met. Phases are sequenced so that each one ships a testable vertical slice.
-4. When a phase doc and the backend API guide disagree, **the API guide wins** — flag the drift instead of guessing.
+1. Read [`00-architecture.md`](./00-architecture.md) and [`01-conventions.md`](./01-conventions.md) before implementation; every phase assumes them.
+2. Execute phases in order. Each phase document is a self-contained work order with prerequisites and a Definition of Done.
+3. When a phase document and the backend integration guide conflict, **the integration guide wins**. Flag the drift instead of guessing or editing the vendored contract.
+4. Keep the phase table current: change status when a phase starts and again when it finishes.
 
 ## Phase map
 
-| Phase | Doc | Delivers | API modules |
-|---|---|---|---|
-| 0 | [phase-0-foundation.md](./phase-0-foundation.md) | Project scaffold, API client, query/store infrastructure, theme tokens, navigation shell | 00 (conventions) |
-| 1 | [phase-1-catalog.md](./phase-1-catalog.md) | Browsable catalog: home, category tree, product list + filters, product detail, public reviews | 01, 02, 03 (read) |
-| 2 | [phase-2-guest-cart.md](./phase-2-guest-cart.md) | Full guest cart with `X-Cart-Session` lifecycle | 05 |
-| 3 | [phase-3-auth-cart-merge.md](./phase-3-auth-cart-merge.md) | Clerk auth, token interceptor, anonymous→user cart merge, profile | 00 (auth), 11 |
-| 4 | [phase-4-account.md](./phase-4-account.md) | Wishlist, own-review CRUD, saved addresses | 03 (write), 04, 08 |
-| 5 | [phase-5-checkout.md](./phase-5-checkout.md) | Shipping estimate, coupon preview, registered + guest checkout (CASH) | 06, 07, 09 |
-| 6 | [phase-6-orders.md](./phase-6-orders.md) | Order history/detail, guest tracking, claim via deep link, self-cancel | 10 |
-| 7 | [phase-7-hardening-release.md](./phase-7-hardening-release.md) | Performance, resilience, accessibility, EAS build/release, Geidea readiness | — |
+| Phase | Doc | Status | Delivers | API modules |
+|---|---|---|---|---|
+| 0 | [phase-0-foundation.md](./phase-0-foundation.md) | **in progress** | Next scaffold, server-only BFF, env/auth/cart-session foundations, providers, shared shell and primitives | 00 (conventions) |
+| 1 | [phase-1-catalog.md](./phase-1-catalog.md) | **not started** | RSC home, category navigation, product listing/filtering, product detail, public reviews | 01, 02, 03 (read) |
+| 2 | [phase-2-guest-cart.md](./phase-2-guest-cart.md) | **not started** | Guest cart page plus interactive drawer/badge and complete `sg_cart_session` lifecycle | 05 |
+| 3 | [phase-3-auth-cart-merge.md](./phase-3-auth-cart-merge.md) | **not started** | Clerk auth, account gate, optional/auth BFF modes, implicit guest-cart merge, profile | 00 (auth), 11 |
+| 4 | [phase-4-account.md](./phase-4-account.md) | **not started** | Authenticated wishlist, own-review CRUD, and saved addresses | 03 (write), 04, 08 |
+| 5 | [phase-5-checkout.md](./phase-5-checkout.md) | **not started** | Shipping estimate, coupon preview, registered and guest CASH checkout | 06, 07, 09 |
+| 6 | [phase-6-orders.md](./phase-6-orders.md) | **not started** | Account order history/detail, guest tracking/claim, self-cancel | 10 |
+| 7 | [phase-7-hardening-release.md](./phase-7-hardening-release.md) | **not started** | Performance, resilience, accessibility, security, SEO, and production readiness | — |
 
 ## Non-goals (v1)
 
-- **Card payments.** Backend gates `CARD` with `422 PAYMENT_METHOD_UNAVAILABLE` until backend Phase 7 (Geidea). The UI ships CASH-only behind a payment-method abstraction so CARD can be enabled without restructuring (see phase 5 + 7).
-- **Push / in-app notifications.** Backend Phase 9. Order status is communicated by transactional email; the app refreshes on screen focus, never polls in a loop.
-- **Localization.** English only in v1. All user-facing strings still go through a single `strings.ts` module so i18n can be added later without a codemod hunt.
-- **Anonymous wishlist sync.** Wishlist is auth-only per the API; guests see a sign-in prompt.
+- **Card payments.** The backend returns `422 PAYMENT_METHOD_UNAVAILABLE` for `CARD`; v1 sends CASH only and does not build payment-session flows.
+- **User notifications.** No storefront notification endpoints exist yet. Order state is refreshed through normal navigation and user actions, not polling.
+- **Localization.** English only in v1.
+- **Anonymous wishlist.** Wishlist is auth-only per the API; guests receive an inline sign-in prompt.
 
 ## Working agreements
 
-- Features-first structure; route files in `src/app/` stay thin and delegate to `src/features/*` (see architecture doc).
-- Server state lives **only** in TanStack Query. Zustand holds client state (cart session token mirror, UI state, filter drafts). No duplication of server data into stores.
+- RSC-first: pages render through Server Components and the server-only BFF. The browser never calls the backend.
+- TanStack Query owns interactive cart, wishlist, and coupon state only. If a Server Component can render it, TanStack Query must not own it.
 - Branch on error `code`, never on `message`.
-- Money values are decimal **strings** with variable scale — format for display, never do client-side arithmetic on them (details in conventions).
-- Every phase ends with the manual test checklist in its Definition of Done executed on iOS and Android.
+- Money values are variable-scale decimal strings. Display through `formatEGP()` and do no client-side money math.
+- A phase's Definition of Done includes browser verification of the complete flow, including hard refresh, incognito/guest state, and a second browser for session behavior.
+- Update this tracker when starting and finishing every phase.
