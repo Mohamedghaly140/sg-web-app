@@ -22,9 +22,10 @@ clarity, correctness, and maintainability.
 - **AVOID** `useEffect()`
   - See the ["You Might Not Need An Effect" guide](references/you-dont-need-useeffect.md) for detailed guidance
   - **PREFER** deriving values during render instead of synchronizing state
-  - For this repository, do not fetch data client-side or via TanStack Query —
-    page data is read in Server Components via `apiFetch`; there is no
-    `@tanstack/react-query` dependency here
+  - For this repository, page data is read in Server Components via `apiFetch`.
+    TanStack Query v5 owns only the designated interactive state (cart
+    drawer/badge, wishlist toggles, coupon preview) — if a Server Component can
+    render it, TanStack Query must not own it
 - **AVOID** unnecessary `useState()` or `useReducer()` usage
   - Derive state from props or other state when possible
   - Localize state to the lowest possible component

@@ -5,7 +5,11 @@ description: Build modern Next.js apps with App Router and best practices
 
 # Next.js Best Practices (App Router)
 
-Next.js is a library that changes frequently - use web search or context7 MCP (via docs-explorer agent) for exploring the current documentation.
+Next.js is a framework that changes frequently - use web search or context7 MCP (via docs-explorer agent) for exploring the current documentation.
+
+This repository is on Next.js 16: `params` and `searchParams` are Promises,
+middleware lives in `proxy.ts`, and `node_modules/next/dist/docs/` has the
+current guides — read the relevant one before writing Next.js code.
 
 ## Routing & Structure
 

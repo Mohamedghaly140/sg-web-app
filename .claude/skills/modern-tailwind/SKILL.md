@@ -26,7 +26,8 @@ description: Build clean, scalable UIs with Tailwind CSS using modern utilities 
 
 - For this repository, use Tailwind v4 CSS-first theming in `app/globals.css`
   via `@theme`; do not add `tailwind.config.*`
-- Use `@layer` for custom utilities/components when repetition is unavoidable
+- Use the v4 `@utility` directive for custom utilities (auto-sorted, variant-aware);
+  reserve `@layer base` for base styles — `@layer utilities` is the v3 pattern
 - Avoid `@apply` except for small, repeatable patterns
 
 ## Maintainability
