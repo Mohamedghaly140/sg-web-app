@@ -11,6 +11,7 @@ export type ProductsSortOption =
   | "top_rated";
 
 export type GetProductsParams = {
+  category?: string;
   featured?: boolean;
   sort?: ProductsSortOption;
   limit?: number;
@@ -22,6 +23,9 @@ export async function getProducts(
 ): Promise<Paginated<ProductSummary>> {
   const searchParams = new URLSearchParams();
 
+  if (params.category !== undefined) {
+    searchParams.set("category", params.category);
+  }
   if (params.featured !== undefined) {
     searchParams.set("featured", String(params.featured));
   }
