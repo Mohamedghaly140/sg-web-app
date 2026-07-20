@@ -65,11 +65,11 @@ declare function apiFetch<T>(
 
 ### 0.5 Responsive storefront shell
 
-- [ ] Replace scaffold metadata and page chrome with the SG Couture root layout, keeping `app/` pages thin and Server Components by default.
-- [ ] Build a responsive Header with logo, links for Home, Products, and Categories, a cart-drawer placeholder with a badge slot, and Clerk signed-out/signed-in controls. Use `LucideShoppingBag`-style imports and accessible labels.
-- [ ] Build the Footer and stable main-content region so later route segments share the same shell without duplicating navigation.
-- [ ] Normalize `app/globals.css` to Tailwind v4 CSS-first `@theme` tokens for typography, spacing-facing semantic colors, radii, borders, focus, and storefront status variants. Components use semantic utilities and generated primitives rather than raw colors.
-- [ ] Add route-level loading, error, empty, and not-found foundations with the copied shared components and generated `Skeleton`/`Alert` primitives where appropriate.
+- [x] Replace scaffold metadata and page chrome with the SG Couture root layout, keeping `app/` pages thin and Server Components by default.
+- [x] Build a responsive Header with logo, links for Home, Products, and Categories, a cart-drawer placeholder with a badge slot, and Clerk signed-out/signed-in controls. Use `LucideShoppingBag`-style imports and accessible labels.
+- [x] Build the Footer and stable main-content region so later route segments share the same shell without duplicating navigation.
+- [x] Normalize `app/globals.css` to Tailwind v4 CSS-first `@theme` tokens for typography, spacing-facing semantic colors, radii, borders, focus, and storefront status variants. Components use semantic utilities and generated primitives rather than raw colors.
+- [x] Add route-level loading, error, empty, and not-found foundations with the copied shared components and generated `Skeleton`/`Alert` primitives where appropriate.
 
 ### 0.6 Live smoke verification
 
