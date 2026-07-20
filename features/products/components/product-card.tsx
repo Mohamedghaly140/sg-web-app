@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { RatingSummary } from "@/components/shared/rating-summary";
+import { DiscountBadge } from "@/features/products/components/discount-badge";
 import { StockBadge } from "@/features/products/components/stock-badge";
 import { formatEGP } from "@/lib/format";
 import type { ProductSummary } from "@/features/products/types/product";
@@ -26,6 +27,9 @@ export function ProductCard({ product }: ProductCardProps) {
           sizes="(min-width: 640px) 224px, 75vw"
           className="object-cover"
         />
+        <div className="absolute left-2 top-2 z-10">
+          <DiscountBadge discount={product.discount} />
+        </div>
       </div>
       <p className="line-clamp-1 text-sm font-medium text-foreground">{product.name}</p>
       <RatingSummary
