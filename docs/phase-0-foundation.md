@@ -58,10 +58,10 @@ declare function apiFetch<T>(
 
 ### 0.4 Providers and route protection
 
-- [ ] Create `app/providers.tsx` as a narrow Client Component and compose, inside `<body>`, `ClerkProvider` → `QueryClientProvider` → `NuqsAdapter` → application children, with one mounted `Toaster`.
-- [ ] Construct one browser `QueryClient` lazily with `useState`. Queries never retry 4xx `ApiError`s and retry other failures at most twice; mutations have `retry: 0`. Feature hooks own their stale-time and focus policies.
-- [ ] Create root `proxy.ts` with `clerkMiddleware` and a public-first `createRouteMatcher` that protects only `/account(.*)`. Keep catalog, cart, checkout, tracking, auth pages, and the two same-origin refetch handlers public at this layer; backend 401/403 responses remain authoritative.
-- [ ] Add a temporary Phase 0 Clerk sign-in/sign-out round trip through Header controls without moving JWT access into a Client Component. Dedicated catch-all auth pages and return-URL behavior are completed in Phase 3.
+- [x] Create `app/providers.tsx` as a narrow Client Component and compose, inside `<body>`, `ClerkProvider` → `QueryClientProvider` → `NuqsAdapter` → application children, with one mounted `Toaster`.
+- [x] Construct one browser `QueryClient` lazily with `useState`. Queries never retry 4xx `ApiError`s and retry other failures at most twice; mutations have `retry: 0`. Feature hooks own their stale-time and focus policies.
+- [x] Create root `proxy.ts` with `clerkMiddleware` and a public-first `createRouteMatcher` that protects only `/account(.*)`. Keep catalog, cart, checkout, tracking, auth pages, and the two same-origin refetch handlers public at this layer; backend 401/403 responses remain authoritative.
+- [x] Add a temporary Phase 0 Clerk sign-in/sign-out round trip through Header controls without moving JWT access into a Client Component. Dedicated catch-all auth pages and return-URL behavior are completed in Phase 3.
 
 ### 0.5 Responsive storefront shell
 

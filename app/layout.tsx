@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto, Noto_Sans } from "next/font/google";
-import { Toaster } from "sonner";
-import RedirectToast from "@/components/shared/redirect-toast";
+import { Show, SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+import Providers from "./providers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -35,9 +36,26 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", roboto.variable, notoSansHeading.variable)}
     >
       <body className="min-h-full flex flex-col">
-        {children}
-        <RedirectToast />
-        <Toaster />
+        <Providers>
+          <div className="flex justify-end gap-2 border-b p-2">
+            <Show when="signed-out">
+              <SignInButton mode="modal">
+                <Button variant="outline" size="sm">
+                  Sign in
+                </Button>
+              </SignInButton>
+            </Show>
+            <Show when="signed-in">
+              <UserButton />
+              <SignOutButton>
+                <Button variant="outline" size="sm">
+                  Sign out
+                </Button>
+              </SignOutButton>
+            </Show>
+          </div>
+          {children}
+        </Providers>
       </body>
     </html>
   );
