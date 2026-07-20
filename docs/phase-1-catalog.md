@@ -10,11 +10,11 @@
 
 ### 1.1 Categories feature
 
-- [ ] Create hand-written category and sub-category response types from `02-categories.md`; preserve nullable `imageUrl`, the unpaginated tree, ACTIVE-product counts, and slug fields.
-- [ ] Add thin `features/categories/queries/get-categories.ts` and `get-category.ts` functions that call Public `apiFetch`, use `next: { revalidate: 300, tags }`, and contain no business rules. Use React `cache()` where the page and metadata need the same request result.
-- [ ] Implement `CategoriesFeature` for `/categories`: a responsive, server-rendered category tree with optimized images, `productCount` hints, nested sub-categories, empty/error states, and links using category/sub-category slugs rather than IDs.
-- [ ] Implement the `/categories/[slug]` landing page as a thin page over `CategoryFeature`. Await the Next 16 `params` Promise, render category context plus its product listing, and use `notFound()` only for `RESOURCE_NOT_FOUND`.
-- [ ] Add `generateMetadata` for category detail using live name/image data, with a safe unavailable fallback and no duplicate client request.
+- [x] Create hand-written category and sub-category response types from `02-categories.md`; preserve nullable `imageUrl`, the unpaginated tree, ACTIVE-product counts, and slug fields.
+- [x] Add thin `features/categories/queries/get-categories.ts` and `get-category.ts` functions that call Public `apiFetch`, use `next: { revalidate: 300, tags }`, and contain no business rules. Use React `cache()` where the page and metadata need the same request result.
+- [x] Implement `CategoriesFeature` for `/categories`: a responsive, server-rendered category tree with optimized images, `productCount` hints, nested sub-categories, empty/error states, and links using category/sub-category slugs rather than IDs.
+- [x] Implement the `/categories/[slug]` landing page as a thin page over `CategoryFeature`. Await the Next 16 `params` Promise, render category context plus its product listing, and use `notFound()` only for `RESOURCE_NOT_FOUND`.
+- [x] Add `generateMetadata` for category detail using live name/image data, with a safe unavailable fallback and no duplicate client request.
 
 ### 1.2 Products feature — list and URL state
 
