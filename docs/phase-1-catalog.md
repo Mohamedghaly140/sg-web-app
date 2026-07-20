@@ -18,14 +18,14 @@
 
 ### 1.2 Products feature — list and URL state
 
-- [ ] Create product-card, product-detail, gallery, and pagination types directly from `01-products.md`; keep all money and rating decimals as strings and `ratingsAverage` nullable.
-- [ ] Add thin `features/products/queries/get-products.ts` and `get-product.ts` functions. Public list/detail requests use `next: { revalidate: 60–300, tags }`; no query sends Clerk or cart headers.
-- [ ] Create `features/products/hooks/use-products-params.ts` as the one products parameter schema feeding both `createSearchParamsCache` and `useQueryStates({ shallow: false })`. Cover the exact wire names `search`, `category`, `subCategory`, `minPrice`, `maxPrice`, `sizes`, `colors`, `featured`, `sort`, `page`, and `limit`.
-- [ ] Serialize `sizes` and `colors` as trimmed CSV values, cap trimmed search at 100 characters, validate non-negative two-decimal price bounds, constrain sort to `newest | price_asc | price_desc | best_selling | top_rated`, and reset `page` to 1 when a filter or sort changes.
-- [ ] Make `/products` a thin RSC page that awaits the `searchParams` Promise, parses it through the server cache, calls `GET /products`, and renders a responsive `ProductCard` grid. Page data must never load through an effect or browser request.
-- [ ] Build client filter/search controls that change only nuqs URL state with `shallow: false`: debounced search, category/sub-category, price range, size/color multi-select, featured toggle, sort, clear-all, and accessible sheet behavior at narrow widths.
-- [ ] Render numbered server-side pagination from `meta.page`, `totalPages`, `hasNext`, and `hasPrev`; use links/query-state navigation, not infinite scrolling. Preserve all active wire-format filters in every page URL.
-- [ ] Product cards show optimized image, name, `formatEGP()` price, original price only when discounted, nullable rating state, semantic low-stock/sold-out badges, and a usable detail link even when stock is advisory zero.
+- [x] Create product-card, product-detail, gallery, and pagination types directly from `01-products.md`; keep all money and rating decimals as strings and `ratingsAverage` nullable.
+- [x] Add thin `features/products/queries/get-products.ts` and `get-product.ts` functions. Public list/detail requests use `next: { revalidate: 60–300, tags }`; no query sends Clerk or cart headers.
+- [x] Create `features/products/hooks/use-products-params.ts` as the one products parameter schema feeding both `createSearchParamsCache` and `useQueryStates({ shallow: false })`. Cover the exact wire names `search`, `category`, `subCategory`, `minPrice`, `maxPrice`, `sizes`, `colors`, `featured`, `sort`, `page`, and `limit`.
+- [x] Serialize `sizes` and `colors` as trimmed CSV values, cap trimmed search at 100 characters, validate non-negative two-decimal price bounds, constrain sort to `newest | price_asc | price_desc | best_selling | top_rated`, and reset `page` to 1 when a filter or sort changes.
+- [x] Make `/products` a thin RSC page that awaits the `searchParams` Promise, parses it through the server cache, calls `GET /products`, and renders a responsive `ProductCard` grid. Page data must never load through an effect or browser request.
+- [x] Build client filter/search controls that change only nuqs URL state with `shallow: false`: debounced search, category/sub-category, price range, size/color multi-select, featured toggle, sort, clear-all, and accessible sheet behavior at narrow widths.
+- [x] Render numbered server-side pagination from `meta.page`, `totalPages`, `hasNext`, and `hasPrev`; use links/query-state navigation, not infinite scrolling. Preserve all active wire-format filters in every page URL.
+- [x] Product cards show optimized image, name, `formatEGP()` price, original price only when discounted, nullable rating state, semantic low-stock/sold-out badges, and a usable detail link even when stock is advisory zero.
 
 ### 1.3 Product detail and gallery
 

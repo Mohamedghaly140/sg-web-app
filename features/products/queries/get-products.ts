@@ -11,7 +11,13 @@ export type ProductsSortOption =
   | "top_rated";
 
 export type GetProductsParams = {
+  search?: string;
   category?: string;
+  subCategory?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  sizes?: string;
+  colors?: string;
   featured?: boolean;
   sort?: ProductsSortOption;
   limit?: number;
@@ -23,8 +29,26 @@ export async function getProducts(
 ): Promise<Paginated<ProductSummary>> {
   const searchParams = new URLSearchParams();
 
+  if (params.search !== undefined) {
+    searchParams.set("search", params.search);
+  }
   if (params.category !== undefined) {
     searchParams.set("category", params.category);
+  }
+  if (params.subCategory !== undefined) {
+    searchParams.set("subCategory", params.subCategory);
+  }
+  if (params.minPrice !== undefined) {
+    searchParams.set("minPrice", String(params.minPrice));
+  }
+  if (params.maxPrice !== undefined) {
+    searchParams.set("maxPrice", String(params.maxPrice));
+  }
+  if (params.sizes !== undefined) {
+    searchParams.set("sizes", params.sizes);
+  }
+  if (params.colors !== undefined) {
+    searchParams.set("colors", params.colors);
   }
   if (params.featured !== undefined) {
     searchParams.set("featured", String(params.featured));

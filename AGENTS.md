@@ -96,11 +96,15 @@ before writing any Next.js code. Heed deprecation notices.
   exactly three events: successful implicit merge after post-sign-in
   `GET /cart`, successful guest checkout, and anonymous cart clear; deletion
   takes precedence over refresh.
-- **URL state**: Use nuqs. One params schema per feature
-  (`hooks/use-<feature>-params.ts`) drives `createSearchParamsCache` and
-  `useQueryStates` with `shallow: false`; names match the API wire format. Never
-  use `useState` for filters or pagination. Next.js 16 `params` and
-  `searchParams` are Promises.
+- **URL state**: Use nuqs. One params schema per feature, split by
+  client/server boundary — a plain `hooks/<feature>-search-params.ts` (no
+  directive) exporting the parsers/`createSearchParamsCache`/type, and a
+  `"use client"` `hooks/use-<feature>-params.ts` wrapping `useQueryStates`
+  with `shallow: false`. Server Components must import the cache/mapper/type
+  from the plain module, never the `"use client"` one — calling a server-only
+  export from a client-directive file throws at runtime even though it
+  type-checks. Names match the API wire format. Never use `useState` for
+  filters or pagination. Next.js 16 `params` and `searchParams` are Promises.
 - **Security**: Backend 401/403 responses are the real gate. `proxy.ts` with
   `clerkMiddleware` protects `/account(.*)` only. Use inline `<RequireAuth>`
   prompts elsewhere, never hard redirects. The storefront is guest-first and

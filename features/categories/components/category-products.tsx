@@ -45,7 +45,11 @@ export async function CategoryProducts({ categorySlug }: CategoryProductsProps) 
         className="flex snap-x gap-4 overflow-x-auto pb-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            key={product.id}
+            product={product}
+            className="w-[75vw] shrink-0 snap-start sm:w-56"
+          />
         ))}
       </div>
     </section>
