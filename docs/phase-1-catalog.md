@@ -43,9 +43,9 @@
 
 ### 1.5 Home storefront
 
-- [ ] Replace the Phase 0 smoke list with `HomeFeature`: a server-rendered hero, category shortcuts, a featured rail from `GET /products?featured=true&limit=10`, and a newest rail from `GET /products?sort=newest&limit=10`.
-- [ ] Reuse category/product queries and cards; fetch independent rails in parallel, support accessible horizontal overflow at narrow widths, and avoid bespoke endpoints or duplicated response types.
-- [ ] Add home loading and partial-failure boundaries so one unavailable rail does not erase the rest of the public storefront.
+- [x] Replace the Phase 0 smoke list with `HomeFeature`: a server-rendered hero, category shortcuts, a featured rail from `GET /products?featured=true&limit=10`, and a newest rail from `GET /products?sort=newest&limit=10`.
+- [x] Reuse category/product queries and cards; fetch independent rails in parallel, support accessible horizontal overflow at narrow widths, and avoid bespoke endpoints or duplicated response types.
+- [x] Add home loading and partial-failure boundaries so one unavailable rail does not erase the rest of the public storefront.
 
 ## Error handling matrix
 

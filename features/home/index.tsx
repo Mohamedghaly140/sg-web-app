@@ -1,22 +1,42 @@
-import { getCategories } from "@/features/home/queries/get-categories";
+import { Suspense } from "react";
 
-export default async function HomeFeature() {
-  const categories = await getCategories();
+import { SectionErrorBoundary } from "@/components/shared/section-error-boundary";
+import { CategorySectionSkeleton } from "@/features/home/components/category-section-skeleton";
+import { CategorySection } from "@/features/home/components/category-section";
+import { Hero } from "@/features/home/components/hero";
+import { ProductSectionSkeleton } from "@/features/home/components/product-section-skeleton";
+import { ProductSection } from "@/features/home/components/product-section";
 
+export default function HomeFeature() {
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-8 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-semibold text-foreground">Categories</h1>
-      {categories.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No categories yet.</p>
-      ) : (
-        <ul className="flex flex-col gap-2">
-          {categories.map((category) => (
-            <li key={category.id} className="text-sm text-foreground">
-              {category.name}
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-8 sm:px-6 lg:px-8">
+      <Hero />
+
+      <SectionErrorBoundary title="Shop by Category">
+        <Suspense fallback={<CategorySectionSkeleton />}>
+          <CategorySection />
+        </Suspense>
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary title="Featured">
+        <Suspense fallback={<ProductSectionSkeleton title="Featured" />}>
+          <ProductSection
+            title="Featured"
+            viewAllHref="/products?featured=true"
+            queryParams={{ featured: true, limit: 10 }}
+          />
+        </Suspense>
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary title="New Arrivals">
+        <Suspense fallback={<ProductSectionSkeleton title="New Arrivals" />}>
+          <ProductSection
+            title="New Arrivals"
+            viewAllHref="/products"
+            queryParams={{ sort: "newest", limit: 10 }}
+          />
+        </Suspense>
+      </SectionErrorBoundary>
     </div>
   );
 }
