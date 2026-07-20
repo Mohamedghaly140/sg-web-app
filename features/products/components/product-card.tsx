@@ -1,0 +1,48 @@
+import Image from "next/image";
+import Link from "next/link";
+
+import { RatingSummary } from "@/components/shared/rating-summary";
+import { StockBadge } from "@/features/products/components/stock-badge";
+import { formatEGP } from "@/lib/format";
+import type { ProductSummary } from "@/features/products/types/product";
+
+type ProductCardProps = {
+  product: ProductSummary;
+};
+
+export function ProductCard({ product }: ProductCardProps) {
+  const isDiscounted = Number(product.discount) > 0;
+
+  return (
+    <Link
+      href={`/products/${product.slug}`}
+      className="flex w-[75vw] shrink-0 snap-start flex-col gap-2 sm:w-56"
+    >
+      <div className="relative aspect-square overflow-hidden rounded-md bg-muted">
+        <Image
+          src={product.imageUrl}
+          alt={product.name}
+          fill
+          sizes="(min-width: 640px) 224px, 75vw"
+          className="object-cover"
+        />
+      </div>
+      <p className="line-clamp-1 text-sm font-medium text-foreground">{product.name}</p>
+      <RatingSummary
+        ratingsAverage={product.ratingsAverage}
+        ratingsQuantity={product.ratingsQuantity}
+      />
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-semibold text-foreground">
+          {formatEGP(product.priceAfterDiscount)}
+        </span>
+        {isDiscounted && (
+          <span className="text-xs text-muted-foreground line-through">
+            {formatEGP(product.price)}
+          </span>
+        )}
+      </div>
+      <StockBadge quantity={product.quantity} />
+    </Link>
+  );
+}
