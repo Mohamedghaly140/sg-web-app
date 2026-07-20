@@ -73,9 +73,9 @@ declare function apiFetch<T>(
 
 ### 0.6 Live smoke verification
 
-- [ ] Replace the scaffold home page with a thin RSC page that renders a `HomeFeature`; its query calls `GET /categories` through Public `apiFetch` and renders live category names from the unwrapped payload.
-- [ ] Verify the smoke query through a normal navigation, hard refresh, new tab, and incognito window. Simulate a backend failure and confirm the route error/retry UI is usable without client-side page-data fetching.
-- [ ] Run `bun lint` and `bunx tsc --noEmit`, then audit client bundles and source for backend URLs, Clerk JWTs, and the cart token.
+- [x] Replace the scaffold home page with a thin RSC page that renders a `HomeFeature`; its query calls `GET /categories` through Public `apiFetch` and renders live category names from the unwrapped payload.
+- [x] Verify the smoke query through a normal navigation, hard refresh, new tab, and incognito window. Simulate a backend failure and confirm the route error/retry UI is usable without client-side page-data fetching.
+- [x] Run `bun lint` and `bunx tsc --noEmit`, then audit client bundles and source for backend URLs, Clerk JWTs, and the cart token.
 
 ## Definition of Done
 

@@ -16,7 +16,7 @@
 
 | Phase | Doc | Status | Delivers | API modules |
 |---|---|---|---|---|
-| 0 | [phase-0-foundation.md](./phase-0-foundation.md) | **in progress** | Next scaffold, server-only BFF, env/auth/cart-session foundations, providers, shared shell and primitives | 00 (conventions) |
+| 0 | [phase-0-foundation.md](./phase-0-foundation.md) | **done** | Next scaffold, server-only BFF, env/auth/cart-session foundations, providers, shared shell and primitives | 00 (conventions) |
 | 1 | [phase-1-catalog.md](./phase-1-catalog.md) | **not started** | RSC home, category navigation, product listing/filtering, product detail, public reviews | 01, 02, 03 (read) |
 | 2 | [phase-2-guest-cart.md](./phase-2-guest-cart.md) | **not started** | Guest cart page plus interactive drawer/badge and complete `sg_cart_session` lifecycle | 05 |
 | 3 | [phase-3-auth-cart-merge.md](./phase-3-auth-cart-merge.md) | **not started** | Clerk auth, account gate, optional/auth BFF modes, implicit guest-cart merge, profile | 00 (auth), 11 |
