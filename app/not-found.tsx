@@ -12,7 +12,12 @@ export default function NotFound() {
         title="Page not found"
         description="The page you're looking for doesn't exist."
         action={
-          <Button render={<Link href="/" />} variant="outline" size="sm">
+          <Button
+            render={<Link href="/" />}
+            nativeButton={false}
+            variant="outline"
+            size="sm"
+          >
             Back to home
           </Button>
         }
