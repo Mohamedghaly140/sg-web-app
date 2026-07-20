@@ -1,5 +1,7 @@
+import { LucideShoppingBag } from "lucide-react";
 import Link from "next/link";
 
+import { EmptyState } from "@/components/shared/empty-state";
 import { ProductCard } from "@/features/products/components/product-card";
 import {
   getProducts,
@@ -16,13 +18,21 @@ export async function ProductSection({ title, viewAllHref, queryParams }: Produc
   const { data: products } = await getProducts(queryParams);
 
   if (products.length === 0) {
-    return null;
+    return (
+      <EmptyState
+        icon={<LucideShoppingBag className="size-6 text-muted-foreground" aria-hidden />}
+        title="No products yet"
+        description="Check back soon for new arrivals."
+      />
+    );
   }
 
   return (
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h2 className="font-heading text-lg font-semibold text-foreground">{title}</h2>
+        <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
+          {title}
+        </h2>
         <Link href={viewAllHref} className="text-sm font-medium text-primary hover:underline">
           View all →
         </Link>

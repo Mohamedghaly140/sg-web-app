@@ -12,7 +12,7 @@ export function CategoryTile({ category }: CategoryTileProps) {
   return (
     <Link
       href={`/categories/${category.slug}`}
-      className="flex flex-col items-center gap-2 text-center"
+      className="flex flex-col items-center gap-2 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       <div className="relative aspect-square w-full overflow-hidden rounded-md bg-muted">
         {category.imageUrl ? (

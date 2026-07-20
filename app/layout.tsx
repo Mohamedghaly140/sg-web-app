@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Roboto, Noto_Sans } from "next/font/google";
+import { Geist_Mono, Inter, Playfair_Display } from "next/font/google";
 import Providers from "./providers";
 import { Header } from "@/components/shared/header";
 import { Footer } from "@/components/shared/footer";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const notoSansHeading = Noto_Sans({subsets:['latin'],variable:'--font-noto-sans'});
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
-const roboto = Roboto({subsets:['latin'],variable:'--font-roboto'});
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -28,7 +31,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", geistMono.variable, "font-sans", roboto.variable, notoSansHeading.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistMono.variable,
+        "font-sans",
+        inter.variable,
+        playfairDisplay.variable
+      )}
     >
       <body className="min-h-full flex flex-col">
         <Providers>

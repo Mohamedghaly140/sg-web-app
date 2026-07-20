@@ -10,7 +10,9 @@ export function ProductSectionSkeleton({ title }: ProductSectionSkeletonProps) {
   return (
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h2 className="font-heading text-lg font-semibold text-foreground">{title}</h2>
+        <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
+          {title}
+        </h2>
       </div>
       <div className="flex gap-4 overflow-x-hidden">
         {Array.from({ length: SKELETON_CARD_COUNT }).map((_, index) => (

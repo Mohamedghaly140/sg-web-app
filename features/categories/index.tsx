@@ -22,7 +22,7 @@ export default async function CategoryFeature({ slug }: CategoryFeatureProps) {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 py-8 sm:px-6 lg:px-8">
       <Link
         href="/categories"
         className="text-sm font-medium text-muted-foreground hover:text-foreground"
@@ -37,6 +37,7 @@ export default async function CategoryFeature({ slug }: CategoryFeatureProps) {
               src={category.imageUrl}
               alt={category.name}
               fill
+              priority
               sizes="(min-width: 640px) 192px, 100vw"
               className="object-cover"
             />
@@ -47,7 +48,9 @@ export default async function CategoryFeature({ slug }: CategoryFeatureProps) {
           )}
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="font-heading text-2xl font-semibold text-foreground">{category.name}</h1>
+          <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
+            {category.name}
+          </h1>
           <Badge variant="secondary">
             {category.productCount} {category.productCount === 1 ? "item" : "items"}
           </Badge>

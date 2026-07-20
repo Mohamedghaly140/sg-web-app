@@ -17,7 +17,10 @@ export function CategoryCard({ category }: CategoryCardProps) {
 
   return (
     <div className="flex flex-col gap-3 rounded-md border border-border p-3">
-      <Link href={`/categories/${category.slug}`} className="flex flex-col gap-3">
+      <Link
+        href={`/categories/${category.slug}`}
+        className="flex flex-col gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-muted">
           {category.imageUrl ? (
             <Image

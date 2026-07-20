@@ -17,7 +17,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="flex w-[75vw] shrink-0 snap-start flex-col gap-2 sm:w-56"
+      className="flex w-[75vw] shrink-0 snap-start flex-col gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:w-56"
     >
       <div className="relative aspect-square overflow-hidden rounded-md bg-muted">
         <Image

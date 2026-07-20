@@ -12,7 +12,7 @@ export function RatingSummary({ ratingsAverage, ratingsQuantity }: RatingSummary
 
   return (
     <p className="flex items-center gap-1 text-sm text-foreground">
-      <LucideStar className="size-4 fill-primary text-primary" aria-hidden />
+      <LucideStar className="size-4 fill-accent text-accent" aria-hidden />
       <span className="font-medium">{ratingsAverage}</span>
       <span className="text-muted-foreground">
         ({ratingsQuantity} {ratingsQuantity === 1 ? "review" : "reviews"})

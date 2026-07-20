@@ -11,5 +11,5 @@ export function DiscountBadge({ discount }: DiscountBadgeProps) {
     return null;
   }
 
-  return <Badge variant="destructive">-{percent}%</Badge>;
+  return <Badge variant="secondary">-{percent}%</Badge>;
 }

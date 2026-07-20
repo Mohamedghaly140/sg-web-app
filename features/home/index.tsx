@@ -9,7 +9,7 @@ import { ProductSection } from "@/features/home/components/product-section";
 
 export default function HomeFeature() {
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 py-8 sm:px-6 lg:px-8">
       <Hero />
 
       <SectionErrorBoundary title="Shop by Category">

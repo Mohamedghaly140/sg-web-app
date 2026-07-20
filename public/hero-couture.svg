@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200" role="img" aria-label="">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#171310" />
+      <stop offset="55%" stop-color="#241d17" />
+      <stop offset="100%" stop-color="#4a3520" />
+    </linearGradient>
+    <radialGradient id="glow" cx="72%" cy="28%" r="55%">
+      <stop offset="0%" stop-color="#a16207" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#a16207" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d4a24a" stop-opacity="0" />
+      <stop offset="50%" stop-color="#d4a24a" stop-opacity="0.75" />
+      <stop offset="100%" stop-color="#d4a24a" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="1200" fill="url(#bgGrad)" />
+  <rect width="1200" height="1200" fill="url(#glow)" />
+
+  <g fill="none" stroke="url(#lineGrad)" stroke-width="1.5" opacity="0.8">
+    <path d="M -50 780 C 250 700, 420 900, 650 760 S 1050 640, 1250 720" />
+    <path d="M -50 860 C 280 790, 440 970, 700 840 S 1080 720, 1250 800" />
+    <path d="M -50 940 C 300 880, 480 1030, 760 920 S 1100 820, 1250 880" />
+  </g>
+
+  <g fill="none" stroke="#d4a24a" stroke-width="1" opacity="0.35">
+    <circle cx="905" cy="330" r="150" />
+    <circle cx="905" cy="330" r="190" />
+  </g>
+
+  <text x="600" y="1120" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="34" letter-spacing="10" fill="#e9dcc4" opacity="0.55">SG COUTURE</text>
+</svg>
