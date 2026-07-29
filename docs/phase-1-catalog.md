@@ -29,17 +29,17 @@
 
 ### 1.3 Product detail and gallery
 
-- [ ] Implement `/products/[slug]` as a thin page over `ProductFeature`; await `params` and `searchParams`, fetch the detail in an RSC query, and render real product content in the initial HTML.
-- [ ] Build a responsive gallery island from the server-provided images ordered by `sortOrder`. Use `next/image`, tolerate null gallery URLs with a stable fallback, provide keyboard-accessible thumbnails and controls, and configure only the documented Cloudinary host in `next.config.ts` `remotePatterns`.
-- [ ] Render name, description, `formatEGP()` price block, category/sub-category slug links, size/color selectors as local interaction state for Phase 2, quantity/stock hints, and the rating summary. A null rating says “No reviews yet,” never zero stars.
-- [ ] Handle `RESOURCE_NOT_FOUND` with the route not-found state and no stale client detail entry. Add `generateMetadata` from the same cached server query for title, description, and available product image.
-- [ ] Verify decimal-string display for `"2400"`, `"2040.5"`, and `"65.00"`; comparison and formatting must not use floating-point price arithmetic.
+- [x] Implement `/products/[slug]` as a thin page over `ProductFeature`; await `params` and `searchParams`, fetch the detail in an RSC query, and render real product content in the initial HTML.
+- [x] Build a responsive gallery island from the server-provided images ordered by `sortOrder`. Use `next/image`, tolerate null gallery URLs with a stable fallback, provide keyboard-accessible thumbnails and controls, and configure only the documented Cloudinary host in `next.config.ts` `remotePatterns`.
+- [x] Render name, description, `formatEGP()` price block, category/sub-category slug links, size/color selectors as local interaction state for Phase 2, quantity/stock hints, and the rating summary. A null rating says “No reviews yet,” never zero stars.
+- [x] Handle `RESOURCE_NOT_FOUND` with the route not-found state and no stale client detail entry. Add `generateMetadata` from the same cached server query for title, description, and available product image.
+- [x] Verify decimal-string display for `"2400"`, `"2040.5"`, and `"65.00"`; comparison and formatting must not use floating-point price arithmetic.
 
 ### 1.4 Public reviews — read only
 
-- [ ] Create review types and `features/reviews/queries/get-product-reviews.ts` from `03-reviews.md`. Call `GET /products/:id/reviews` as Public with `page`/`limit`, short revalidation, and pagination tags.
-- [ ] Render the first review page inside product detail, followed by numbered server-side review pagination driven by a reviews nuqs schema with wire-format `page` and `limit`; navigation rerenders the RSC section with `shallow: false`.
-- [ ] Show title, decimal-string rating, reviewer display name, and formatted creation date. An unknown product ID returning an empty page is a normal “No reviews” state, not a 404.
+- [x] Create review types and `features/reviews/queries/get-product-reviews.ts` from `03-reviews.md`. Call `GET /products/:id/reviews` as Public with `page`/`limit`, short revalidation, and pagination tags.
+- [x] Render the first review page inside product detail, followed by numbered server-side review pagination driven by a reviews nuqs schema with wire-format `page` and `limit`; navigation rerenders the RSC section with `shallow: false`.
+- [x] Show title, decimal-string rating, reviewer display name, and formatted creation date. An unknown product ID returning an empty page is a normal “No reviews” state, not a 404.
 
 ### 1.5 Home storefront
 

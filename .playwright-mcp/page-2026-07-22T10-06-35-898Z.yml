@@ -1,0 +1,137 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "SG Couture" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Main" [ref=e5]:
+        - link "Home" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - link "Products" [ref=e7] [cursor=pointer]:
+          - /url: /products
+        - link "Categories" [ref=e8] [cursor=pointer]:
+          - /url: /categories
+      - searchbox "Search products" [ref=e10]
+      - generic [ref=e11]:
+        - button "Wishlist" [disabled]
+        - button "Cart" [disabled]
+        - button "Sign in" [ref=e13]
+  - main [ref=e14]:
+    - generic [ref=e15]:
+      - navigation "Breadcrumb" [ref=e16]:
+        - list [ref=e17]:
+          - listitem [ref=e18]:
+            - link "Dresses" [ref=e19] [cursor=pointer]:
+              - /url: /categories/dresses
+          - listitem [ref=e20]: /
+          - listitem [ref=e21]:
+            - link "Day Dresses" [ref=e22] [cursor=pointer]:
+              - /url: /categories/dresses?subCategory=day-dresses
+          - listitem [ref=e23]: /
+          - listitem [ref=e24]: Floral Tea Day Dress
+      - generic [ref=e25]:
+        - generic [ref=e28]:
+          - img "Floral Tea Day Dress — image 1" [ref=e29]
+          - button "Wishlist coming soon" [disabled]
+        - generic [ref=e30]:
+          - heading "Floral Tea Day Dress" [level=1] [ref=e31]
+          - paragraph [ref=e32]:
+            - generic [ref=e35]: "4.2"
+            - generic [ref=e36]: (3 reviews)
+          - generic [ref=e37]:
+            - generic [ref=e38]: EGP 1,377.50
+            - generic [ref=e39]: EGP 1,450.00
+            - generic [ref=e40]: "-5%"
+          - generic [ref=e41]:
+            - group "Color" [ref=e42]:
+              - group "Color" [ref=e44]:
+                - button "Sage" [ref=e45]
+                - button "Ivory" [ref=e46]
+            - group "Size" [ref=e47]:
+              - group "Size" [ref=e49]:
+                - button "S" [ref=e50]
+                - button "M" [ref=e51]
+                - button "L" [ref=e52]
+                - button "XL" [ref=e53]
+            - generic [ref=e54]:
+              - generic [ref=e55]: Quantity
+              - generic [ref=e56]:
+                - button "Decrease quantity" [disabled]
+                - status [ref=e57]: "1"
+                - button "Increase quantity" [ref=e58]
+            - generic [ref=e59]:
+              - generic [ref=e60]:
+                - button "Add to Cart" [disabled]
+                - button "Buy Now" [disabled]
+              - paragraph [ref=e61]: Cart and checkout are coming soon.
+      - generic [ref=e62]:
+        - heading "Description" [level=2] [ref=e63]
+        - paragraph [ref=e64]: Knee-length day dress in a soft floral print with short sleeves.
+      - generic [ref=e65]:
+        - generic [ref=e66]:
+          - heading "Reviews" [level=2] [ref=e67]
+          - paragraph [ref=e68]:
+            - generic [ref=e71]: "4.2"
+            - generic [ref=e72]: (3 reviews)
+        - generic [ref=e77]:
+          - paragraph [ref=e78]: No reviews yet
+          - paragraph [ref=e79]: Be the first to review this product.
+      - region [ref=e80]:
+        - generic [ref=e81]:
+          - heading "You may also like" [level=2] [ref=e82]
+          - link "View all →" [ref=e83] [cursor=pointer]:
+            - /url: /categories/dresses
+        - generic [ref=e84]:
+          - link "Pleated Chiffon Gown -20% Pleated Chiffon Gown 4.8 (5 reviews) EGP 2,560.00 EGP 3,200.00" [ref=e85] [cursor=pointer]:
+            - /url: /products/pleated-chiffon-gown
+            - generic [ref=e86]:
+              - img "Pleated Chiffon Gown" [ref=e87]
+              - generic [ref=e88]: "-20%"
+            - paragraph [ref=e90]: Pleated Chiffon Gown
+            - paragraph [ref=e91]:
+              - generic [ref=e94]: "4.8"
+              - generic [ref=e95]: (5 reviews)
+            - generic [ref=e96]:
+              - generic [ref=e97]: EGP 2,560.00
+              - generic [ref=e98]: EGP 3,200.00
+          - link "Satin Cowl-Neck Dress -15% Satin Cowl-Neck Dress 4.5 (2 reviews) EGP 2,040.00 EGP 2,400.00" [ref=e99] [cursor=pointer]:
+            - /url: /products/satin-cowl-neck-dress
+            - generic [ref=e100]:
+              - img "Satin Cowl-Neck Dress" [ref=e101]
+              - generic [ref=e102]: "-15%"
+            - paragraph [ref=e104]: Satin Cowl-Neck Dress
+            - paragraph [ref=e105]:
+              - generic [ref=e108]: "4.5"
+              - generic [ref=e109]: (2 reviews)
+            - generic [ref=e110]:
+              - generic [ref=e111]: EGP 2,040.00
+              - generic [ref=e112]: EGP 2,400.00
+  - contentinfo [ref=e113]:
+    - generic [ref=e114]:
+      - generic [ref=e115]:
+        - generic [ref=e116]: SG Couture
+        - paragraph [ref=e117]: Elegant couture, delivered to your door.
+        - generic [ref=e118]:
+          - link "Instagram" [ref=e119] [cursor=pointer]:
+            - /url: https://instagram.com
+          - link "Facebook" [ref=e123] [cursor=pointer]:
+            - /url: https://facebook.com
+      - generic [ref=e127]:
+        - generic [ref=e128]: Shop
+        - link "Home" [ref=e129] [cursor=pointer]:
+          - /url: /
+        - link "Products" [ref=e130] [cursor=pointer]:
+          - /url: /products
+        - link "Categories" [ref=e131] [cursor=pointer]:
+          - /url: /categories
+      - generic [ref=e132]:
+        - generic [ref=e133]: Stay in the loop
+        - paragraph [ref=e134]: Get updates on new arrivals.
+        - generic [ref=e135]:
+          - textbox "Email address" [disabled] [ref=e136]
+          - button "Notify me" [disabled]
+    - generic [ref=e137]:
+      - paragraph [ref=e138]: © 2026 SG Couture. All rights reserved.
+      - generic [ref=e139]: Cash on Delivery
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e145] [cursor=pointer]
+  - alert [ref=e149]
