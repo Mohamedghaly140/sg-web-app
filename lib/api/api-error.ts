@@ -21,6 +21,19 @@ export class ApiError extends Error {
   }
 }
 
+export type StockErrorEntry = {
+  productId: string;
+  requested: number;
+  available: number;
+};
+
+export type VariantErrorEntry = {
+  productId: string;
+  color: string;
+  size: string;
+  code: string;
+};
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -57,17 +70,13 @@ export function getValidationErrors(
 }
 
 export function getStockErrors(
-  error: ApiError,
-): { productId: string; requested: number; available: number }[] | undefined {
+  error: ApiError | { code: string; errors?: unknown },
+): StockErrorEntry[] | undefined {
   if (error.code !== "INSUFFICIENT_STOCK" || !Array.isArray(error.errors)) {
     return undefined;
   }
 
-  const stockErrors: {
-    productId: string;
-    requested: number;
-    available: number;
-  }[] = [];
+  const stockErrors: StockErrorEntry[] = [];
 
   for (const entry of error.errors) {
     if (
@@ -92,20 +101,13 @@ export function getStockErrors(
 }
 
 export function getVariantErrors(
-  error: ApiError,
-):
-  | { productId: string; color: string; size: string; code: string }[]
-  | undefined {
+  error: ApiError | { code: string; errors?: unknown },
+): VariantErrorEntry[] | undefined {
   if (error.code !== "INVALID_VARIANT" || !Array.isArray(error.errors)) {
     return undefined;
   }
 
-  const variantErrors: {
-    productId: string;
-    color: string;
-    size: string;
-    code: string;
-  }[] = [];
+  const variantErrors: VariantErrorEntry[] = [];
 
   for (const entry of error.errors) {
     if (
