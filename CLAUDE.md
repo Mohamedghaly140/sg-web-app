@@ -34,7 +34,7 @@ No automated test suite is configured. Rely on `bun lint`, `bunx tsc --noEmit`, 
 
 ## Implementation status
 
-This is a greenfield storefront. Phase 0 is **in progress**: the Next.js scaffold, shadcn/base-ui dependencies, and `components/shared/` primitives have landed. Phases 1–7 have **not started**. `docs/README.md` is the single status tracker — keep its table current when starting or finishing a phase.
+Phases 0 and 1 are **done**: the scaffold, server-only BFF, cart-session foundations, shared primitives, and the full read-only catalog (`features/home`, `features/categories`, `features/products`, `features/reviews`) have landed. Phase 2 (guest cart) is **in progress** — its server half exists (`features/cart/` types, `queries/get-cart.ts`, the four interactive Server Actions, session capture/refresh/sanitize); the TanStack layer (`useCart`, `app/api/cart/route.ts`, mutation hooks), the add-to-cart control, the header drawer/badge, and the `/cart` page do not. Phases 3–7 have **not started**. `docs/README.md` is the single status tracker — keep its table current when starting or finishing a phase.
 
 **Deferred backend capabilities — do not build against them:** `CARD` checkout returns `422 PAYMENT_METHOD_UNAVAILABLE` until backend Phase 7, and no storefront user-notification endpoints exist yet. Ship CASH-only checkout and no notification feature.
 
