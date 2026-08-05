@@ -29,11 +29,11 @@
 
 ### 2.2 TanStack cart state and same-origin refetch
 
-- [ ] Define `cartKeys.current` and `useCart(initialData?)` with `staleTime: 30_000` and `refetchOnWindowFocus: true`. The root layout server-reads the current cart and passes it through `Providers` as initial data; pages remain RSC-first.
-- [ ] Add `app/api/cart/route.ts` only as the thin TanStack refetch boundary. Its `GET` reads server cookies/session, calls backend `GET /cart`, applies the same capture/sanitize rule in a cookie-write-capable context, returns only the cart, and disables caching.
-- [ ] Make the `useCart` query function fetch only same-origin `/api/cart`. It must never receive the backend URL, Clerk JWT, `X-Cart-Session`, or `sessionToken`.
-- [ ] Add `useMutation` hooks for the four Server Actions. Mutation retry stays disabled; success always calls `queryClient.setQueryData(cartKeys.current, cart)` with the returned complete cart and never uses invalidate-and-refetch as the normal success path.
-- [ ] Keep cart mutations pessimistic in v1. Disable the affected control and show a per-line pending state until the server returns; do not fabricate stock, price, totals, or a temporary cart.
+- [x] Define `cartKeys.current` and `useCart(initialData?)` with `staleTime: 30_000` and `refetchOnWindowFocus: true`. The root layout server-reads the current cart and passes it through `Providers` as initial data; pages remain RSC-first.
+- [x] Add `app/api/cart/route.ts` only as the thin TanStack refetch boundary. Its `GET` reads server cookies/session, calls backend `GET /cart`, applies the same capture/sanitize rule in a cookie-write-capable context, returns only the cart, and disables caching.
+- [x] Make the `useCart` query function fetch only same-origin `/api/cart`. It must never receive the backend URL, Clerk JWT, `X-Cart-Session`, or `sessionToken`.
+- [x] Add `useMutation` hooks for the four Server Actions. Mutation retry stays disabled; success always calls `queryClient.setQueryData(cartKeys.current, cart)` with the returned complete cart and never uses invalidate-and-refetch as the normal success path.
+- [x] Keep cart mutations pessimistic in v1. Disable the affected control and show a per-line pending state until the server returns; do not fabricate stock, price, totals, or a temporary cart. *(Hook layer: no `onMutate`/rollback, and `onMutate` is excluded from `CartMutationOptions` at the type level. The per-line disabled/pending UI itself lands with the controls in 2.4.)*
 
 ### 2.3 Add to cart from product detail
 

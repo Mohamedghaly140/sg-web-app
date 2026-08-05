@@ -5,6 +5,7 @@ import { Header } from "@/components/shared/header";
 import { Footer } from "@/components/shared/footer";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { getInitialCart } from "@/features/cart/queries/get-initial-cart";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -23,11 +24,13 @@ export const metadata: Metadata = {
   description: "Elegant couture, delivered to your door.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialCart = await getInitialCart();
+
   return (
     <html
       lang="en"
@@ -41,7 +44,7 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <Providers>
+        <Providers initialCart={initialCart}>
           <Header />
           <main className="flex-1 flex flex-col">{children}</main>
           <Footer />

@@ -1,6 +1,8 @@
 "use client";
 
 import { ApiError } from "@/lib/api/api-error";
+import { CartInitialDataProvider } from "@/features/cart/components/cart-initial-data-provider";
+import type { Cart } from "@/features/cart/types/cart";
 import { ClerkProvider } from "@clerk/nextjs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
@@ -9,6 +11,7 @@ import { Toaster } from "sonner";
 
 type ProvidersProps = {
   children: React.ReactNode;
+  initialCart: Cart | undefined;
 };
 
 function createQueryClient() {
@@ -27,16 +30,18 @@ function createQueryClient() {
   });
 }
 
-export default function Providers({ children }: ProvidersProps) {
+export default function Providers({ children, initialCart }: ProvidersProps) {
   const [queryClient] = useState(createQueryClient);
 
   return (
     <ClerkProvider>
       <QueryClientProvider client={queryClient}>
-        <NuqsAdapter>
-          {children}
-          <Toaster />
-        </NuqsAdapter>
+        <CartInitialDataProvider cart={initialCart}>
+          <NuqsAdapter>
+            {children}
+            <Toaster />
+          </NuqsAdapter>
+        </CartInitialDataProvider>
       </QueryClientProvider>
     </ClerkProvider>
   );

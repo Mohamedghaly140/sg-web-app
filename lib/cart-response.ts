@@ -34,3 +34,21 @@ export async function captureRefreshAndSanitizeCart<TCart>(
 
   return sanitizeCartResponse(transport);
 }
+
+/**
+ * Handles cart reads in cookie-write-capable contexts such as
+ * `app/api/cart/route.ts`. Lifecycle rule 3 limits the seven-day `maxAge`
+ * refresh to successful anonymous mutations; refreshing on a read would slide
+ * the cookie on every window-focus refetch and make an idle open tab's guest
+ * cart effectively immortal. Deliberately omitting an `existingSession`
+ * parameter makes that refresh misuse structurally impossible.
+ */
+export async function captureAndSanitizeCart<TCart>(
+  transport: TCart & { sessionToken?: string },
+): Promise<TCart> {
+  if (transport.sessionToken) {
+    await setCartSession(transport.sessionToken);
+  }
+
+  return sanitizeCartResponse(transport);
+}
