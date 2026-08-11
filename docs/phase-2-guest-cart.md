@@ -39,27 +39,27 @@
 
 ### 2.3 Add to cart from product detail
 
-- [ ] Turn the Phase 1 selectors into the add-item control. Require a color when the product’s color array is non-empty, a size when its size array is non-empty, and an integer quantity with a minimum of 1; zero is never sent.
-- [ ] Submit only `productId`, `quantity`, and selected `color`/`size` through the add-item Server Action. On success, update the cart cache directly, show a Sonner success message, and let the Header badge/drawer update from the same cache entry.
-- [ ] For `INSUFFICIENT_STOCK`, use `errors[] { productId, requested, available }` to show “Only N available” beside the quantity control; never parse the human-readable message.
-- [ ] For `INVALID_VARIANT`, keep the selection visible, refresh the RSC product data with `router.refresh()`, and require a valid re-selection. For `RESOURCE_NOT_FOUND`, render the product-unavailable path.
+- [x] Turn the Phase 1 selectors into the add-item control. Require a color when the product’s color array is non-empty, a size when its size array is non-empty, and an integer quantity with a minimum of 1; zero is never sent.
+- [x] Submit only `productId`, `quantity`, and selected `color`/`size` through the add-item Server Action. On success, update the cart cache directly, show a Sonner success message, and let the Header badge/drawer update from the same cache entry.
+- [x] For `INSUFFICIENT_STOCK`, use `errors[] { productId, requested, available }` to show “Only N available” beside the quantity control; never parse the human-readable message.
+- [x] For `INVALID_VARIANT`, keep the selection visible, refresh the RSC product data with `router.refresh()`, and require a valid re-selection. For `RESOURCE_NOT_FOUND`, render the product-unavailable path.
 
 ### 2.4 Cart drawer, cart page, and badge
 
-- [ ] Replace the Header placeholder with a base-ui `Sheet` cart drawer fed only by `useCart()`: item count, compact lines, server totals, empty state, link to `/cart`, and accessible title/focus behavior.
-- [ ] Implement `/cart` as a thin RSC page rendering `CartFeature`, whose body is entirely TanStack-owned. `CartFeature` must **not** call `getCart()`: the root layout already performs the single server read and `CartInitialDataProvider` carries it down, so `useCart()` takes no argument and the page issues no second `GET /cart`. Interactive line controls consume that same `cartKeys.current` entry rather than issuing a second initial request.
-- [ ] Render each line’s image, product link, nullable variant chips, stored price, server `lineTotal`, and a quantity control that sends the cart item `id` to `PATCH /cart/items/:itemId`, never the product ID.
-- [ ] Render `totalCartPrice` and `totalPriceAfterDiscount` exactly from the server and format only for display. Show savings when the normalized decimal strings differ; perform no client-side money arithmetic.
-- [ ] Detect price drift by decimal-normalized comparison of line `price` and live `product.priceAfterDiscount`; show a semantic “Price updated” notice without recomputing totals. Detect stock/status drift from live `quantity` and `status` and offer correction/removal UI.
-- [ ] Put clear-cart and destructive line removal behind `ConfirmDialog`. Disable duplicate submits and track in-flight item IDs so the non-idempotent delete cannot be replayed by repeated clicks.
-- [ ] If a remove replay or stale line returns `RESOURCE_NOT_FOUND`, treat it as already removed, perform one explicit `/api/cart` recovery refetch, replace `cartKeys.current`, and suppress an error toast. Do not automatically retry the delete.
-- [ ] Derive the Header badge by summing line quantities from `cartKeys.current`; do not duplicate cart state in another store. The drawer, page, and product detail must update together after each successful Action.
+- [x] Replace the Header placeholder with a base-ui `Sheet` cart drawer fed only by `useCart()`: item count, compact lines, server totals, empty state, link to `/cart`, and accessible title/focus behavior.
+- [x] Implement `/cart` as a thin RSC page rendering `CartFeature`, whose body is entirely TanStack-owned. `CartFeature` must **not** call `getCart()`: the root layout already performs the single server read and `CartInitialDataProvider` carries it down, so `useCart()` takes no argument and the page issues no second `GET /cart`. Interactive line controls consume that same `cartKeys.current` entry rather than issuing a second initial request.
+- [x] Render each line’s image, product link, nullable variant chips, stored price, server `lineTotal`, and a quantity control that sends the cart item `id` to `PATCH /cart/items/:itemId`, never the product ID.
+- [x] Render `totalCartPrice` and `totalPriceAfterDiscount` exactly from the server and format only for display. Show savings when the normalized decimal strings differ; perform no client-side money arithmetic.
+- [x] Detect price drift by decimal-normalized comparison of line `price` and live `product.priceAfterDiscount`; show a semantic “Price updated” notice without recomputing totals. Detect stock/status drift from live `quantity` and `status` and offer correction/removal UI.
+- [x] Put clear-cart and destructive line removal behind `ConfirmDialog`. Disable duplicate submits and track in-flight item IDs so the non-idempotent delete cannot be replayed by repeated clicks.
+- [x] If a remove replay or stale line returns `RESOURCE_NOT_FOUND`, treat it as already removed, perform one explicit `/api/cart` recovery refetch, replace `cartKeys.current`, and suppress an error toast. Do not automatically retry the delete.
+- [x] Derive the Header badge by summing line quantities from `cartKeys.current`; do not duplicate cart state in another store. The drawer, page, and product detail must update together after each successful Action.
 
 ### 2.5 Structured correction states
 
-- [ ] Add reusable cart error mapping keyed by `code`. Map `INSUFFICIENT_STOCK.errors[]` back by `productId` and show requested/available quantities on matching rendered lines.
-- [ ] Preserve structured `INVALID_VARIANT.errors[] { productId, color, size, code }` for checkout correction UI and map it back to the matching variant line; the add-item form uses its product refresh/re-selection behavior when that error has no line payload.
-- [ ] Guard all client-known validation constraints before submission, but surface unexpected `VALIDATION_ERROR` fields as implementation defects without losing the current cart or selection.
+- [x] Add reusable cart error mapping keyed by `code`. Map `INSUFFICIENT_STOCK.errors[]` back by `productId` and show requested/available quantities on matching rendered lines.
+- [x] Preserve structured `INVALID_VARIANT.errors[] { productId, color, size, code }` for checkout correction UI and map it back to the matching variant line; the add-item form uses its product refresh/re-selection behavior when that error has no line payload.
+- [x] Guard all client-known validation constraints before submission, but surface unexpected `VALIDATION_ERROR` fields as implementation defects without losing the current cart or selection.
 
 ## Error handling matrix
 
@@ -73,6 +73,9 @@
 | `RATE_LIMITED` | any mutation | preserve controls/cart, stop retries, and allow a later manual attempt |
 
 ## Definition of Done
+
+> **Status:** every 2.1–2.5 task above is implemented, and `bun lint`, `bunx tsc --noEmit`, and `bun run build` are green. The browser checks below are **not yet done** — the local backend's health endpoint reports `SERVICE_UNAVAILABLE`, so no cart request can be exercised end to end. Phase 2 stays *in progress* in `docs/README.md` until they pass.
+
 
 - Signed out: add an item, hard refresh, and open a new tab; the same cart and badge persist through `sg_cart_session`.
 - After each successful signed-out add, quantity replace, or line removal, the browser cookie receives a fresh seven-day `maxAge` even when the backend response omits `sessionToken`; failed and signed-in mutations do not refresh it.
