@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Show, SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
-import { LucideHeart, LucideShoppingBag } from "lucide-react";
+import { LucideHeart } from "lucide-react";
 
+import { CartDrawer } from "@/features/cart/components/cart-drawer";
 import { Button } from "@/components/ui/button";
 import { HeaderMobileMenu } from "@/components/shared/header/header-mobile-menu";
 
@@ -54,15 +55,7 @@ export function Header() {
           >
             <LucideHeart />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            disabled
-            aria-label="Cart"
-            className="hidden sm:inline-flex"
-          >
-            <LucideShoppingBag />
-          </Button>
+          <CartDrawer />
           <div className="hidden items-center gap-2 sm:flex">
             <Show when="signed-out">
               <SignInButton mode="modal">
