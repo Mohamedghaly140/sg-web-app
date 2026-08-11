@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { useProductPurchase } from "@/features/products/components/product-purchase-provider";
 import { formatEGP } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -13,10 +14,13 @@ type StickyAddToCartBarProps = {
 
 export function StickyAddToCartBar({
   priceAfterDiscount,
-  soldOut,
+  soldOut: productSoldOut,
 }: StickyAddToCartBarProps) {
   const [hasPassedActions, setHasPassedActions] = useState(false);
   const [isFooterNear, setIsFooterNear] = useState(false);
+  const { addToCart, isAdding, isProductUnavailable } =
+    useProductPurchase();
+  const soldOut = productSoldOut || isProductUnavailable;
 
   useEffect(() => {
     const purchaseActions = document.querySelector(
@@ -67,8 +71,13 @@ export function StickyAddToCartBar({
         <span className="mr-auto text-sm font-semibold text-foreground">
           {formatEGP(priceAfterDiscount)}
         </span>
-        <Button type="button" size="sm" disabled>
-          {soldOut ? "Sold out" : "Add to Cart"}
+        <Button
+          type="button"
+          size="sm"
+          onClick={addToCart}
+          disabled={soldOut || isAdding}
+        >
+          {soldOut ? "Sold out" : isAdding ? "Adding…" : "Add to Cart"}
         </Button>
         <Button type="button" variant="outline" size="sm" disabled>
           Buy Now

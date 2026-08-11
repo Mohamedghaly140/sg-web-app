@@ -4,6 +4,7 @@ import { RatingSummary } from "@/components/shared/rating-summary";
 import { Breadcrumb } from "@/features/products/components/breadcrumb";
 import { Gallery } from "@/features/products/components/gallery";
 import { PriceBlock } from "@/features/products/components/price-block";
+import { ProductPurchaseProvider } from "@/features/products/components/product-purchase-provider";
 import { RelatedProducts } from "@/features/products/components/related-products";
 import { ShareButton } from "@/features/products/components/share-button";
 import { StickyAddToCartBar } from "@/features/products/components/sticky-add-to-cart-bar";
@@ -61,68 +62,75 @@ export default async function ProductDetailFeature({
   const isSoldOut = product.quantity <= 0;
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pb-24 pt-8 sm:px-6 sm:pb-8 lg:px-8">
-      <Breadcrumb
-        category={product.category}
-        subCategory={product.subCategories[0]}
-        productName={product.name}
-      />
-
-      <div className="grid gap-8 lg:grid-cols-2">
-        <Gallery
-          images={product.images}
-          fallbackImageUrl={product.imageUrl}
+    <ProductPurchaseProvider
+      productId={product.id}
+      sizes={product.sizes}
+      colors={product.colors}
+      quantity={product.quantity}
+    >
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pb-24 pt-8 sm:px-6 sm:pb-8 lg:px-8">
+        <Breadcrumb
+          category={product.category}
+          subCategory={product.subCategories[0]}
           productName={product.name}
         />
 
-        <div className="flex flex-col gap-4">
-          <h1 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
-            {product.name}
-          </h1>
-          <RatingSummary
-            ratingsAverage={product.ratingsAverage}
-            ratingsQuantity={product.ratingsQuantity}
+        <div className="grid gap-8 lg:grid-cols-2">
+          <Gallery
+            images={product.images}
+            fallbackImageUrl={product.imageUrl}
+            productName={product.name}
           />
-          <PriceBlock
-            price={product.price}
-            discount={product.discount}
-            priceAfterDiscount={product.priceAfterDiscount}
-          />
-          {/* Stock badge is rendered beside the quantity stepper in VariantSelectors. */}
-          <VariantSelectors
-            sizes={product.sizes}
-            colors={product.colors}
-            quantity={product.quantity}
-          />
-          <ShareButton title={product.name} />
+
+          <div className="flex flex-col gap-4">
+            <h1 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+              {product.name}
+            </h1>
+            <RatingSummary
+              ratingsAverage={product.ratingsAverage}
+              ratingsQuantity={product.ratingsQuantity}
+            />
+            <PriceBlock
+              price={product.price}
+              discount={product.discount}
+              priceAfterDiscount={product.priceAfterDiscount}
+            />
+            {/* Stock badge is rendered beside the quantity stepper in VariantSelectors. */}
+            <VariantSelectors
+              sizes={product.sizes}
+              colors={product.colors}
+              quantity={product.quantity}
+            />
+            <ShareButton title={product.name} />
+          </div>
         </div>
+
+        <section className="flex flex-col gap-2">
+          <h2 className="font-heading text-lg font-semibold text-foreground">
+            Description
+          </h2>
+          <p className="whitespace-pre-line text-sm text-muted-foreground">
+            {product.description}
+          </p>
+        </section>
+
+        <ReviewsFeature
+          productId={product.id}
+          ratingsAverage={product.ratingsAverage}
+          ratingsQuantity={product.ratingsQuantity}
+          searchParams={searchParams}
+        />
+
+        <RelatedProductsSection
+          categorySlug={product.category.slug}
+          excludeProductId={product.id}
+        />
+
+        <StickyAddToCartBar
+          priceAfterDiscount={product.priceAfterDiscount}
+          soldOut={isSoldOut}
+        />
       </div>
-
-      <section className="flex flex-col gap-2">
-        <h2 className="font-heading text-lg font-semibold text-foreground">
-          Description
-        </h2>
-        <p className="whitespace-pre-line text-sm text-muted-foreground">
-          {product.description}
-        </p>
-      </section>
-
-      <ReviewsFeature
-        productId={product.id}
-        ratingsAverage={product.ratingsAverage}
-        ratingsQuantity={product.ratingsQuantity}
-        searchParams={searchParams}
-      />
-
-      <RelatedProductsSection
-        categorySlug={product.category.slug}
-        excludeProductId={product.id}
-      />
-
-      <StickyAddToCartBar
-        priceAfterDiscount={product.priceAfterDiscount}
-        soldOut={isSoldOut}
-      />
-    </div>
+    </ProductPurchaseProvider>
   );
 }

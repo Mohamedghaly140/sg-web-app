@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { LucideMinus, LucidePlus } from "lucide-react";
-
+import { QuantityStepper } from "@/components/shared/quantity-stepper";
 import { Button } from "@/components/ui/button";
 import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/ui/toggle-group";
+import {
+  availableForProduct,
+  variantErrorForProduct,
+} from "@/features/cart/hooks/use-cart-error-state";
+import { useProductPurchase } from "@/features/products/components/product-purchase-provider";
 import { StockBadge } from "@/features/products/components/stock-badge";
 
 type VariantSelectorsProps = {
@@ -21,14 +24,24 @@ export function VariantSelectors({
   colors,
   quantity,
 }: VariantSelectorsProps) {
-  const [selectedSize, setSelectedSize] = useState<string | undefined>(
-    sizes[0],
-  );
-  const [selectedColor, setSelectedColor] = useState<string | undefined>(
-    colors[0],
-  );
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
-  const soldOut = quantity <= 0;
+  const {
+    productId,
+    selectedColor,
+    setSelectedColor,
+    selectedSize,
+    setSelectedSize,
+    selectedQuantity,
+    setSelectedQuantity,
+    error,
+    isAdding,
+    isProductUnavailable,
+    addToCart,
+  } = useProductPurchase();
+  const soldOut = quantity <= 0 || isProductUnavailable;
+  const available = availableForProduct(error, productId);
+  const variantError = variantErrorForProduct(error, productId);
+  const variantRejected =
+    variantError !== undefined || error?.code === "INVALID_VARIANT";
 
   return (
     <div className="flex flex-col gap-6">
@@ -80,42 +93,26 @@ export function VariantSelectors({
         </fieldset>
       )}
 
+      {variantRejected && (
+        <p className="text-xs text-destructive" role="alert">
+          That variant is unavailable. Choose another option.
+        </p>
+      )}
+
       <div className="flex flex-wrap items-center gap-3">
         <span className="text-sm font-medium text-foreground">Quantity</span>
-        <div className="flex items-center border border-border">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            aria-label="Decrease quantity"
-            disabled={soldOut || selectedQuantity <= 1}
-            onClick={() =>
-              setSelectedQuantity((current) => Math.max(1, current - 1))
-            }
-          >
-            <LucideMinus data-icon="inline-start" />
-          </Button>
-          <output
-            className="min-w-8 text-center text-sm tabular-nums"
-            aria-live="polite"
-          >
-            {selectedQuantity}
-          </output>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            aria-label="Increase quantity"
-            disabled={soldOut || selectedQuantity >= quantity}
-            onClick={() =>
-              setSelectedQuantity((current) =>
-                Math.min(quantity, current + 1),
-              )
-            }
-          >
-            <LucidePlus data-icon="inline-start" />
-          </Button>
-        </div>
+        <QuantityStepper
+          value={selectedQuantity}
+          min={1}
+          max={quantity}
+          disabled={soldOut || isAdding}
+          onValueChange={setSelectedQuantity}
+        />
+        {available !== undefined && (
+          <p className="text-xs text-destructive" role="status">
+            Only {available} available
+          </p>
+        )}
         <StockBadge quantity={quantity} />
       </div>
 
@@ -124,15 +121,19 @@ export function VariantSelectors({
           className="grid grid-cols-2 gap-2"
           data-product-purchase-actions
         >
-          <Button type="button" disabled>
-            {soldOut ? "Sold out" : "Add to Cart"}
+          <Button
+            type="button"
+            onClick={addToCart}
+            disabled={soldOut || isAdding}
+          >
+            {soldOut ? "Sold out" : isAdding ? "Adding…" : "Add to Cart"}
           </Button>
           <Button type="button" variant="outline" disabled>
             Buy Now
           </Button>
         </div>
         <p className="text-xs text-muted-foreground">
-          Cart and checkout are coming soon.
+          Checkout is coming soon.
         </p>
       </div>
     </div>
