@@ -39,7 +39,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 export function getValidationErrors(
-  error: ApiError,
+  error: ApiError | { code: string; errors?: unknown },
 ): Record<string, string[]> | undefined {
   if (error.code !== "VALIDATION_ERROR" || !Array.isArray(error.errors)) {
     return undefined;

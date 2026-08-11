@@ -1,7 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
 import { removeCartItemSchema } from "@/features/cart/schema/remove-cart-item-schema";
 import type {
   Cart,
@@ -33,7 +31,6 @@ export async function removeCartItemAction(
       existingSession,
     );
 
-    revalidatePath("/cart");
     return cart;
   } catch (error) {
     redirectOnAuthError(error, "optional");

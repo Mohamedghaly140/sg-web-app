@@ -1,7 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
 import { addCartItemSchema } from "@/features/cart/schema/add-cart-item-schema";
 import type {
   Cart,
@@ -31,7 +29,6 @@ export async function addCartItemAction(
       existingSession,
     );
 
-    revalidatePath("/cart");
     return cart;
   } catch (error) {
     redirectOnAuthError(error, "optional");

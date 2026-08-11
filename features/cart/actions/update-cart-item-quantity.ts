@@ -1,7 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
 import { updateCartItemQuantitySchema } from "@/features/cart/schema/update-cart-item-quantity-schema";
 import type {
   Cart,
@@ -34,7 +32,6 @@ export async function updateCartItemQuantityAction(
       existingSession,
     );
 
-    revalidatePath("/cart");
     return cart;
   } catch (error) {
     redirectOnAuthError(error, "optional");

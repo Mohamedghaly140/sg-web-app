@@ -59,6 +59,40 @@ export function formatEGP(amount: string | number): string {
   return egpFormatter.format(value);
 }
 
+/**
+ * Collapse a decimal money string to a canonical textual form so `"2400"`,
+ * `"2400.00"`, and `"2400.0"` compare equal. Purely textual on purpose: the API
+ * sends variable-scale decimal strings and the storefront does no money math,
+ * so this must never round-trip through `Number`.
+ */
+export function normalizeDecimal(value: string): string {
+  const trimmed = value.trim();
+  const negative = trimmed.startsWith("-");
+  const unsigned = negative ? trimmed.slice(1) : trimmed;
+
+  if (!/^\d*\.?\d*$/.test(unsigned) || unsigned === "" || unsigned === ".") {
+    return trimmed;
+  }
+
+  const [whole = "", fraction = ""] = unsigned.split(".");
+  const normalizedWhole = whole.replace(/^0+(?=\d)/, "") || "0";
+  const normalizedFraction = fraction.replace(/0+$/, "");
+  const magnitude = normalizedFraction
+    ? `${normalizedWhole}.${normalizedFraction}`
+    : normalizedWhole;
+
+  if (magnitude === "0") {
+    return "0";
+  }
+
+  return negative ? `-${magnitude}` : magnitude;
+}
+
+/** Value-equality for two decimal money strings, without any arithmetic. */
+export function isSameDecimal(a: string, b: string): boolean {
+  return normalizeDecimal(a) === normalizeDecimal(b);
+}
+
 export function formatDate(value: string | Date): string {
   return dateFormatter.format(toDate(value));
 }

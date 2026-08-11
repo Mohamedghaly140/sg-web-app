@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
 
 import {
   EMPTY_CART,
@@ -26,7 +25,6 @@ export async function clearCartAction(): Promise<CartActionResult> {
       await clearCartSession();
     }
 
-    revalidatePath("/cart");
     return EMPTY_CART;
   } catch (error) {
     redirectOnAuthError(error, "optional");
