@@ -60,7 +60,7 @@ declare function apiFetch<T>(
 
 The documented cart wiring is:
 
-1. The root layout reads `GET /cart` on the server and passes the cart to a small client boundary as `initialData`.
+1. The root layout reads `GET /cart` on the server and passes the cart to a small client boundary as `initialData`. That is the **only** server read per request: a route whose entire body is TanStack-owned (`/cart` today, a future `/account/wishlist`) renders a Server Component shell that performs no read of its own and lets the client leaf pick the cart up from the layout's context. Identity-scoped reads are never memoized with React `cache()` to paper over a duplicate call — remove the duplicate instead.
 2. `useCart()` calls `useQuery` with `cartKeys.current`, `staleTime: 30_000`, and `refetchOnWindowFocus: true`.
 3. A refetch calls the same-origin `app/api/cart/route.ts`, which is a thin server wrapper over `apiFetch`. Wishlist refetches use the only other interactive handler, `app/api/wishlist/route.ts`.
 4. Interactive writes call a Server Action through `useMutation`. The action returns either the typed cart payload or a serializable `{ error: { code, message, errors } }`; it does not throw an expected API failure.

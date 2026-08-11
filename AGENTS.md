@@ -52,12 +52,15 @@ trailers.
 finishing a phase. Phases 0 and 1 are done: scaffold, server-only BFF,
 cart-session foundations, shared primitives, and the full read-only catalog
 (`features/home`, `features/categories`, `features/products`,
-`features/reviews`). Phase 2 (guest cart) is in progress — the server half
-exists (`features/cart/` types, `queries/get-cart.ts`, the four interactive
-Server Actions, session capture/refresh/sanitize), while the TanStack layer
-(`useCart`, `app/api/cart/route.ts`, mutation hooks), the add-to-cart control,
-the header drawer/badge, and the `/cart` page do not. Phases 3–7 have not
-started. Do not build `CARD` checkout while it returns
+`features/reviews`). Phase 2 (guest cart) is in progress — sub-phases 2.1 and
+2.2 have landed, so both the server half (`features/cart/` types,
+`queries/get-cart.ts` and `get-initial-cart.ts`, the four interactive Server
+Actions, `lib/cart-response.ts` capture/refresh/sanitize) and the TanStack layer
+(`cartKeys`, `useCart`, `app/api/cart/route.ts`, the four mutation hooks, and
+`CartInitialDataProvider` wired through `app/layout.tsx` → `app/providers.tsx`)
+already exist — do not rebuild them. What remains is 2.3–2.5, all client UI: the
+add-to-cart control, the header drawer/badge, the `/cart` page, and the
+structured cart-error correction states. Phases 3–7 have not started. Do not build `CARD` checkout while it returns
 `422 PAYMENT_METHOD_UNAVAILABLE`, or user notifications before storefront
 notification endpoints exist.
 
