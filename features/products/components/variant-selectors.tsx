@@ -1,5 +1,7 @@
 "use client";
 
+import { LucideLoader2, LucideShoppingBag, LucideZap } from "lucide-react";
+
 import { QuantityStepper } from "@/components/shared/quantity-stepper";
 import { Button } from "@/components/ui/button";
 import {
@@ -147,9 +149,15 @@ export function VariantSelectors({
             onClick={addToCart}
             disabled={soldOut || isAdding}
           >
+            {isAdding ? (
+              <LucideLoader2 data-icon="inline-start" className="animate-spin" />
+            ) : (
+              <LucideShoppingBag data-icon="inline-start" />
+            )}
             {soldOut ? "Sold out" : isAdding ? "Adding…" : "Add to Cart"}
           </Button>
           <Button type="button" variant="outline" disabled>
+            <LucideZap data-icon="inline-start" />
             Buy Now
           </Button>
         </div>

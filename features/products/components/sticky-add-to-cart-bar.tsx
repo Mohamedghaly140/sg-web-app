@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { LucideLoader2, LucideShoppingBag, LucideZap } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useProductPurchase } from "@/features/products/components/product-purchase-provider";
@@ -18,8 +19,7 @@ export function StickyAddToCartBar({
 }: StickyAddToCartBarProps) {
   const [hasPassedActions, setHasPassedActions] = useState(false);
   const [isFooterNear, setIsFooterNear] = useState(false);
-  const { addToCart, isAdding, isProductUnavailable } =
-    useProductPurchase();
+  const { addToCart, isAdding, isProductUnavailable } = useProductPurchase();
   const soldOut = productSoldOut || isProductUnavailable;
 
   useEffect(() => {
@@ -56,14 +56,17 @@ export function StickyAddToCartBar({
   }, []);
 
   const isVisible = hasPassedActions && !isFooterNear;
+  const addToCartLabel = soldOut
+    ? "Sold out"
+    : isAdding
+      ? "Adding…"
+      : "Add to Cart";
 
   return (
     <div
       className={cn(
         "fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 shadow-lg backdrop-blur transition-transform motion-reduce:transition-none sm:hidden",
-        isVisible
-          ? "translate-y-0"
-          : "pointer-events-none translate-y-full",
+        isVisible ? "translate-y-0" : "pointer-events-none translate-y-full",
       )}
       aria-hidden={!isVisible}
     >
@@ -77,9 +80,15 @@ export function StickyAddToCartBar({
           onClick={addToCart}
           disabled={soldOut || isAdding}
         >
-          {soldOut ? "Sold out" : isAdding ? "Adding…" : "Add to Cart"}
+          {isAdding ? (
+            <LucideLoader2 data-icon="inline-start" className="animate-spin" />
+          ) : (
+            <LucideShoppingBag data-icon="inline-start" />
+          )}
+          {addToCartLabel}
         </Button>
         <Button type="button" variant="outline" size="sm" disabled>
+          <LucideZap data-icon="inline-start" />
           Buy Now
         </Button>
       </div>
