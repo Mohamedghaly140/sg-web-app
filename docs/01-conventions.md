@@ -68,7 +68,7 @@ Also mirror the backend's sliding expiry after every successful anonymous cart-a
 
 ## 2. Server Action result styles
 
-Form mutations for profile, addresses, reviews, and checkout live in `features/<name>/actions/`, one action per file. They return the existing `ActionState` type from `components/shared/form/utils/to-action-state.ts`:
+Form mutations for addresses, reviews, and checkout live in `features/<name>/actions/`, one action per file. They return the existing `ActionState` type from `components/shared/form/utils/to-action-state.ts`:
 
 ```ts
 type ActionState = {
@@ -161,7 +161,7 @@ Cache-update rules:
 - Coupon preview belongs to interactive state but never mutates cart totals locally; render only the server response from `POST /coupons/validate`.
 - Checkout success replaces `cartKeys.current` with the canonical empty-cart shape and the checkout action calls `revalidatePath("/account/orders")`. Do not derive the empty state by subtracting lines.
 
-Do not put catalog lists, product detail, categories, public review pages, profile, addresses, or orders in the query cache. Those reads belong in Server Components, with URL navigation or `router.refresh()` when a fresh render is required.
+Do not put catalog lists, product detail, categories, public review pages, addresses, or orders in the query cache. Those reads belong in Server Components, with URL navigation or `router.refresh()` when a fresh render is required.
 
 ## 4. Money, dates, and IDs
 

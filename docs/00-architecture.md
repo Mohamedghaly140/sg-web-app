@@ -118,7 +118,7 @@ Interactive cart and wishlist Server Actions are the separate typed-result style
 
 - *Why:* Next.js 16 does not cache `fetch` by default without Cache Components, while explicit public revalidation improves catalog latency and crawl performance.
 - *Hard rule:* caching is allowed only when `(auth ?? "public") === "public"` and `cartSession !== true`. Optional and Required calls remain no-store even when no bearer token is currently attached, and cart-aware calls remain no-store even when no cookie is currently present. Fetch cache keys do not partition safely by identity headers, so `apiFetch` must assert against a violation during development.
-- *Consequence:* cart, coupon, wishlist, checkout, profile, address, and order reads remain uncached. Cache Components and `'use cache'` are a deliberate later decision, not a Phase 0 shortcut.
+- *Consequence:* cart, coupon, wishlist, checkout, address, and order reads remain uncached. Cache Components and `'use cache'` are a deliberate later decision, not a Phase 0 shortcut.
 
 ## Repository layout
 

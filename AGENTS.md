@@ -82,7 +82,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   tokens never reach the client.
 - **Mutations**: Server Actions use two result styles. Interactive cart/wishlist
   actions return an authoritative typed payload or serializable error to
-  `useMutation`. Form actions for profile, addresses, reviews, and checkout
+  `useMutation`. Form actions for addresses, reviews, and checkout
   return `ActionState`: Zod whitelist parse, call `apiFetch`, then
   `revalidatePath` and `toActionState`; convert failures with
   `fromErrorToActionState`. Expected failures do not throw; only `redirect` or
@@ -232,18 +232,18 @@ refresh. A mutation `onSuccess` branches on `"error" in result`; only a returned
 Form actions keep the `ActionState` skeleton:
 
 ```ts
-export async function updateProfileAction(
+export async function updateAddressAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
   try {
-    const input = updateProfileSchema.parse(Object.fromEntries(formData));
-    await apiFetch("/users/me", {
+    const input = updateAddressSchema.parse(Object.fromEntries(formData));
+    await apiFetch(`/addresses/${input.id}`, {
       method: "PATCH",
       body: input,
       auth: "required",
     });
-    revalidatePath("/account");
+    revalidatePath("/account/addresses");
     return toActionState("SUCCESS", "Saved", formData);
   } catch (error) {
     return fromErrorToActionState(error, "required", formData);

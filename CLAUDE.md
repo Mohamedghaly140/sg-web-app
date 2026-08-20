@@ -54,7 +54,7 @@ Phases 0 and 1 are **done**: the scaffold, server-only BFF, cart-session foundat
 ## Architecture
 
 - **Reads**: Pure Server Component pages call server-only `apiFetch` through thin `queries/`. `apiFetch` fetches a fresh Clerk JWT per request when the endpoint's auth mode needs one. The browser never calls the backend, and the JWT never reaches client code.
-- **Mutations**: Server Actions use two result styles. Interactive cart/wishlist actions return an authoritative typed payload or serializable error to `useMutation`; form actions for profile, addresses, reviews, and checkout return `ActionState` through Zod whitelist parse → `apiFetch` → `revalidatePath` → `toActionState`, with failures converted by `fromErrorToActionState`. Expected failures do not throw; only `redirect` or `notFound` may escape. Use `formData.getAll(...)` for repeated fields because `Object.fromEntries(formData)` collapses them.
+- **Mutations**: Server Actions use two result styles. Interactive cart/wishlist actions return an authoritative typed payload or serializable error to `useMutation`; form actions for addresses, reviews, and checkout return `ActionState` through Zod whitelist parse → `apiFetch` → `revalidatePath` → `toActionState`, with failures converted by `fromErrorToActionState`. Expected failures do not throw; only `redirect` or `notFound` may escape. Use `formData.getAll(...)` for repeated fields because `Object.fromEntries(formData)` collapses them.
 - **Interactive state**: TanStack Query v5 owns only the cart drawer/badge, wishlist toggles, and coupon preview. The root layout passes the server-read cart as `initialData` to `useCart()`. Refetches go only through thin `app/api/cart/route.ts` and `app/api/wishlist/route.ts`; page data never does. Interactive mutations use `useMutation` with a Server Action as `mutationFn` returning a typed payload; successful cart mutations use their authoritative payload with `setQueryData`, never invalidate-refetch. Wishlist toggles are optimistic with rollback. **If a Server Component can render it, TanStack Query must not own it.**
 - **Guest cart**: `lib/cart-session.ts` captures `sessionToken` whenever present in any cart response and overwrites the httpOnly `sg_cart_session` cookie. After every successful anonymous cart-aware mutation that returns no token, re-write the stored token with `setCartSession()` to refresh its seven-day `maxAge`; do not refresh failed or signed-in mutations or pure RSC reads. `apiFetch({ cartSession: true })` attaches it as `X-Cart-Session` on cart CRUD, `POST /coupons/validate`, `POST /orders/guest`, and the post-sign-in `GET /cart`. Never expose it in URLs, logs, analytics, or client JavaScript. Delete it on exactly three events: a successful implicit merge after the post-sign-in `GET /cart`, successful guest checkout, and anonymous cart clear; deletion takes precedence over refresh.
 - **URL state**: nuqs provides one params schema per feature, split by client/server boundary — a plain `hooks/<feature>-search-params.ts` (no directive) exporting the parsers/`createSearchParamsCache`/type, and a `"use client"` `hooks/use-<feature>-params.ts` wrapping `useQueryStates` with `shallow: false`. Server Components must import the cache/mapper/type from the plain module, never from the `"use client"` one — calling a server-only export from a client-directive file throws at runtime even though it type-checks. Param names match the API wire format. Do not use `useState` for filters or pagination. In Next.js 16, `params` and `searchParams` are Promises.
@@ -154,18 +154,18 @@ export async function addCartItemAction(input: unknown): Promise<CartActionResul
 Form actions keep the `ActionState` skeleton:
 
 ```ts
-export async function updateProfileAction(
+export async function updateAddressAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
   try {
-    const input = updateProfileSchema.parse(Object.fromEntries(formData));
-    await apiFetch("/users/me", {
+    const input = updateAddressSchema.parse(Object.fromEntries(formData));
+    await apiFetch(`/addresses/${input.id}`, {
       method: "PATCH",
       body: input,
       auth: "required",
     });
-    revalidatePath("/account");
+    revalidatePath("/account/addresses");
     return toActionState("SUCCESS", "Saved", formData);
   } catch (error) {
     return fromErrorToActionState(error, "required", formData);
