@@ -12,32 +12,34 @@
 
 ### 3.1 Clerk routes, Header states, and protection
 
-- [ ] Complete Clerk setup with `app/(auth)/sign-in/[[...sign-in]]/page.tsx` and `app/(auth)/sign-up/[[...sign-up]]/page.tsx`, plus a centered shared auth layout. Use Clerk’s Next.js components with the shadcn-aligned appearance; keep both routes public in `proxy.ts`.
-- [ ] Replace the temporary Header controls with explicit `SignedOut` sign-in/sign-up links and `SignedIn` `UserButton` state. Preserve the intended return URL so a visitor sent from `/account(.*)` lands on the original account page after authentication.
-- [ ] Keep `proxy.ts` public-first and protect only `/account(.*)` with `await auth.protect()`. Do not introduce roles; backend 401/403 responses remain the security gate for RSC queries, Route Handlers, and Server Actions.
-- [ ] Add a reusable `<RequireAuth>` prompt for optional actions available on public pages. It opens or links to sign-in with a return URL and never hard-redirects catalog browsing; protected `/account(.*)` routes continue to use `proxy.ts`.
-- [ ] Verify every Optional/Auth backend request obtains a fresh token server-side through `await auth()` and `getToken()`. No Client Component, Action result, same-origin handler payload, log, or TanStack entry may receive the Clerk JWT.
+- [x] Complete Clerk setup with `app/(auth)/sign-in/[[...sign-in]]/page.tsx` and `app/(auth)/sign-up/[[...sign-up]]/page.tsx`, plus a centered shared auth layout. Use Clerk’s Next.js components with the shadcn-aligned appearance; keep both routes public in `proxy.ts`.
+- [x] Replace the temporary Header controls with explicit `SignedOut` sign-in/sign-up links and `SignedIn` `UserButton` state. Preserve the intended return URL so a visitor sent from `/account(.*)` lands on the original account page after authentication.
+- [x] Keep `proxy.ts` public-first and protect only `/account(.*)` with `await auth.protect()`. Do not introduce roles; backend 401/403 responses remain the security gate for RSC queries, Route Handlers, and Server Actions.
+- [x] Add a reusable `<RequireAuth>` prompt for optional actions available on public pages. It opens or links to sign-in with a return URL and never hard-redirects catalog browsing; protected `/account(.*)` routes continue to use `proxy.ts`. (Built, no live consumer yet — its gated features, wishlist and reviews-write, ship in Phase 4.)
+- [x] Verify every Optional/Auth backend request obtains a fresh token server-side through `await auth()` and `getToken()`. No Client Component, Action result, same-origin handler payload, log, or TanStack entry may receive the Clerk JWT.
 
 ### 3.2 Cart merge — critical sequence
 
-- [ ] Add `syncCartAction` as a Server Action returning a sanitized `CartActionResult`. Require an active Clerk session, read `sg_cart_session`, and call `GET /cart` with both `Authorization: Bearer <fresh token>` and `X-Cart-Session` when the guest cookie exists; that overlap triggers the documented server-side merge.
-- [ ] After a successful authenticated `GET /cart`, call `clearCartSession()` when a guest cookie was present, then return only the merged cart. Never clear the cookie before success, on an error, or through a separate merge route.
-- [ ] Add a narrow client session bridge under the providers. When Clerk reports an active session, call `syncCartAction`, then `queryClient.setQueryData(cartKeys.current, mergedCart)`; do not invalidate the cart or refetch it after success.
-- [ ] Guard activation by Clerk session ID with a ref so React re-renders cannot double-fire the merge. Reset the guard only after a failed attempt that the user may safely retry; server merge replay safety is a fallback, not the primary control.
-- [ ] If there is no guest cookie, the same action still loads the current user cart with Bearer only and seeds `cartKeys.current`. Preserve an adopted cart exactly as returned even if its totals remain stale until the next mutation.
-- [ ] Document beside `syncCartAction` that registered checkout depends on this invariant: the authenticated `GET /cart` completes before any registered checkout UI can proceed, so checkout never works from an unmerged guest view.
+- [x] Add `syncCartAction` as a Server Action returning a sanitized `CartActionResult`. Require an active Clerk session, read `sg_cart_session`, and call `GET /cart` with both `Authorization: Bearer <fresh token>` and `X-Cart-Session` when the guest cookie exists; that overlap triggers the documented server-side merge.
+- [x] After a successful authenticated `GET /cart`, call `clearCartSession()` when a guest cookie was present, then return only the merged cart. Never clear the cookie before success, on an error, or through a separate merge route.
+- [x] Add a narrow client session bridge under the providers. When Clerk reports an active session, call `syncCartAction`, then `queryClient.setQueryData(cartKeys.current, mergedCart)`; do not invalidate the cart or refetch it after success.
+- [x] Guard activation by Clerk session ID with a ref so React re-renders cannot double-fire the merge. Reset the guard only after a failed attempt that the user may safely retry; server merge replay safety is a fallback, not the primary control. (Browser-verified 2026-08-20: the effect calls `mutate()` exactly once per session in both `next dev` and a production build; an apparent duplicate `syncCartAction` POST seen only under `next dev` was traced to Turbopack's dev-mode Server Action dispatch, not this guard — confirmed absent from a `next build && next start` run.)
+- [x] If there is no guest cookie, the same action still loads the current user cart with Bearer only and seeds `cartKeys.current`. Preserve an adopted cart exactly as returned even if its totals remain stale until the next mutation.
+- [x] Document beside `syncCartAction` that registered checkout depends on this invariant: the authenticated `GET /cart` completes before any registered checkout UI can proceed, so checkout never works from an unmerged guest view.
 
 ### 3.3 Sign-out hygiene
 
-- [ ] Centralize signed-in → signed-out transition handling around Clerk’s session state, including sign-out initiated from `UserButton`. After Clerk sign-out completes, call `queryClient.clear()` so cart, future wishlist data, and any other user-scoped interactive cache entries are removed.
-- [ ] Immediately load guest cart state through same-origin `/api/cart` after the clear and seed `cartKeys.current`. Because a successfully merged guest cookie was deleted, the expected state is the documented virtual empty cart.
-- [ ] Verify sign-out does not call `clearCartSession()` and does not reveal prior profile/cart data during the transition; catalog pages remain publicly navigable.
+- [x] Centralize signed-in → signed-out transition handling around Clerk’s session state, including sign-out initiated from `UserButton`. After Clerk sign-out completes, call `queryClient.clear()` so cart, future wishlist data, and any other user-scoped interactive cache entries are removed.
+- [x] Immediately load guest cart state through same-origin `/api/cart` after the clear and seed `cartKeys.current`. Because a successfully merged guest cookie was deleted, the expected state is the documented virtual empty cart.
+- [x] Verify sign-out does not call `clearCartSession()` and does not reveal prior profile/cart data during the transition; catalog pages remain publicly navigable.
 
 ### 3.4 Disabled-account handling
 
-- [ ] Build one shared disabled-account state and central handler keyed strictly to `403 ACCOUNT_DISABLED`. It must cover RSC Auth reads, same-origin refetch errors, and serializable Server Action errors, then sign out through Clerk, clear the QueryClient, and render support guidance.
-- [ ] Keep `403 FORBIDDEN` as a distinct no-access result and `401 UNAUTHENTICATED` as a re-authentication result. Never branch on the backend message and never apply the Phase 0 Auth redirect helper to Public/Optional failures.
-- [ ] Prevent redirect or sign-out loops while the disabled-account state is active, and verify no protected content flashes before the state replaces it.
+- [x] Build one shared disabled-account state and central handler keyed strictly to `403 ACCOUNT_DISABLED`. It must cover RSC Auth reads, same-origin refetch errors, and serializable Server Action errors, then sign out through Clerk, clear the QueryClient, and render support guidance.
+- [x] Keep `403 FORBIDDEN` as a distinct no-access result and `401 UNAUTHENTICATED` as a re-authentication result. Never branch on the backend message and never apply the Phase 0 Auth redirect helper to Public/Optional failures.
+- [x] Prevent redirect or sign-out loops while the disabled-account state is active, and verify no protected content flashes before the state replaces it.
+
+> Built and code-reviewed, but not yet exercised end-to-end in a browser: no backend affordance was available in this pass to actually flip an account to disabled. Give this one a live pass once that's possible.
 
 ## Error handling matrix
 
