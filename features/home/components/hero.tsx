@@ -1,8 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import heroImage from "@/public/hero-couture.svg";
 
 export function Hero() {
   return (
@@ -22,13 +20,13 @@ export function Hero() {
         aria-hidden
         className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-accent/30 to-accent/10 sm:aspect-square sm:w-full sm:max-w-md"
       >
-        <Image
-          src={heroImage}
-          alt=""
-          fill
-          priority
-          sizes="(min-width: 640px) 400px, 100vw"
-          className="object-cover"
+        <video
+          src="/hero-video.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 size-full object-cover"
         />
       </div>
     </section>
