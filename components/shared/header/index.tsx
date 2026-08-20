@@ -3,17 +3,20 @@ import Link from "next/link";
 import { LucideHeart } from "lucide-react";
 
 import { CartDrawer } from "@/features/cart/components/cart-drawer";
+import { getCategories } from "@/features/categories/queries/get-categories";
 import { Button } from "@/components/ui/button";
 import { HeaderAuthControls } from "@/components/shared/header/header-auth-controls";
-import { HeaderMobileMenu } from "@/components/shared/header/header-mobile-menu";
+import { HeaderCategoriesMenu } from "@/components/shared/header/header-categories-menu";
+import { Sidenav } from "@/components/shared/sidenav/sidenav";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Products" },
-  { href: "/categories", label: "Categories" },
 ];
 
-export function Header() {
+export async function Header() {
+  const categories = await getCategories();
+
   return (
     <header className="border-b border-border">
       <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
@@ -38,6 +41,7 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+          <HeaderCategoriesMenu categories={categories} />
         </nav>
 
         <form method="GET" action="/products" className="hidden flex-1 sm:flex">
@@ -64,7 +68,7 @@ export function Header() {
           <div className="hidden items-center gap-2 sm:flex">
             <HeaderAuthControls />
           </div>
-          <HeaderMobileMenu navLinks={NAV_LINKS} />
+          <Sidenav navLinks={NAV_LINKS} categories={categories} />
         </div>
       </div>
     </header>
