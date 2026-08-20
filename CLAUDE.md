@@ -12,6 +12,19 @@ Keep your replies extremely concise and focus on conveying the key information. 
 - When stuck, or before implementing against a third-party library/framework you're unsure about, you MUST pull fresh official documentation instead of relying on possibly stale memory — use your available agents, especially **`docs-explorer`**.
 - Before committing to any architecture decision, deviation from documented conventions, or refactor touching 3+ files, consult the **`fable-advisor`** subagent and act on its verdict — treat a `Flag` as blocking until resolved (fix the plan, or explain to the user why the flag doesn't apply) before writing code.
 
+## Delegating implementation
+
+**Implementation work goes to Cursor, not into this context.** When a task means writing or
+refactoring more than a couple of files against a spec that already exists, hand it to the
+`cursor-delegate` skill instead of typing the code here — it keeps this session's tokens for
+planning and review.
+
+```bash
+node .claude/skills/cursor-delegate/scripts/relay.mjs \
+  --brief <brief>.txt --cd /Users/mohamedghaly/sg_couture/sg-web-app \
+  --model cursor-grok-4.5-high-fast --timeout 2h
+```
+
 @AGENTS.md
 
 ## Commands
