@@ -4,12 +4,11 @@ import { usePathname } from "next/navigation";
 import {
   Show,
   SignInButton,
-  SignOutButton,
   SignUpButton,
   UserButton,
 } from "@clerk/nextjs";
 
-import { LucideLogIn } from "lucide-react";
+import { LucideLogIn, LucideUserPlus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -29,6 +28,12 @@ export function HeaderAuthControls() {
             Sign in
           </Button>
         </SignInButton>
+        <SignUpButton mode="modal" fallbackRedirectUrl={returnUrl}>
+          <Button variant="ghost" size="sm">
+            <LucideUserPlus data-icon="inline-start" />
+            Sign up
+          </Button>
+        </SignUpButton>
       </Show>
       <Show when="signed-in">
         <UserButton />
