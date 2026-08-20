@@ -20,7 +20,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
     <Link
       href={`/products/${product.slug}`}
       className={cn(
-        "flex flex-col gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "group flex flex-col gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         className,
       )}
     >
@@ -31,13 +31,13 @@ export function ProductCard({ product, className }: ProductCardProps) {
           alt={product.name}
           fill
           sizes="(min-width: 640px) 224px, 75vw"
-          className="object-cover"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute left-2 top-2 z-10">
           <DiscountBadge discount={product.discount} />
         </div>
       </div>
-      <p className="line-clamp-1 text-sm font-medium text-foreground">
+      <p className="line-clamp-1 text-sm font-medium text-foreground transition-colors group-hover:text-accent">
         {product.name}
       </p>
       <RatingSummary

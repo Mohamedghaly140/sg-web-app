@@ -23,16 +23,17 @@ export function CategoryCard({ category }: CategoryCardProps) {
     <div className="flex flex-col gap-3 rounded-none border border-border p-3">
       <Link
         href={`/categories/${category.slug}`}
-        className="flex flex-col gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="group flex flex-col gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        <div className="relative aspect-4/3 w-full overflow-hidden rounded-none bg-muted">
+        {/* Soft-rounded: navigational imagery (two-tier rule); not text-eyebrow — denser card with count badge. */}
+        <div className="relative aspect-4/3 w-full overflow-hidden rounded-md bg-muted">
           {category.imageUrl ? (
             <Image
               src={category.imageUrl}
               alt={category.name}
               fill
               sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 90vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
