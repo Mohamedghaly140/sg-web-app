@@ -76,10 +76,7 @@ export function CartDrawer() {
   };
 
   const items = cart?.items ?? [];
-  const itemCount = items.reduce(
-    (count, item) => count + item.quantity,
-    0,
-  );
+  const itemCount = items.reduce((count, item) => count + item.quantity, 0);
   const itemLabel = itemCount === 1 ? "item" : "items";
 
   return (
@@ -99,7 +96,7 @@ export function CartDrawer() {
         {itemCount > 0 ? (
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center bg-primary px-1 text-[0.625rem] font-semibold text-primary-foreground"
+            className="pointer-events-none absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[0.625rem] font-semibold text-primary-foreground"
           >
             {itemCount}
           </span>
@@ -148,7 +145,7 @@ export function CartDrawer() {
               }
             />
           ) : (
-            items.map((item) => (
+            items.map(item => (
               <CartDrawerLine
                 key={item.id}
                 item={item}
