@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 
 type ProductsErrorProps = {
   error: Error & { digest?: string };
-  unstable_retry: () => void;
+  retry: () => void;
 };
 
-export default function ProductsError({ unstable_retry }: ProductsErrorProps) {
+export default function ProductsError({ retry }: ProductsErrorProps) {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col px-4 py-16 sm:px-6 lg:px-8">
       <EmptyState
@@ -18,7 +18,7 @@ export default function ProductsError({ unstable_retry }: ProductsErrorProps) {
         title="Something went wrong"
         description="We couldn't load these products. This is usually temporary — try again."
         action={
-          <Button onClick={() => unstable_retry()}>
+          <Button onClick={() => retry()}>
             <LucideRefreshCw />
             Try again
           </Button>

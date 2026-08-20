@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 
 export default function Error({
   error,
-  reset,
+  retry,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 }) {
   useEffect(() => {
     console.error(error);
@@ -24,7 +24,7 @@ export default function Error({
           We couldn&apos;t load this page. Please try again.
         </AlertDescription>
       </Alert>
-      <Button variant="outline" size="sm" onClick={() => reset()}>
+      <Button variant="outline" size="sm" onClick={() => retry()}>
         Try again
       </Button>
     </div>
