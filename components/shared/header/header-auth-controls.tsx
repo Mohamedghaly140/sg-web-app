@@ -32,11 +32,6 @@ export function HeaderAuthControls() {
       </Show>
       <Show when="signed-in">
         <UserButton />
-        <SignOutButton>
-          <Button variant="outline" size="sm">
-            Sign out
-          </Button>
-        </SignOutButton>
       </Show>
     </>
   );
