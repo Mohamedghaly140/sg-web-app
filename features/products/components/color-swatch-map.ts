@@ -1,0 +1,38 @@
+const COLOR_SWATCHES: Record<string, string> = {
+  black: "#000000",
+  white: "#ffffff",
+  ivory: "#fffff0",
+  navy: "#0a1a3f",
+  blush: "#f2c9c2",
+  "blush pink": "#f2c9c2",
+  emerald: "#0f6b4f",
+  burgundy: "#6d1b2e",
+  charcoal: "#2b2b2b",
+  gold: "#c9a24b",
+  "rose gold": "#b76e79",
+  beige: "#e8dcc8",
+  camel: "#c19a6b",
+  gray: "#8a8a8a",
+  grey: "#8a8a8a",
+  red: "#c0272d",
+  pink: "#e8a0bf",
+  purple: "#5b3a8e",
+  lavender: "#c8b6e2",
+  blue: "#2b5fad",
+  "royal blue": "#2b5fad",
+  teal: "#0f7a7a",
+  green: "#2f7a3c",
+  olive: "#6b6f2b",
+  mustard: "#c9a227",
+  brown: "#5c3d2e",
+  tan: "#d2b48c",
+  coral: "#e2694b",
+  turquoise: "#2fb5b0",
+  silver: "#c0c0c0",
+  maroon: "#6d1b2e",
+  cream: "#f5f0e1",
+};
+
+export function getColorSwatch(colorName: string): string | undefined {
+  return COLOR_SWATCHES[colorName.trim().toLowerCase()];
+}

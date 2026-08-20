@@ -10,6 +10,7 @@ import {
   availableForProduct,
   variantErrorForProduct,
 } from "@/features/cart/hooks/use-cart-error-state";
+import { getColorSwatch } from "@/features/products/components/color-swatch-map";
 import { useProductPurchase } from "@/features/products/components/product-purchase-provider";
 import { StockBadge } from "@/features/products/components/stock-badge";
 
@@ -47,23 +48,38 @@ export function VariantSelectors({
     <div className="flex flex-col gap-6">
       {colors.length > 0 && (
         <fieldset className="flex flex-col gap-3">
-          <legend className="text-sm font-medium text-foreground">Color</legend>
-          <ToggleGroup className="flex-wrap gap-2" aria-label="Color">
+          <legend className="text-sm font-medium text-foreground">
+            Color
+            {selectedColor && (
+              <span className="ml-1 font-normal text-muted-foreground">
+                — {selectedColor}
+              </span>
+            )}
+          </legend>
+          <ToggleGroup
+            className="flex-wrap gap-2"
+            aria-label="Color"
+            value={selectedColor ? [selectedColor] : []}
+            onValueChange={(next) => {
+              const nextColor = next[next.length - 1];
+              if (nextColor) {
+                setSelectedColor(nextColor);
+              }
+            }}
+          >
             {colors.map((color) => (
               <ToggleGroupItem
                 key={color}
+                value={color}
                 type="button"
                 variant="outline"
-                className="rounded-full px-4"
-                pressed={selectedColor === color}
-                onPressedChange={(pressed) => {
-                  if (pressed) {
-                    setSelectedColor(color);
-                  }
+                aria-label={color}
+                title={color}
+                className="size-9 shrink-0 rounded-full border border-input p-0 shadow-none data-pressed:ring-2 data-pressed:ring-accent data-pressed:ring-offset-2 data-pressed:ring-offset-background"
+                style={{
+                  backgroundColor: getColorSwatch(color) ?? "var(--muted)",
                 }}
-              >
-                {color}
-              </ToggleGroupItem>
+              />
             ))}
           </ToggleGroup>
         </fieldset>
@@ -72,19 +88,24 @@ export function VariantSelectors({
       {sizes.length > 0 && (
         <fieldset className="flex flex-col gap-3">
           <legend className="text-sm font-medium text-foreground">Size</legend>
-          <ToggleGroup className="flex-wrap gap-2" aria-label="Size">
+          <ToggleGroup
+            className="flex-wrap gap-2"
+            aria-label="Size"
+            value={selectedSize ? [selectedSize] : []}
+            onValueChange={(next) => {
+              const nextSize = next[next.length - 1];
+              if (nextSize) {
+                setSelectedSize(nextSize);
+              }
+            }}
+          >
             {sizes.map((size) => (
               <ToggleGroupItem
                 key={size}
+                value={size}
                 type="button"
                 variant="outline"
-                className="rounded-full px-4"
-                pressed={selectedSize === size}
-                onPressedChange={(pressed) => {
-                  if (pressed) {
-                    setSelectedSize(size);
-                  }
-                }}
+                className="flex size-9 shrink-0 items-center justify-center rounded-full border border-input text-sm font-medium shadow-none data-pressed:border-transparent data-pressed:bg-foreground data-pressed:text-background data-pressed:ring-2 data-pressed:ring-accent data-pressed:ring-offset-2 data-pressed:ring-offset-background"
               >
                 {size}
               </ToggleGroupItem>
