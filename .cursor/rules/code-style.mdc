@@ -1,0 +1,22 @@
+---
+description: Component prop prefixes, Lucide icon prefix, kebab-case files, and hand-written API types
+globs: "**/*.ts,**/*.tsx"
+alwaysApply: false
+---
+
+# Naming and style
+
+- Prefix component prop types with the component name: `ProductCardProps`, never `Props`.
+- Lucide icons always use the `Lucide` prefix: `LucideSearch`, never `Search`.
+- Files are kebab-case. Feature default exports are named `<Name>Feature`.
+- Hand-write API response types from the contract docs — do not generate them from an OpenAPI client.
+
+```tsx
+// ❌ BAD
+type Props = { title: string };
+import { Search } from "lucide-react";
+
+// ✅ GOOD
+type ProductCardProps = { title: string };
+import { Search as LucideSearch } from "lucide-react";
+```

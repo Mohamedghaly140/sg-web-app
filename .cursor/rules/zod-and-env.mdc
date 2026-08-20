@@ -1,0 +1,32 @@
+---
+description: Zod v4 patterns and the lib/env.ts singleton — never read process.env in app code
+globs: "**/schema/**/*.ts,lib/env.ts,features/**/*.ts"
+alwaysApply: false
+---
+
+# Zod v4 and environment
+
+## Zod v4
+
+- `z.enum()` accepts enum-like objects; `z.nativeEnum()` is deprecated. Use the singular `.enum` accessor.
+- `error.flatten()` is deprecated; prefer `z.flattenError(error)`.
+- Use top-level formats such as `z.url()` and `z.email()`, not `z.string().url()` or `z.string().email()`.
+
+```ts
+// ❌ BAD
+z.nativeEnum(Status);
+z.string().email();
+error.flatten();
+
+// ✅ GOOD
+z.enum(Status);
+z.email();
+z.flattenError(error);
+```
+
+## Environment
+
+Seven validated vars, all through the `lib/env.ts` singleton — application code never reads `process.env` directly:
+
+- App: `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, server-only `API_URL` (must not use `NEXT_PUBLIC_`)
+- Clerk SDK routing: `NEXT_PUBLIC_CLERK_SIGN_IN_URL`, `NEXT_PUBLIC_CLERK_SIGN_UP_URL`, `NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL`, `NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL`

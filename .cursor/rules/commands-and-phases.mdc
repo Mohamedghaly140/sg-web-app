@@ -1,0 +1,28 @@
+---
+description: Bun-only commands, phase tracker discipline, deferred CARD/notifications, and git commit style
+alwaysApply: true
+---
+
+# Commands, phases, git
+
+Always use **Bun** — never `npm`, `npx`, or `yarn`.
+
+```bash
+bun dev              # start dev server
+bun run build        # production build
+bun lint             # ESLint
+bunx tsc --noEmit    # type-check only
+bunx shadcn@latest add <item>
+```
+
+No automated tests. Verify with lint, type-check, build, and the browser.
+
+## Phases
+
+`docs/README.md` is the source of truth. Read it before assuming a feature, helper, or provider exists. Update its table when starting or finishing a phase. Do not rebuild landed work or implement a later phase uninvited.
+
+**Do not build:** `CARD` checkout (`422 PAYMENT_METHOD_UNAVAILABLE` until backend Phase 7) or user notifications (no storefront endpoints yet). Ship CASH-only checkout.
+
+## Git
+
+Commit messages must **not** include a `Co-Authored-By` trailer or any Claude/Cursor/AI-attribution line.

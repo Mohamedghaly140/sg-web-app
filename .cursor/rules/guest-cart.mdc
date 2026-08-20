@@ -1,0 +1,25 @@
+---
+description: Guest cart sessionToken capture, refresh, deletion events, and X-Cart-Session hygiene
+globs: features/cart/**,lib/cart-session.ts,lib/cart-response.ts,app/api/cart/**
+alwaysApply: false
+---
+
+# Guest cart session
+
+`lib/cart-session.ts` captures `sessionToken` whenever present in any cart response and overwrites the httpOnly `sg_cart_session` cookie.
+
+`apiFetch({ cartSession: true })` attaches it as `X-Cart-Session` on cart CRUD, `POST /coupons/validate`, `POST /orders/guest`, and the post-sign-in `GET /cart`.
+
+## Refresh vs delete
+
+After every **successful anonymous** cart-aware mutation that returns no token, re-write the stored token with `setCartSession()` to refresh its seven-day `maxAge`. Do **not** refresh failed mutations, signed-in mutations, or pure RSC reads.
+
+`captureRefreshAndSanitizeCart` applies capture-whenever-present, refreshes when no new token is returned, and strips `sessionToken` before anything reaches the client.
+
+Delete the cookie on **exactly three** successful events (deletion wins over refresh):
+
+1. Implicit merge after post-sign-in `GET /cart`
+2. Guest checkout
+3. Anonymous cart clear
+
+Never expose the token in URLs, logs, analytics, or client JavaScript.

@@ -1,0 +1,25 @@
+---
+description: apiFetch contract, envelopes, money strings, pagination, rate limits, and CASH-only checkout
+globs: features/**,lib/api/**,lib/format.ts
+alwaysApply: false
+---
+
+# API conventions
+
+Full table: `docs/integration/storefront/00-conventions.md`. Callers never set identity headers.
+
+## `apiFetch` (`lib/api/http.ts`)
+
+Prefixes `${API_URL}/api/v1`, defaults to `cache: "no-store"`, unwraps `{ status, message, data, meta }`, throws `ApiError(status, code, message, errors)`, returns `undefined` for 204. Attaches a fresh Clerk bearer for `auth: "optional" | "required"` and `sg_cart_session` for `cartSession: true`.
+
+`auth` defaults to `"public"`; `cartSession` defaults to `false`. Backend Public / Optional / Auth map to `"public"` / `"optional"` / `"required"`. Cache metadata is allowed only when `(auth ?? "public") === "public"` and `cartSession !== true`.
+
+## Wire format
+
+- Success: `{ status: "success", message, data, meta? }`. Error: `{ status: "error", message, code, errors? }`. Branch on `code`, never `message`. DELETE success is 204.
+- Money is a variable-scale decimal **string** (`"2400"`, `"65.00"`, EGP). Format with `formatEGP()`. **No client-side money math.**
+- Bodies are strict. Never send undocumented or server-owned fields (slugs, computed prices/discounts, stock/sold, ratings, order totals, usage counts).
+- Pagination: send `page`/`limit`; read `meta { page, limit, totalItems, totalPages, hasNext, hasPrev }`. Keep it RSC + URL-driven.
+- Rate limits: checkout/guest-checkout/claim 5/60s; coupon validate/guest lookup 10/60s; global 100/60s. Never auto-retry mutations or poll tightly.
+- Map `INSUFFICIENT_STOCK` and `INVALID_VARIANT` structured errors back to cart lines.
+- Checkout is CASH-only. `CARD` → `422 PAYMENT_METHOD_UNAVAILABLE`. No storefront notification endpoints.

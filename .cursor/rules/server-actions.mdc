@@ -1,0 +1,47 @@
+---
+description: Interactive vs form Server Action result styles, Zod whitelists, and shared form wiring
+globs: features/**/actions/**,actions/**,components/shared/**
+alwaysApply: false
+---
+
+# Server Actions
+
+One file per Server Action. Schemas are whitelists — unknown API fields return 422. Use `formData.getAll(...)` for repeated fields; `Object.fromEntries` collapses them.
+
+## Interactive (cart / wishlist → `useMutation`)
+
+Return a typed payload or serializable error, not `ActionState`. `onSuccess` branches on `"error" in result`; only a returned `Cart` is written with `setQueryData`.
+
+```ts
+export async function addCartItemAction(input: unknown): Promise<CartActionResult> {
+  try {
+    const parsedInput = addCartItemSchema.parse(input);
+    const existingSession = await getCartSession();
+    const transportCart = await apiFetch<CartTransport>("/cart/items", {
+      method: "POST", body: parsedInput, auth: "optional", cartSession: true,
+    });
+    const cart = await captureRefreshAndSanitizeCart(transportCart, existingSession);
+    revalidatePath("/cart");
+    return cart;
+  } catch (error) {
+    return { error: toInteractiveActionError(error) };
+  }
+}
+```
+
+## Form actions (`ActionState`)
+
+```ts
+export async function updateProfileAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const input = updateProfileSchema.parse(Object.fromEntries(formData));
+    await apiFetch("/users/me", { method: "PATCH", body: input, auth: "required" });
+    revalidatePath("/account");
+    return toActionState("SUCCESS", "Saved", formData);
+  } catch (error) {
+    return fromErrorToActionState(error, "required", formData);
+  }
+}
+```
+
+Wire `useActionState` with shared `Form`, `FormControl`, and `SubmitButton` (`Form` auto-toasts). Redirects: `setCookieByKey("toast", ...)` then `redirect()`; `RedirectToast` shows the flash.

@@ -1,0 +1,21 @@
+---
+description: SG Couture storefront identity, contract fidelity, and when to consult docs-explorer / fable-advisor
+alwaysApply: true
+---
+
+# SG Couture web storefront
+
+Standalone Next.js 16 App Router frontend for `sg-couture-api`. **No database and no backend of its own.**
+
+- API contract: `docs/integration/storefront/` — vendored, **read-only**. Never edit it or invent endpoints or fields not documented there.
+- Plan/status: `docs/README.md`. Architecture: `docs/00-architecture.md`. Conventions: `docs/01-conventions.md`.
+- Replies: extremely concise. No fluff, no long code snippets.
+
+## Engineering posture
+
+Act as a senior Next.js developer. Prefer App Router, Server Components, Server Actions, `proxy.ts`, `revalidatePath`, and `server-only`. Never use client-side fetching, `useEffect` data loading, or client state for server data when an RSC/Server Action exists.
+
+## Consult before coding
+
+- Unfamiliar library/framework APIs → **`docs-explorer`** (project MCPs + Context7). Do not rely on training-data APIs.
+- Architecture decision, convention/API deviation, or refactor touching 3+ files → **`fable-advisor`**. A **Flag** is blocking until you fix the plan or explain why it does not apply.

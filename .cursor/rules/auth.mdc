@@ -1,0 +1,14 @@
+---
+description: Guest-first Clerk auth — server-only JWT, proxy.ts account gate, inline RequireAuth
+globs: proxy.ts,app/**,lib/api/**,components/shared/**
+alwaysApply: false
+---
+
+# Auth
+
+The storefront is **guest-first and has no roles**. Backend 401/403 responses are the real gate.
+
+- API auth modes are Public, Optional, and Auth. Match each endpoint's documented mode via `auth: "public" | "optional" | "required"`.
+- For Optional/Auth, `apiFetch` fetches and attaches a fresh Clerk session JWT **server-side**. Never set, cache, or expose the token in feature or client code.
+- `proxy.ts` with `clerkMiddleware` protects `/account(.*)` for UX only.
+- Elsewhere use inline `<RequireAuth>` prompts — never hard-redirect unauthenticated users away from public/guest flows.

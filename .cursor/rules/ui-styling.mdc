@@ -1,0 +1,22 @@
+---
+description: base-lyra shadcn, Tailwind v4 @theme, shared primitives, and semantic Badge variants
+globs: "**/*.tsx,app/globals.css,components/**/*"
+alwaysApply: false
+---
+
+# UI
+
+- shadcn style is **base-lyra on `@base-ui/react`, not Radix**. Inspect generated component anatomy before applying library patterns.
+- Tailwind v4 is CSS-first. Theme lives in `app/globals.css` via `@theme`. There is no `tailwind.config.*`.
+- Prefer `components/shared/` primitives (`Form`, `FormControl`, `SubmitButton`, empty-state, spinner, redirect-toast, badges).
+- `components/ui/` is shadcn primitives only.
+- Badge colors use semantic variants (`success`, `warning`, `info`, `destructive`, `secondary`, `outline`) — never literal color classes.
+- Pages are RSC-first. TanStack Query is only for the designated interactive cart, wishlist, and coupon surfaces.
+
+```tsx
+// ❌ BAD
+<Badge className="bg-red-500 text-white">Failed</Badge>
+
+// ✅ GOOD
+<Badge variant="destructive">Failed</Badge>
+```

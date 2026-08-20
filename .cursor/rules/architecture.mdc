@@ -1,0 +1,25 @@
+---
+description: RSC-first data flow, TanStack boundary, feature layout, and nuqs URL state
+globs: app/**,features/**,lib/**,proxy.ts,components/**
+alwaysApply: false
+---
+
+# Architecture
+
+Full specs: `docs/00-architecture.md`, `docs/01-conventions.md`.
+
+## Data flow
+
+- **Reads:** Server Component pages → thin `queries/` → server-only `apiFetch`. The browser never calls the backend. JWTs never reach client code.
+- **Mutations:** one Server Action per file. Interactive cart/wishlist return typed payloads to `useMutation`. Forms return `ActionState`. Expected failures do not throw; only `redirect` / `notFound` may escape.
+- **TanStack Query v5** owns only cart drawer/badge, wishlist toggles, and coupon preview. Root layout seeds `useCart()` `initialData`. Refetch only via `app/api/cart/route.ts` and `app/api/wishlist/route.ts`. Cart success → `setQueryData` (never invalidate-refetch). Wishlist → optimistic with rollback. **If a Server Component can render it, TanStack Query must not own it.**
+
+## Layout
+
+No `src/`. `@/*` maps to the repo root. `app/` pages/layouts stay thin. Feature code lives in `features/<name>/{components,hooks,actions,queries,schema,types,index.tsx}`; `index.tsx` exports default `<Name>Feature`. `queries/` have no business logic.
+
+The only route handlers are the interactive cart/wishlist refetch routes. `proxy.ts` gates `/account(.*)` only.
+
+## URL state
+
+nuqs: one params schema per feature. Plain `hooks/<feature>-search-params.ts` (parsers, `createSearchParamsCache`, types) vs `"use client"` `hooks/use-<feature>-params.ts` (`useQueryStates`, `shallow: false`). Server Components import the **plain** module only — a server-only export from a client file throws at runtime. Names match the API wire format. Never `useState` for filters or pagination.
