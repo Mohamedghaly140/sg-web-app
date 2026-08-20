@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SG Couture",
+  title: "Safa Ghaly",
   description: "Elegant couture, delivered to your door.",
 };
 

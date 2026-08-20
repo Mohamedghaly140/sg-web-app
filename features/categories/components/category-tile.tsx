@@ -14,6 +14,7 @@ export function CategoryTile({ category }: CategoryTileProps) {
       href={`/categories/${category.slug}`}
       className="flex flex-col items-center gap-2 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
+      {/* Soft-rounded: navigational imagery, see product-card.tsx for the square merchandise-photography counterpart. */}
       <div className="relative aspect-square w-full overflow-hidden rounded-md bg-muted">
         {category.imageUrl ? (
           <Image

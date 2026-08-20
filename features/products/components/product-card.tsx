@@ -24,6 +24,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
         className,
       )}
     >
+      {/* Square: merchandise photography stays sharp-edged, see category-tile.tsx for the rounded navigational-imagery counterpart. */}
       <div className="relative aspect-square overflow-hidden rounded-none bg-muted">
         <Image
           src={product.imageUrl}

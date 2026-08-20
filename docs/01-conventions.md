@@ -206,6 +206,7 @@ Do not use component state as the source of truth for filters or pagination.
 - Badge styling uses semantic variants only: `success`, `warning`, `info`, `destructive`, `secondary`, or `outline`. Do not apply literal color utility classes to badges.
 - Component prop types are named `<ComponentName>Props`, files are kebab-case, and each feature's default export is a named `<Name>Feature` Server Component.
 - Keep `app/` pages thin. Components, actions, queries, schemas, hooks, and types belong to their feature; `components/ui/` contains shadcn primitives only.
+- Image radius is two-tier by intent: square corners (`rounded-none`) on interactive UI chrome and product photography; soft-rounded corners (`rounded-md`) on navigational or decorative imagery such as category tiles and the home hero panel. Do not "normalize" one toward the other.
 
 ## 8. Testing baseline (applies to every phase)
 

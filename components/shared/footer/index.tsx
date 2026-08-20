@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { LucideCamera, LucideGlobe } from "lucide-react";
 
@@ -14,9 +15,13 @@ export function Footer() {
     <footer className="border-t border-border">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 sm:px-6 lg:flex-row lg:justify-between lg:px-8">
         <div className="flex flex-col gap-3">
-          <span className="font-heading text-lg font-semibold text-foreground">
-            SG Couture
-          </span>
+          <Image
+            src="/brand/logo-lockup.png"
+            alt="Safa Ghaly"
+            width={318}
+            height={302}
+            className="h-16 w-auto"
+          />
           <p className="max-w-xs text-sm text-muted-foreground">
             Elegant couture, delivered to your door.
           </p>
@@ -41,7 +46,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-foreground">Shop</span>
+          <span className="text-eyebrow text-foreground">Shop</span>
           {SHOP_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -54,9 +59,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-foreground">
-            Stay in the loop
-          </span>
+          <span className="text-eyebrow text-foreground">Stay in the loop</span>
           <p className="max-w-xs text-sm text-muted-foreground">
             Get updates on new arrivals.
           </p>
@@ -76,7 +79,7 @@ export function Footer() {
       </div>
 
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-3 border-t border-border px-4 py-4 text-sm text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
-        <p>© {new Date().getFullYear()} SG Couture. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Safa Ghaly. All rights reserved.</p>
         <span className="rounded-full border border-border px-3 py-1 text-xs font-medium">
           Cash on Delivery
         </span>

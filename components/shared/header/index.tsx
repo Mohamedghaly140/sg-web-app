@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { LucideHeart } from "lucide-react";
 
@@ -16,11 +17,15 @@ export function Header() {
   return (
     <header className="border-b border-border">
       <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <Link
-          href="/"
-          className="font-heading text-lg font-semibold text-foreground"
-        >
-          SG Couture
+        <Link href="/">
+          <Image
+            src="/brand/logo-mark.png"
+            alt="Safa Ghaly"
+            width={318}
+            height={242}
+            priority
+            className="h-10 w-auto"
+          />
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-6 sm:flex">
@@ -28,7 +33,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-foreground"
+              className="text-eyebrow text-foreground"
             >
               {link.label}
             </Link>
