@@ -117,6 +117,7 @@ export default async function ProductDetailFeature({
 
         <ReviewsFeature
           productId={product.id}
+          slug={slug}
           ratingsAverage={product.ratingsAverage}
           ratingsQuantity={product.ratingsQuantity}
           searchParams={searchParams}

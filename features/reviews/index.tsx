@@ -1,11 +1,15 @@
+import { auth } from "@clerk/nextjs/server";
+
 import { RatingSummary } from "@/components/shared/rating-summary";
 import { ReviewList } from "@/features/reviews/components/review-list";
 import { ReviewPagination } from "@/features/reviews/components/review-pagination";
+import { YourReviewSection } from "@/features/reviews/components/your-review-section";
 import { reviewsSearchParamsCache } from "@/features/reviews/hooks/reviews-search-params";
 import { getProductReviews } from "@/features/reviews/queries/get-product-reviews";
 
 type ReviewsFeatureProps = {
   productId: string;
+  slug: string;
   ratingsAverage: string | null;
   ratingsQuantity: number;
   searchParams: Record<string, string | string[] | undefined>;
@@ -13,10 +17,12 @@ type ReviewsFeatureProps = {
 
 export default async function ReviewsFeature({
   productId,
+  slug,
   ratingsAverage,
   ratingsQuantity,
   searchParams,
 }: ReviewsFeatureProps) {
+  const { userId } = await auth();
   const { page, limit } = reviewsSearchParamsCache.parse(searchParams);
   const { reviews, meta } = await getProductReviews(productId, page, limit);
 
@@ -31,7 +37,13 @@ export default async function ReviewsFeature({
           ratingsQuantity={ratingsQuantity}
         />
       </div>
-      <ReviewList reviews={reviews} />
+      <YourReviewSection
+        reviews={reviews}
+        currentUserId={userId}
+        productId={productId}
+        slug={slug}
+      />
+      <ReviewList reviews={reviews} currentUserId={userId} />
       <ReviewPagination meta={meta} />
     </section>
   );

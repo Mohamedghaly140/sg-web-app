@@ -19,12 +19,12 @@
 
 ### 4.2 Review CRUD
 
-- [ ] Add strict Zod schemas and one Server Action per create, update, and delete mutation. Whitelist only `title` (trimmed, optional, at most 150 characters) and `ratings` (JSON number from 1–5 in 0.5 increments), then use the shared `ActionState` pipeline and revalidate the affected product/review paths.
-- [ ] On the product page, render the signed-in customer's create or edit form with the shared `Form`, `FormControl`, and `SubmitButton`. Identify ownership for UI purposes by comparing `review.user.id` with the Clerk user ID; continue to treat backend `FORBIDDEN` as authoritative.
-- [ ] Handle `409 REVIEW_EXISTS` using the GAP-2 fallback only: search reviews already rendered, then page through `GET /products/:id/reviews` server-side until `review.user.id` matches the Clerk user ID. Switch to edit mode when found; if the global throttle interrupts the O(pages) fallback, preserve the form and offer a manual retry. Do not invent an own-review lookup endpoint.
-- [ ] Update an owned review through `PATCH /reviews/:id`; delete through `DELETE /reviews/:id` behind `ConfirmDialog`. Map `VALIDATION_ERROR` paths to the form and handle missing reviews with a refreshed product page rather than stale edit controls.
-- [ ] After create, edit, or delete, revalidate the product detail, review list, and affected catalog card paths so aggregate rating changes render server-side. Preserve the documented last-review state of `ratingsAverage: null` and `ratingsQuantity: 0`.
-- [ ] Treat `RESOURCE_NOT_FOUND` from review creation as an unavailable product and keep retrying `POST` after `REVIEW_EXISTS` impossible by design.
+- [x] Add strict Zod schemas and one Server Action per create, update, and delete mutation. Whitelist only `title` (trimmed, optional, at most 150 characters) and `ratings` (JSON number from 1–5 in 0.5 increments), then use the shared `ActionState` pipeline and revalidate the affected product/review paths.
+- [x] On the product page, render the signed-in customer's create or edit form with the shared `Form`, `FormControl`, and `SubmitButton`. Identify ownership for UI purposes by comparing `review.user.id` with the Clerk user ID; continue to treat backend `FORBIDDEN` as authoritative.
+- [x] Handle `409 REVIEW_EXISTS` using the GAP-2 fallback only: search reviews already rendered, then page through `GET /products/:id/reviews` server-side until `review.user.id` matches the Clerk user ID. Switch to edit mode when found; if the global throttle interrupts the O(pages) fallback, preserve the form and offer a manual retry. Do not invent an own-review lookup endpoint.
+- [x] Update an owned review through `PATCH /reviews/:id`; delete through `DELETE /reviews/:id` behind `ConfirmDialog`. Map `VALIDATION_ERROR` paths to the form and handle missing reviews with a refreshed product page rather than stale edit controls.
+- [x] After create, edit, or delete, revalidate the product detail, review list, and affected catalog card paths so aggregate rating changes render server-side. Preserve the documented last-review state of `ratingsAverage: null` and `ratingsQuantity: 0`.
+- [x] Treat `RESOURCE_NOT_FOUND` from review creation as an unavailable product and keep retrying `POST` after `REVIEW_EXISTS` impossible by design.
 
 ### 4.3 Addresses
 
