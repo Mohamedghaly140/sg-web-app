@@ -10,12 +10,12 @@
 
 ### 4.1 Wishlist
 
-- [ ] Build `features/wishlist` with hand-written contract types, `wishlistKeys`, an Auth-only server query for the unpaginated `GET /wishlist` response, and typed Server Actions for `PUT /wishlist/:productId` and `DELETE /wishlist/:productId`. Strip backend-only identity data before crossing a server boundary.
-- [ ] Hydrate `wishlistKeys.current(userId)` from the server response for signed-in customers so product-card and product-detail hearts share one ID set. Scope the key by Clerk user ID and clear it on auth transitions so two accounts cannot share cached wishlist state in one browser.
-- [ ] Implement the heart as a focused Client Component using TanStack Query v5 `useMutation`: cancel the current wishlist query, snapshot it, update optimistically, roll back on failure, and reconcile with the action result on success. Set mutation retries to `0`; a failed `PUT` with `RESOURCE_NOT_FOUND` rolls back and shows product-unavailable copy.
-- [ ] Replace the Phase 1 heart placeholder on product cards and product detail. A signed-out tap opens inline `<RequireAuth>` sign-in copy without navigating away from the public product page; anonymous wishlist persistence remains unsupported.
-- [ ] Build `/account/wishlist` as a thin page around a `WishlistFeature` Server Component. Render newest-first products and `addedAt`; keep `available: false` products visible but disabled and unlinked, while ACTIVE zero-stock products remain linked with a sold-out hint.
-- [ ] Allow interactive wishlist reconciliation only through the same-origin `app/api/wishlist/route.ts`; the browser never calls the backend and the route never exposes a Clerk JWT.
+- [x] Build `features/wishlist` with hand-written contract types, `wishlistKeys`, an Auth-only server query for the unpaginated `GET /wishlist` response, and typed Server Actions for `PUT /wishlist/:productId` and `DELETE /wishlist/:productId`. Strip backend-only identity data before crossing a server boundary.
+- [x] Hydrate `wishlistKeys.current(userId)` from the server response for signed-in customers so product-card and product-detail hearts share one ID set. Scope the key by Clerk user ID and clear it on auth transitions so two accounts cannot share cached wishlist state in one browser.
+- [x] Implement the heart as a focused Client Component using TanStack Query v5 `useMutation`: cancel the current wishlist query, snapshot it, update optimistically, roll back on failure, and reconcile with the action result on success. Set mutation retries to `0`; a failed `PUT` with `RESOURCE_NOT_FOUND` rolls back and shows product-unavailable copy.
+- [x] Replace the Phase 1 heart placeholder on product cards and product detail. A signed-out tap opens inline `<RequireAuth>` sign-in copy without navigating away from the public product page; anonymous wishlist persistence remains unsupported.
+- [x] Build `/account/wishlist` as a thin page around a `WishlistFeature` Server Component. Render newest-first products and `addedAt`; keep `available: false` products visible but disabled and unlinked, while ACTIVE zero-stock products remain linked with a sold-out hint.
+- [x] Allow interactive wishlist reconciliation only through the same-origin `app/api/wishlist/route.ts`; the browser never calls the backend and the route never exposes a Clerk JWT.
 
 ### 4.2 Review CRUD
 
