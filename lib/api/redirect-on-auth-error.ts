@@ -16,7 +16,7 @@ export function redirectOnAuthError(
   }
 
   if (error.code === "ACCOUNT_DISABLED") {
-    redirect("/account-disabled");
+    redirect("/account-disabled?reason=account-disabled");
   }
 
   if (mode === "required" && error.code === "UNAUTHENTICATED") {

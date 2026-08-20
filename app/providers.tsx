@@ -1,5 +1,6 @@
 "use client";
 
+import { AccountDisabledBridge } from "@/components/shared/account-disabled/account-disabled-bridge";
 import { ApiError } from "@/lib/api/api-error";
 import { CartInitialDataProvider } from "@/features/cart/components/cart-initial-data-provider";
 import { CartMergeBridge } from "@/features/cart/components/cart-merge-bridge";
@@ -42,6 +43,7 @@ export default function Providers({ children, initialCart }: ProvidersProps) {
         <CartMergeBridge />
         <CartSignOutBridge />
         <CartInitialDataProvider cart={initialCart}>
+          <AccountDisabledBridge />
           <NuqsAdapter>
             {children}
             <Toaster />
