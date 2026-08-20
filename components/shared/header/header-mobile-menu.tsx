@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { LucideMenu, LucideSearch } from "lucide-react";
-import { Show, SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
 
+import { HeaderAuthControls } from "@/components/shared/header/header-auth-controls";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -70,21 +70,7 @@ export function HeaderMobileMenu({ navLinks }: HeaderMobileMenuProps) {
               </Link>
             ))}
             <div className="flex items-center gap-2">
-              <Show when="signed-out">
-                <SignInButton mode="modal">
-                  <Button variant="outline" size="sm">
-                    Sign in
-                  </Button>
-                </SignInButton>
-              </Show>
-              <Show when="signed-in">
-                <UserButton />
-                <SignOutButton>
-                  <Button variant="outline" size="sm">
-                    Sign out
-                  </Button>
-                </SignOutButton>
-              </Show>
+              <HeaderAuthControls />
             </div>
           </nav>
         </SheetContent>

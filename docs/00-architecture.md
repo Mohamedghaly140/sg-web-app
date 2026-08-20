@@ -179,7 +179,7 @@ sg-web-app/
 
 There is no `src/` directory. `@/*` maps to the repository root. The route map is `/`, `/products`, `/products/[slug]`, `/categories`, `/categories/[slug]`, `/cart`, `/checkout`, `/checkout/guest`, `/orders/track/[token]`, `/account`, `/account/addresses`, `/account/orders`, `/account/orders/[id]`, and `/account/wishlist`, plus the Clerk catch-all routes and the two internal refetch handlers shown above.
 
-The environment surface is exactly `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and server-only `API_URL`. All access goes through the validated `lib/env.ts` singleton; application code never reads `process.env` directly.
+The environment surface is the app's three custom-consumed variables (`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `API_URL`) plus Clerk's four SDK-consumed routing variables (`NEXT_PUBLIC_CLERK_SIGN_IN_URL`, `NEXT_PUBLIC_CLERK_SIGN_UP_URL`, `NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL`, and `NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL`). All seven are validated through the `lib/env.ts` singleton; `API_URL` remains server-only and must not use `NEXT_PUBLIC_`. Application code never reads `process.env` directly.
 
 ## Data flow
 

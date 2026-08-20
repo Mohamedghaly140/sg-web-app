@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Show, SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
 import { LucideHeart } from "lucide-react";
 
 import { CartDrawer } from "@/features/cart/components/cart-drawer";
 import { Button } from "@/components/ui/button";
+import { HeaderAuthControls } from "@/components/shared/header/header-auth-controls";
 import { HeaderMobileMenu } from "@/components/shared/header/header-mobile-menu";
 
 const NAV_LINKS = [
@@ -57,21 +57,7 @@ export function Header() {
           </Button>
           <CartDrawer />
           <div className="hidden items-center gap-2 sm:flex">
-            <Show when="signed-out">
-              <SignInButton mode="modal">
-                <Button variant="outline" size="sm">
-                  Sign in
-                </Button>
-              </SignInButton>
-            </Show>
-            <Show when="signed-in">
-              <UserButton />
-              <SignOutButton>
-                <Button variant="outline" size="sm">
-                  Sign out
-                </Button>
-              </SignOutButton>
-            </Show>
+            <HeaderAuthControls />
           </div>
           <HeaderMobileMenu navLinks={NAV_LINKS} />
         </div>

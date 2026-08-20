@@ -322,11 +322,11 @@ Full table: `docs/integration/storefront/00-conventions.md`.
 
 ## Environment
 
-Exactly these environment variables are expected:
-
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
-- `CLERK_SECRET_KEY`
-- `API_URL`
-
-`API_URL` is server-only and must not use `NEXT_PUBLIC_`. Access all variables
-through the validated `lib/env.ts` singleton, never `process.env` directly.
+The environment surface is the app's three custom-consumed variables
+(`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `API_URL`) plus
+Clerk's four SDK-consumed routing variables (`NEXT_PUBLIC_CLERK_SIGN_IN_URL`,
+`NEXT_PUBLIC_CLERK_SIGN_UP_URL`,
+`NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL`, and
+`NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL`). All seven are validated
+through the `lib/env.ts` singleton; `API_URL` remains server-only and must not
+use `NEXT_PUBLIC_`. Application code never reads `process.env` directly.

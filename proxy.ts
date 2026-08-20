@@ -1,8 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// TODO(phase-3): createRouteMatcher is deprecated by Clerk in favor of
-// resource-based auth.protect() checks in the route itself. Revisit once
-// app/account/layout.tsx exists and move this gate there.
+// TODO(phase-3): Clerk's installed @deprecated JSDoc directs resource-based
+// auth.protect() calls into each route/layout because middleware-level auth
+// gating can create a false sense of security. Keep this check only until
+// app/account/layout.tsx ships in Phase 4; then move await auth.protect() there
+// and remove this middleware matcher entirely.
 const isAccountRoute = createRouteMatcher(["/account(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {

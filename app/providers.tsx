@@ -4,6 +4,7 @@ import { ApiError } from "@/lib/api/api-error";
 import { CartInitialDataProvider } from "@/features/cart/components/cart-initial-data-provider";
 import type { Cart } from "@/features/cart/types/cart";
 import { ClerkProvider } from "@clerk/nextjs";
+import { shadcn } from "@clerk/ui/themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { useState } from "react";
@@ -34,7 +35,7 @@ export default function Providers({ children, initialCart }: ProvidersProps) {
   const [queryClient] = useState(createQueryClient);
 
   return (
-    <ClerkProvider>
+    <ClerkProvider appearance={{ theme: shadcn }}>
       <QueryClientProvider client={queryClient}>
         <CartInitialDataProvider cart={initialCart}>
           <NuqsAdapter>
