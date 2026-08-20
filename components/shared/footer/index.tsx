@@ -20,7 +20,7 @@ export function Footer() {
             alt="Safa Ghaly"
             width={318}
             height={302}
-            className="h-16 w-auto"
+            className="h-16 w-auto self-start object-contain"
           />
           <p className="max-w-xs text-sm text-muted-foreground">
             Elegant couture, delivered to your door.
@@ -47,7 +47,7 @@ export function Footer() {
 
         <div className="flex flex-col gap-2">
           <span className="text-eyebrow text-foreground">Shop</span>
-          {SHOP_LINKS.map((link) => (
+          {SHOP_LINKS.map(link => (
             <Link
               key={link.href}
               href={link.href}
