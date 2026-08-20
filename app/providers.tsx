@@ -2,6 +2,7 @@
 
 import { ApiError } from "@/lib/api/api-error";
 import { CartInitialDataProvider } from "@/features/cart/components/cart-initial-data-provider";
+import { CartMergeBridge } from "@/features/cart/components/cart-merge-bridge";
 import type { Cart } from "@/features/cart/types/cart";
 import { ClerkProvider } from "@clerk/nextjs";
 import { shadcn } from "@clerk/ui/themes";
@@ -37,6 +38,7 @@ export default function Providers({ children, initialCart }: ProvidersProps) {
   return (
     <ClerkProvider appearance={{ theme: shadcn }}>
       <QueryClientProvider client={queryClient}>
+        <CartMergeBridge />
         <CartInitialDataProvider cart={initialCart}>
           <NuqsAdapter>
             {children}
