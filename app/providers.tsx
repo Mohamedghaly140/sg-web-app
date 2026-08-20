@@ -6,6 +6,10 @@ import { CartInitialDataProvider } from "@/features/cart/components/cart-initial
 import { CartMergeBridge } from "@/features/cart/components/cart-merge-bridge";
 import { CartSignOutBridge } from "@/features/cart/components/cart-sign-out-bridge";
 import type { Cart } from "@/features/cart/types/cart";
+import {
+  WishlistInitialDataProvider,
+  type WishlistInitialData,
+} from "@/features/wishlist/components/wishlist-initial-data-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { shadcn } from "@clerk/ui/themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -16,6 +20,7 @@ import { Toaster } from "sonner";
 type ProvidersProps = {
   children: React.ReactNode;
   initialCart: Cart | undefined;
+  initialWishlist: WishlistInitialData | undefined;
 };
 
 function createQueryClient() {
@@ -34,7 +39,11 @@ function createQueryClient() {
   });
 }
 
-export default function Providers({ children, initialCart }: ProvidersProps) {
+export default function Providers({
+  children,
+  initialCart,
+  initialWishlist,
+}: ProvidersProps) {
   const [queryClient] = useState(createQueryClient);
 
   return (
@@ -43,11 +52,13 @@ export default function Providers({ children, initialCart }: ProvidersProps) {
         <CartMergeBridge />
         <CartSignOutBridge />
         <CartInitialDataProvider cart={initialCart}>
-          <AccountDisabledBridge />
-          <NuqsAdapter>
-            {children}
-            <Toaster />
-          </NuqsAdapter>
+          <WishlistInitialDataProvider initialWishlist={initialWishlist}>
+            <AccountDisabledBridge />
+            <NuqsAdapter>
+              {children}
+              <Toaster />
+            </NuqsAdapter>
+          </WishlistInitialDataProvider>
         </CartInitialDataProvider>
       </QueryClientProvider>
     </ClerkProvider>

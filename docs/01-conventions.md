@@ -146,10 +146,12 @@ export const cartKeys = {
 };
 
 export const wishlistKeys = {
-  all: ["wishlist"] as const,
-  current: ["wishlist", "current"] as const,
+  all: (userId: string) => ["wishlist", userId] as const,
+  current: (userId: string) => ["wishlist", userId, "current"] as const,
 };
 ```
+
+Wishlist keys are userId-scoped (unlike cart) because wishlist has no session-cookie identity resolution and two accounts can sign in on one browser.
 
 The root layout reads the cart server-side and passes it to the client cart boundary as `initialData`. `useCart()` refetches only through the same-origin `app/api/cart/route.ts`. Wishlist refetches only through `app/api/wishlist/route.ts`. These are the only Route Handlers for interactive refetch; page data never flows through them.
 

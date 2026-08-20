@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LucideMenu } from "lucide-react";
 
 import { HeaderAuthControls } from "@/components/shared/header/header-auth-controls";
+import { HeaderWishlistLink } from "@/components/shared/header/header-wishlist-link";
 import type { Category } from "@/features/categories/types/category";
 import {
   Accordion,
@@ -68,6 +69,7 @@ export function Sidenav({ navLinks, categories }: SidenavProps) {
                   {link.label}
                 </Link>
               ))}
+              <HeaderWishlistLink variant="nav" onNavigate={close} />
             </nav>
 
             <div className="flex flex-col gap-3">

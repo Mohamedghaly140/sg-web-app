@@ -80,6 +80,7 @@ export default async function ProductDetailFeature({
             images={product.images}
             fallbackImageUrl={product.imageUrl}
             productName={product.name}
+            product={product}
           />
 
           <div className="flex flex-col gap-4">

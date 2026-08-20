@@ -6,6 +6,7 @@ import { Footer } from "@/components/shared/footer";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { getInitialCart } from "@/features/cart/queries/get-initial-cart";
+import { getInitialWishlist } from "@/features/wishlist/queries/get-initial-wishlist";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -29,7 +30,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialCart = await getInitialCart();
+  const [initialCart, initialWishlist] = await Promise.all([
+    getInitialCart(),
+    getInitialWishlist(),
+  ]);
 
   return (
     <html
@@ -44,7 +48,10 @@ export default async function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <Providers initialCart={initialCart}>
+        <Providers
+          initialCart={initialCart}
+          initialWishlist={initialWishlist}
+        >
           <Header />
           <main className="flex-1 flex flex-col">{children}</main>
           <Footer />

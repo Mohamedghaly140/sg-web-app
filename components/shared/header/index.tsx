@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { LucideHeart } from "lucide-react";
 
 import { CartDrawer } from "@/features/cart/components/cart-drawer";
 import { getCategories } from "@/features/categories/queries/get-categories";
-import { Button } from "@/components/ui/button";
 import { HeaderAuthControls } from "@/components/shared/header/header-auth-controls";
 import { HeaderCategoriesMenu } from "@/components/shared/header/header-categories-menu";
+import { HeaderWishlistLink } from "@/components/shared/header/header-wishlist-link";
 import { Sidenav } from "@/components/shared/sidenav/sidenav";
 
 const NAV_LINKS = [
@@ -55,15 +54,7 @@ export async function Header() {
         </form>
 
         <div className="ml-auto flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            disabled
-            aria-label="Wishlist"
-            className="hidden sm:inline-flex"
-          >
-            <LucideHeart />
-          </Button>
+          <HeaderWishlistLink />
           <CartDrawer />
           <div className="hidden items-center gap-2 sm:flex">
             <HeaderAuthControls />

@@ -1,11 +1,13 @@
 "use client";
 
 import { useRef, useState, type UIEvent } from "react";
-import { LucideHeart } from "lucide-react";
 import Image from "next/image";
 
-import { Button } from "@/components/ui/button";
-import type { ProductImage } from "@/features/products/types/product";
+import type {
+  ProductImage,
+  ProductSummary,
+} from "@/features/products/types/product";
+import { WishlistHeart } from "@/features/wishlist/components/wishlist-heart";
 import { cldUrl } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +15,7 @@ type GalleryProps = {
   images: ProductImage[];
   fallbackImageUrl: string;
   productName: string;
+  product: ProductSummary;
 };
 
 type GallerySlide = {
@@ -24,6 +27,7 @@ export function Gallery({
   images,
   fallbackImageUrl,
   productName,
+  product,
 }: GalleryProps) {
   const mobileRailRef = useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -94,16 +98,7 @@ export function Gallery({
           ))}
         </div>
 
-        <Button
-          type="button"
-          variant="secondary"
-          size="icon"
-          className="absolute right-3 top-3"
-          aria-label="Wishlist coming soon"
-          disabled
-        >
-          <LucideHeart data-icon="inline-start" />
-        </Button>
+        <WishlistHeart product={product} className="absolute right-3 top-3" />
       </div>
 
       {slides.length > 1 && (
@@ -184,16 +179,7 @@ export function Gallery({
             sizes="(min-width: 1024px) 45vw, 70vw"
             className="object-cover"
           />
-          <Button
-            type="button"
-            variant="secondary"
-            size="icon"
-            className="absolute right-3 top-3"
-            aria-label="Wishlist coming soon"
-            disabled
-          >
-            <LucideHeart data-icon="inline-start" />
-          </Button>
+          <WishlistHeart product={product} className="absolute right-3 top-3" />
         </div>
       </div>
     </div>
