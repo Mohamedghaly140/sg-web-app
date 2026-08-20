@@ -28,14 +28,14 @@
 
 ### 4.3 Addresses
 
-- [ ] Build `features/addresses` with Auth-only, no-store server queries and one ActionState Server Action for each create, edit, delete, and set-default mutation. `/account/addresses` remains a thin page around `AddressesFeature`.
-- [ ] Create a shared address form component with registered and guest modes. Registered mode supports `alias`, `country`, `governorate`, `city`, `area`, `phone`, `addressLine1`, `details`, and optional `postalCode`, `latitude`, and `longitude`; guest mode omits `alias` and all default-address controls for Phase 5 reuse.
-- [ ] Mirror contract validation exactly: field length bounds, integer postal code, coordinate ranges, and Egyptian phone validation. Zod request schemas remain strict whitelists, and backend `VALIDATION_ERROR` dotted paths map back to `FormControl` errors.
-- [ ] Use canonical country, governorate, and city labels shared with Phase 5 shipping lookup. Values are free text in v1 but are not case-normalized by the backend, so centralize the allowed UI labels rather than correcting them after submission.
-- [ ] Preserve server ordering from `GET /addresses`: default first, then newest. Reflect that the first address is forced to default; on create only, an explicit `isDefault: true` may make a later address the default.
-- [ ] Use `PATCH /addresses/:id/default` as the normal default-changing action. Do not expose a free-form `isDefault` toggle on edit, especially `false`, because that can leave the account without a default.
-- [ ] Put delete behind `ConfirmDialog`. After success, revalidate the list and display the server-promoted default; never implement promotion logic in the browser.
-- [ ] For any address `RESOURCE_NOT_FOUND`, preserve the deliberate missing/other-owner ambiguity, refresh `/account/addresses`, and show generic “Address not found” copy.
+- [x] Build `features/addresses` with Auth-only, no-store server queries and one ActionState Server Action for each create, edit, delete, and set-default mutation. `/account/addresses` remains a thin page around `AddressesFeature`.
+- [x] Create a shared address form component with registered and guest modes. Registered mode supports `alias`, `country`, `governorate`, `city`, `area`, `phone`, `addressLine1`, `details`, and optional `postalCode`, `latitude`, and `longitude`; guest mode omits `alias` and all default-address controls for Phase 5 reuse.
+- [x] Mirror contract validation exactly: field length bounds, integer postal code, coordinate ranges, and Egyptian phone validation. Zod request schemas remain strict whitelists, and backend `VALIDATION_ERROR` dotted paths map back to `FormControl` errors.
+- [x] Use canonical country, governorate, and city labels shared with Phase 5 shipping lookup. Values are free text in v1 but are not case-normalized by the backend, so centralize the allowed UI labels rather than correcting them after submission.
+- [x] Preserve server ordering from `GET /addresses`: default first, then newest. Reflect that the first address is forced to default; on create only, an explicit `isDefault: true` may make a later address the default.
+- [x] Use `PATCH /addresses/:id/default` as the normal default-changing action. Do not expose a free-form `isDefault` toggle on edit, especially `false`, because that can leave the account without a default.
+- [x] Put delete behind `ConfirmDialog`. After success, revalidate the list and display the server-promoted default; never implement promotion logic in the browser.
+- [x] For any address `RESOURCE_NOT_FOUND`, preserve the deliberate missing/other-owner ambiguity, refresh `/account/addresses`, and show generic “Address not found” copy.
 
 ## Definition of Done
 
