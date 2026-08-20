@@ -8,7 +8,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 
-import { LucideLogIn, LucideUserPlus } from "lucide-react";
+import { LucideLogIn, LucideMapPin, LucideUser, LucideUserPlus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -36,7 +36,20 @@ export function HeaderAuthControls() {
         </SignUpButton>
       </Show>
       <Show when="signed-in">
-        <UserButton />
+        <UserButton>
+          <UserButton.MenuItems>
+            <UserButton.Link
+              label="Account"
+              labelIcon={<LucideUser />}
+              href="/account"
+            />
+            <UserButton.Link
+              label="Addresses"
+              labelIcon={<LucideMapPin />}
+              href="/account/addresses"
+            />
+          </UserButton.MenuItems>
+        </UserButton>
       </Show>
     </>
   );
