@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@clerk/nextjs";
 import { LucideHeart } from "lucide-react";
 import { toast } from "sonner";
 
@@ -16,15 +17,21 @@ type WishlistHeartProps = {
 };
 
 export function WishlistHeart({ product, className }: WishlistHeartProps) {
+  const { isSignedIn } = useAuth();
   const { data } = useWishlist();
   const isWishlisted = (data ?? []).some(
     (entry) => entry.product.id === product.id,
   );
   const toggle = useToggleWishlist((message) => toast.error(message));
+  // useWishlist()'s query is disabled while signed out, so `data` never
+  // resolves away from undefined in that case — only gate on hydration once
+  // we know the visitor is signed in; a confirmed-signed-out visitor must
+  // stay clickable so RequireAuth's trigger can open the sign-in prompt.
+  const notHydrated = isSignedIn !== false && data === undefined;
 
   function handleClick() {
     if (toggle.isPending) return;
-    if (data === undefined) return;
+    if (notHydrated) return;
     toggle.mutate({ product, isWishlisted });
   }
 
@@ -43,7 +50,7 @@ export function WishlistHeart({ product, className }: WishlistHeartProps) {
               ? `Remove ${product.name} from wishlist`
               : `Add ${product.name} to wishlist`
           }
-          disabled={toggle.isPending || data === undefined}
+          disabled={toggle.isPending || notHydrated}
           onClick={handleClick}
           className={className}
         >
