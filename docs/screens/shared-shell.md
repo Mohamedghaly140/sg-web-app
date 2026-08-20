@@ -43,7 +43,7 @@ Rendered on every route via the root layout (Phase 0 §0.5, `docs/phase-0-founda
 │                                                                (visual only,   │
 │                                                                 no submit)     │
 │──────────────────────────────────────────────────────────────────────────│
-│ © 2026 SG Couture. All rights reserved.              [ Cash on Delivery ]    │
+│ © 2026 Safa Ghaly. All rights reserved.              [ Cash on Delivery ]    │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 

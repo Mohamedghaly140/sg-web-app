@@ -20,7 +20,7 @@ export function Hero() {
       </div>
       <div
         aria-hidden
-        className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-primary/30 to-primary/10 sm:aspect-square sm:w-full sm:max-w-md"
+        className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-accent/30 to-accent/10 sm:aspect-square sm:w-full sm:max-w-md"
       >
         <Image
           src={heroImage}

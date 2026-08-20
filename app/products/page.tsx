@@ -5,7 +5,7 @@ import { productsSearchParamsCache } from "@/features/products/hooks/products-se
 
 export const metadata: Metadata = {
   title: "Shop",
-  description: "Browse the complete SG Couture catalog.",
+  description: "Browse the complete Safa Ghaly catalog.",
 };
 
 type ProductsPageProps = {

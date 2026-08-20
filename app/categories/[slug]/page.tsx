@@ -19,7 +19,7 @@ export async function generateMetadata({
 
   return {
     title: category.name,
-    description: `Shop the ${category.name} collection at SG Couture.`,
+    description: `Shop the ${category.name} collection at Safa Ghaly.`,
     openGraph: category.imageUrl ? { images: [category.imageUrl] } : undefined,
   };
 }

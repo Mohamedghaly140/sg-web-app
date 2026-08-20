@@ -4,7 +4,7 @@ import { CategoriesFeature } from "@/features/categories/components/categories-f
 
 export const metadata: Metadata = {
   title: "Categories",
-  description: "Browse all SG Couture categories.",
+  description: "Browse all Safa Ghaly categories.",
 };
 
 export default function CategoriesPage() {
