@@ -1,6 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 
-import { ProfileForm } from "@/features/profile/components/profile-form";
+import { ProfileNameForm } from "@/features/profile/components/profile-name-form";
+import { ProfilePhoneForm } from "@/features/profile/components/profile-phone-form";
 import { getProfile } from "@/features/profile/queries/get-profile";
 import { formatDate } from "@/lib/format";
 
@@ -63,11 +64,13 @@ export default async function ProfileFeature() {
         >
           Edit profile
         </h2>
-        <ProfileForm
-          firstName={clerkUser?.firstName ?? ""}
-          lastName={clerkUser?.lastName ?? ""}
-          phone={profile.phone}
-        />
+        <div className="flex flex-col gap-6">
+          <ProfileNameForm
+            firstName={clerkUser?.firstName ?? ""}
+            lastName={clerkUser?.lastName ?? ""}
+          />
+          <ProfilePhoneForm phone={profile.phone} />
+        </div>
       </section>
     </div>
   );

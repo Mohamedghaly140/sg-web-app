@@ -29,7 +29,13 @@ export function AccountDisabledBridge() {
     handledRef.current = true;
 
     void (async () => {
-      await signOut();
+      try {
+        await signOut();
+      } catch {
+        // The session-id guard inside useAccountDisabledSignOut resets on
+        // failure, so a later disabled detection can retry; still surface
+        // the disabled state now rather than leaving the user stranded.
+      }
       router.replace("/account-disabled");
     })();
   }, [error, signOut, router]);

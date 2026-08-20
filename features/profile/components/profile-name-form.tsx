@@ -10,12 +10,11 @@ import {
 } from "@/components/shared/form/utils/to-action-state";
 import FormControl from "@/components/shared/form-control";
 import SubmitButton from "@/components/shared/submit-button";
-import { updateProfileAction } from "@/features/profile/actions/update-profile-action";
+import { updateProfileNameAction } from "@/features/profile/actions/update-profile-name-action";
 
-type ProfileFormProps = {
+type ProfileNameFormProps = {
   firstName: string;
   lastName: string;
-  phone: string | null;
 };
 
 function payloadString(
@@ -26,10 +25,13 @@ function payloadString(
   return typeof value === "string" ? value : undefined;
 }
 
-export function ProfileForm({ firstName, lastName, phone }: ProfileFormProps) {
+export function ProfileNameForm({
+  firstName,
+  lastName,
+}: ProfileNameFormProps) {
   const { user } = useUser();
   const [actionState, action] = useActionState(
-    updateProfileAction,
+    updateProfileNameAction,
     EMPTY_ACTION_STATE,
   );
 
@@ -59,17 +61,7 @@ export function ProfileForm({ firstName, lastName, phone }: ProfileFormProps) {
         }
         autoComplete="family-name"
       />
-      <FormControl
-        label="Phone"
-        name="phone"
-        type="tel"
-        actionState={actionState}
-        defaultValue={
-          payloadString(actionState.payload, "phone") ?? phone ?? ""
-        }
-        autoComplete="tel"
-      />
-      <SubmitButton label="Save profile" />
+      <SubmitButton label="Save name" />
     </Form>
   );
 }

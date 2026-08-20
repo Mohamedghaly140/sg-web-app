@@ -1,30 +1,37 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 import { useAccountDisabledSignOut } from "@/components/shared/account-disabled/use-account-disabled-sign-out";
 
-export function AccountDisabledCleanup() {
-  const searchParams = useSearchParams();
+type AccountDisabledCleanupProps = {
+  shouldSignOut: boolean;
+};
+
+export function AccountDisabledCleanup({
+  shouldSignOut,
+}: AccountDisabledCleanupProps) {
   const router = useRouter();
   const signOut = useAccountDisabledSignOut();
   const handledRef = useRef(false);
 
   useEffect(() => {
-    if (searchParams.get("reason") !== "account-disabled") {
-      return;
-    }
-    if (handledRef.current) {
+    if (!shouldSignOut || handledRef.current) {
       return;
     }
     handledRef.current = true;
 
     void (async () => {
-      await signOut();
+      try {
+        await signOut();
+      } catch {
+        // Still land on the plain URL below; the disabled state renders
+        // regardless of whether Clerk sign-out itself succeeded.
+      }
       router.replace("/account-disabled");
     })();
-  }, [searchParams, signOut, router]);
+  }, [shouldSignOut, signOut, router]);
 
   return null;
 }
