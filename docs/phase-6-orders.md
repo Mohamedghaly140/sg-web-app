@@ -10,10 +10,10 @@
 
 ### 6.1 Order history
 
-- [ ] Build `/account/orders` as a thin page around an `OrdersFeature` Server Component using the Auth-only, no-store `GET /orders` query. Hand-write the summary and pagination types; label `itemsCount` as distinct products/lines rather than summed quantity.
-- [ ] Define `features/orders/hooks/use-orders-params.ts` once for both nuqs server and client parsers. Keep `page`, `limit`, and optional `status` in exact API wire format, update with `shallow: false`, and await Next.js 16 `searchParams` before querying.
-- [ ] Render newest-first rows with `humanOrderId`, formatted total, date, and a shared semantic status badge covering `PENDING | PROCESSING | SHIPPED | DELIVERED | CANCELLED | REFUNDED`. Provide explicit refresh through RSC navigation/`router.refresh()` and never add a polling loop or client cache for orders.
-- [ ] Add server-rendered loading, empty, error, and pagination states that retain the status filter in the URL and never discard a successfully rendered page because a later refresh fails.
+- [x] Build `/account/orders` as a thin page around an `OrdersFeature` Server Component using the Auth-only, no-store `GET /orders` query. Hand-write the summary and pagination types; label `itemsCount` as distinct products/lines rather than summed quantity.
+- [x] Define `features/orders/hooks/use-orders-params.ts` once for both nuqs server and client parsers. Keep `page`, `limit`, and optional `status` in exact API wire format, update with `shallow: false`, and await Next.js 16 `searchParams` before querying.
+- [x] Render newest-first rows with `humanOrderId`, formatted total, date, and a shared semantic status badge covering `PENDING | PROCESSING | SHIPPED | DELIVERED | CANCELLED | REFUNDED`. Provide explicit refresh through RSC navigation/`router.refresh()` and never add a polling loop or client cache for orders.
+- [x] Add server-rendered loading, empty, error, and pagination states that retain the status filter in the URL and never discard a successfully rendered page because a later refresh fails.
 
 ### 6.2 Order detail
 
