@@ -17,9 +17,9 @@
 
 ### 6.2 Order detail
 
-- [ ] Build `/account/orders/[id]` as an Auth-only `OrderDetailFeature` Server Component over `GET /orders/:id`; await the promised `params` and use the opaque record ID only in the route and API call.
-- [ ] Render permanent item price snapshots, status, `isPaid`, payment method, and `itemsSubtotal`, `discountApplied`, `shippingFees`, and `totalOrderPrice` exactly as server strings through `formatEGP()`. Per GAP-4, render no shipping address, contact, or notes because the detail response does not contain them.
-- [ ] Treat `RESOURCE_NOT_FOUND` as the same generic not-found state for missing and other-owner records, with no ownership disclosure and a link back to order history.
+- [x] Build `/account/orders/[id]` as an Auth-only `OrderDetailFeature` Server Component over `GET /orders/:id`; await the promised `params` and use the opaque record ID only in the route and API call.
+- [x] Render permanent item price snapshots, status, `isPaid`, payment method, and `itemsSubtotal`, `discountApplied`, `shippingFees`, and `totalOrderPrice` exactly as server strings through `formatEGP()`. Per GAP-4, render no shipping address, contact, or notes because the detail response does not contain them.
+- [x] Treat `RESOURCE_NOT_FOUND` as the same generic not-found state for missing and other-owner records, with no ownership disclosure and a link back to order history.
 
 ### 6.3 Guest tracking
 
