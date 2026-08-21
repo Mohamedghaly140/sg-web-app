@@ -26,6 +26,7 @@ export type ToggleWishlistVariables = {
 
 export function useToggleWishlist(
   onRolledBack?: (message: string) => void,
+  onSucceeded?: (isWishlisted: boolean) => void,
 ): UseMutationResult<
   AddToWishlistResult | RemoveFromWishlistResult,
   Error,
@@ -78,13 +79,16 @@ export function useToggleWishlist(
       onRolledBack?.("Something went wrong. Please try again.");
     },
     onSuccess: (result, { product, isWishlisted }) => {
-      if (!("error" in result)) return;
-      revertToggle(product, isWishlisted);
-      onRolledBack?.(
-        result.error.code === "RESOURCE_NOT_FOUND"
-          ? "This product is no longer available."
-          : result.error.message,
-      );
+      if ("error" in result) {
+        revertToggle(product, isWishlisted);
+        onRolledBack?.(
+          result.error.code === "RESOURCE_NOT_FOUND"
+            ? "This product is no longer available."
+            : result.error.message,
+        );
+        return;
+      }
+      onSucceeded?.(!isWishlisted);
     },
     onSettled: () => {
       if (pathname === "/account/wishlist") {

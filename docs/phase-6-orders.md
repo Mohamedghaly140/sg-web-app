@@ -23,18 +23,20 @@
 
 ### 6.3 Guest tracking
 
-- [ ] Build public `/orders/track/[token]` around `GET /orders/guest/:token`. Resolve the token only in the Server Component, force dynamic/no-store rendering, exclude the route from sitemap indexing, and use restrictive referrer handling.
-- [ ] Keep the claim token only in the required tracking path and server call. Never log it, attach it to analytics/error breadcrumbs, place it in navigation labels, or pass it to Client Components; redact the tracking path in observability tooling.
-- [ ] Render the same address-free order detail shape as 6.2. For `CLAIM_TOKEN_INVALID`, show only “This tracking link is invalid or has expired,” preserving the deliberate unknown/expired/consumed ambiguity.
-- [ ] Respect the 10/60s limit with no automatic retry. `RATE_LIMITED` keeps the page intact and offers a manual server refresh after the wait guidance.
+- [x] Build public `/orders/track/[token]` around `GET /orders/guest/:token`. Resolve the token only in the Server Component, force dynamic/no-store rendering, exclude the route from sitemap indexing, and use restrictive referrer handling.
+- [x] Keep the claim token only in the required tracking path and server call. Never log it, attach it to analytics/error breadcrumbs, place it in navigation labels, or pass it to Client Components; redact the tracking path in observability tooling.
+- [x] Render the same address-free order detail shape as 6.2. For `CLAIM_TOKEN_INVALID`, show only “This tracking link is invalid or has expired,” preserving the deliberate unknown/expired/consumed ambiguity.
+- [x] Respect the 10/60s limit with no automatic retry. `RATE_LIMITED` keeps the page intact and offers a manual server refresh after the wait guidance.
 
 ### 6.4 Claim flow
 
-- [ ] On the tracking page, signed-out customers see inline `<RequireAuth>` copy to sign in or create an account and return to the same tracking URL; do not hard-redirect the public page.
-- [ ] Bind the route token to `claimOrderAction` server-side rather than rendering it in a form field. Validate the documented exact 64-character length, then call `POST /orders/claim` with a fresh Clerk JWT; expected failures return `ActionState` and mutation retries remain disabled.
-- [ ] On success, call `revalidatePath("/account/orders")`, set a redirect toast cookie, and replace-navigate to `/account/orders/[id]` from the returned order ID. The consumed tracking URL is expected to become invalid.
-- [ ] If the first claim times out and the directly following retry returns `CLAIM_TOKEN_INVALID`, refresh `/account/orders` as the contract recommends but keep the public tracking copy generic unless a successful claim response identified the order. Never disclose whether another account consumed the token.
-- [ ] Preserve the form and show wait guidance on the 5/60s `RATE_LIMITED` response; do not automatically replay the one-shot mutation.
+- [x] On the tracking page, signed-out customers see inline `<RequireAuth>` copy to sign in or create an account and return to the same tracking URL; do not hard-redirect the public page.
+- [x] Bind the route token to `claimOrderAction` server-side rather than rendering it in a form field. Validate the documented exact 64-character length, then call `POST /orders/claim` with a fresh Clerk JWT; expected failures return `ActionState` and mutation retries remain disabled.
+- [x] On success, call `revalidatePath("/account/orders")`, set a redirect toast cookie, and replace-navigate to `/account/orders/[id]` from the returned order ID. The consumed tracking URL is expected to become invalid.
+- [x] If the first claim times out and the directly following retry returns `CLAIM_TOKEN_INVALID`, refresh `/account/orders` as the contract recommends but keep the public tracking copy generic unless a successful claim response identified the order. Never disclose whether another account consumed the token.
+- [x] Preserve the form and show wait guidance on the 5/60s `RATE_LIMITED` response; do not automatically replay the one-shot mutation.
+
+**Token binding (`.bind` vs Client Components):** The phase rule “never pass [the claim token] to Client Components” means never pass the raw string as a client prop, form field, or DOM value. `OrderTrackingFeature` (Server Component) calls `claimOrderAction.bind(null, token)` and passes only the resulting **bound action reference** into `ClaimOrderGate` / `ClaimOrderForm`. Next encrypts closure-captured / bound Server Action arguments end-to-end, so the plaintext token never appears in serialized client props, HTML, or client JS. That encryption is defense-in-depth only — `claimOrderAction` still re-validates the 64-character length server-side, and the backend `CLAIM_TOKEN_INVALID` response remains authoritative.
 
 ### 6.5 Self-cancel
 
