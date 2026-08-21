@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { OrderDetail } from "@/features/checkout/types/order";
+import { CancelOrderButton } from "@/features/orders/components/cancel-order-button";
 import { OrderItemRow } from "@/features/orders/components/order-item-row";
 import { PAYMENT_METHODS } from "@/lib/constants/payment-methods";
 import { formatDate, formatEGP, isSameDecimal } from "@/lib/format";
@@ -18,13 +19,21 @@ import { formatDate, formatEGP, isSameDecimal } from "@/lib/format";
 type OrderDetailViewProps = {
   order: OrderDetail;
   back?: { href: string; label: string };
+  /** Owner account detail only — never set on guest tracking. */
+  allowCancel?: boolean;
 };
 
-export function OrderDetailView({ order, back }: OrderDetailViewProps) {
+export function OrderDetailView({
+  order,
+  back,
+  allowCancel = false,
+}: OrderDetailViewProps) {
   const paymentLabel =
     PAYMENT_METHODS.find((method) => method.value === order.paymentMethod)
       ?.label ?? order.paymentMethod;
   const hasDiscount = !isSameDecimal(order.discountApplied, "0");
+  const canCancel =
+    allowCancel && order.status === "PENDING" && !order.isPaid;
 
   return (
     <>
@@ -45,6 +54,7 @@ export function OrderDetailView({ order, back }: OrderDetailViewProps) {
           </h1>
           <OrderStatusBadge status={order.status} />
           <PaymentStatusBadge isPaid={order.isPaid} />
+          {canCancel ? <CancelOrderButton orderId={order.id} /> : null}
         </div>
         <p className="text-sm text-muted-foreground">
           {formatDate(order.createdAt)}

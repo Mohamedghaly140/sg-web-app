@@ -40,13 +40,13 @@
 
 ### 6.5 Self-cancel
 
-- [ ] Render cancellation on the owned detail only when `status === "PENDING" && !isPaid`. Put the action behind `ConfirmDialog` with copy explaining that stock returns and coupon use is released.
-- [ ] Implement `cancelOrderAction` for `POST /orders/:id/cancel` with the shared ActionState form pipeline. On success, revalidate both `/account/orders` and `/account/orders/[id]` and render the returned `CANCELLED` state through the shared badge.
-- [ ] On `INVALID_STATUS_TRANSITION`, refresh the RSC detail, explain that the order state changed, and remove the action when it is no longer eligible. Treat `RESOURCE_NOT_FOUND` with the same generic not-found state as detail.
+- [x] Render cancellation on the owned detail only when `status === "PENDING" && !isPaid`. Put the action behind `ConfirmDialog` with copy explaining that stock returns and coupon use is released.
+- [x] Implement `cancelOrderAction` for `POST /orders/:id/cancel` with the shared ActionState form pipeline. On success, revalidate both `/account/orders` and `/account/orders/[id]` and render the returned `CANCELLED` state through the shared badge.
+- [x] On `INVALID_STATUS_TRANSITION`, refresh the RSC detail, explain that the order state changed, and remove the action when it is no longer eligible. Treat `RESOURCE_NOT_FOUND` with the same generic not-found state as detail.
 
 ### 6.6 Post-checkout handoff
 
-- [ ] Update Phase 5 handoffs: registered confirmation links to `/account/orders/[id]`; guest confirmation explains that the tracking URL was sent by email and never fabricates or displays the real token.
+- [x] Update Phase 5 handoffs: registered confirmation links to `/account/orders/[id]`; guest confirmation explains that the tracking URL was sent by email and never fabricates or displays the real token.
 
 ## Error handling matrix
 

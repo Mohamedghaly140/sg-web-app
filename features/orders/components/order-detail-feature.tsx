@@ -15,6 +15,7 @@ export default async function OrderDetailFeature({
       <OrderDetailView
         order={order}
         back={{ href: "/account/orders", label: "Back to orders" }}
+        allowCancel
       />
     </div>
   );
