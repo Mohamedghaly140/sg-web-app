@@ -136,8 +136,13 @@ export function CartDrawer() {
               description="Explore the collection and add something you love."
               action={
                 <SheetClose
+                  nativeButton={false}
                   render={
-                    <Button render={<Link href="/products" />} size="sm" />
+                    <Button
+                      render={<Link href="/products" />}
+                      nativeButton={false}
+                      size="sm"
+                    />
                   }
                 >
                   Continue shopping
@@ -167,9 +172,11 @@ export function CartDrawer() {
               <span>{formatEGP(cart.totalPriceAfterDiscount)}</span>
             </div>
             <SheetClose
+              nativeButton={false}
               render={
                 <Button
                   render={<Link href="/cart" />}
+                  nativeButton={false}
                   variant="outline"
                   className="w-full"
                 />

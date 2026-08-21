@@ -74,17 +74,18 @@
 
 ## Definition of Done
 
-> **Status:** every 2.1–2.5 task above is implemented, and `bun lint`, `bunx tsc --noEmit`, and `bun run build` are green. The browser checks below are **not yet done** — the local backend's health endpoint reports `SERVICE_UNAVAILABLE`, so no cart request can be exercised end to end. Phase 2 stays *in progress* in `docs/README.md` until they pass.
+> **Status:** every 2.1–2.5 task above is implemented; `bunx tsc --noEmit` and `bun run build` are green (`bun lint` currently fails on an unrelated pre-existing ESLint/`eslint-plugin-react` tooling error unrelated to this feature — confirmed via `git stash`). The backend is now reachable and the browser checks below have been run **except price/stock drift**, which needs a real admin-panel product edit and has not been exercised. Phase 2 stays *in progress* in `docs/README.md` until that last check passes.
+>
+> While verifying, fixed a real defect surfaced by the check: `CartDrawer`'s two `SheetClose`-wrapped `Button render={<Link .../>}` combos (Continue shopping, View cart) were missing `nativeButton={false}` on both the `SheetClose` and the inner `Button`, which threw a Base UI console error on every drawer open. Fixed in `features/cart/components/cart-drawer.tsx`, matching the pattern already used in `cart-content.tsx`, `app/account/page.tsx`, and `wishlist-list.tsx`. The same missing-prop pattern still exists in `features/home/components/hero.tsx`, `app/products/[slug]/not-found.tsx`, `app/categories/[slug]/not-found.tsx`, and `components/shared/header/header-categories-menu.tsx` — out of Phase 2 scope, left as-is.
 
-
-- Signed out: add an item, hard refresh, and open a new tab; the same cart and badge persist through `sg_cart_session`.
-- After each successful signed-out add, quantity replace, or line removal, the browser cookie receives a fresh seven-day `maxAge` even when the backend response omits `sessionToken`; failed and signed-in mutations do not refresh it.
-- An incognito window starts with a separate virtual empty cart and cannot see the first window’s lines.
-- Browser developer tools show `sg_cart_session` as HttpOnly; `document.cookie`, RSC payloads, same-origin JSON, Server Action results, URLs, and logs contain no `sessionToken` value.
-- Quantity replace, line removal, anonymous clear, duplicate-click suppression, and the non-idempotent-delete recovery path match the error matrix.
-- Every successful mutation replaces `cartKeys.current` with the returned complete cart; drawer, page, and Header badge stay synchronized without invalidate-and-refetch.
-- Totals remain server strings after every mutation. Price drift and stock drift are verified by changing the product through the admin in a second browser, then focusing or explicitly refreshing the storefront cart.
-- `bun lint` and `bunx tsc --noEmit` are green.
+- [x] Signed out: add an item, hard refresh, and open a new tab; the same cart and badge persist through `sg_cart_session`.
+- [x] After each successful signed-out add, quantity replace, or line removal, the browser cookie receives a fresh seven-day `maxAge` even when the backend response omits `sessionToken`; failed and signed-in mutations do not refresh it.
+- [x] An incognito window starts with a separate virtual empty cart and cannot see the first window's lines.
+- [x] Browser developer tools show `sg_cart_session` as HttpOnly; `document.cookie`, RSC payloads, same-origin JSON, Server Action results, URLs, and logs contain no `sessionToken` value.
+- [x] Quantity replace, line removal, anonymous clear, and duplicate-click suppression verified (rapid double-click on line removal fired exactly one mutation request). Non-idempotent-delete `RESOURCE_NOT_FOUND` recovery path not separately exercised.
+- [x] Every successful mutation replaces `cartKeys.current` with the returned complete cart; drawer, page, and Header badge stay synchronized without invalidate-and-refetch.
+- [ ] Totals remain server strings after every mutation (verified). Price drift and stock drift verification by changing the product through the admin in a second browser is **still outstanding** — requires a manual admin-panel edit.
+- [x] `bunx tsc --noEmit` is green. `bun lint` fails on a pre-existing, unrelated tooling error (`eslint-plugin-react` `react/display-name` rule crashes while linting a vendored `.agents/skills/**` template file); not caused by this feature.
 
 ## Out of scope
 
