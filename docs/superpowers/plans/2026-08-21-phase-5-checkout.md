@@ -908,7 +908,7 @@ git commit -m "feat: add payment method selector"
 
 **Interfaces:**
 - Consumes: `parseGuestCheckoutFormData` (Task 2), `fromCheckoutErrorToActionState` (Task 3), `GuestOrderDetail` (Task 1), `clearCartSession` (existing).
-- Produces: `placeGuestOrderAction(prev, formData): Promise<ActionState>` (success `response` carries `humanOrderId`), `GUEST_CHECKOUT_STEPS`, `GuestCheckoutStep`, `checkoutSearchParamsCache`, `useCheckoutStep()` — consumed by Tasks 8–9.
+- Produces: `placeGuestOrderAction(prev, formData): Promise<ActionState>` (success `response` carries `humanOrderId`), `GUEST_CHECKOUT_STEPS`, `GuestCheckoutStep`, `checkoutParamsParsers`, `useCheckoutStep()` — consumed by Tasks 8–9.
 
 - [ ] **Step 1: `features/checkout/actions/place-guest-order.ts`**
 
@@ -1237,7 +1237,7 @@ git commit -m "feat: add guest checkout contact and shipping steps"
 - Create: `app/checkout/guest/page.tsx`
 
 **Interfaces:**
-- Consumes: `useCart` (existing), `CouponForm` (Task 5), `PaymentMethodSelect` (Task 6), `placeGuestOrderAction` (Task 7), `checkoutSearchParamsCache`/`useCheckoutStep` (Task 7), `GuestContactStep`/`GuestShippingStep` (Task 8).
+- Consumes: `useCart` (existing), `CouponForm` (Task 5), `PaymentMethodSelect` (Task 6), `placeGuestOrderAction` (Task 7), `useCheckoutStep` (Task 7), `GuestContactStep`/`GuestShippingStep` (Task 8).
 - Produces: `CheckoutGuestFeature` (default export) — consumed by `app/checkout/guest/page.tsx`.
 
 - [ ] **Step 1: `features/checkout/components/checkout-cart-summary.tsx`** — read-only line list + server totals. Deliberately does **not** duplicate `cart-line-item.tsx`'s correction UI (Context, decision 1); it only warns and links to `/cart` when a line needs attention.
@@ -1440,6 +1440,7 @@ export function GuestReviewStep({
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { LucideShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 
@@ -1489,6 +1490,7 @@ export function GuestCheckoutWizard() {
   if (!cart || cart.items.length === 0) {
     return (
       <EmptyState
+        icon={<LucideShoppingBag className="size-6" />}
         title="Your cart is empty"
         description="Add something to your cart before checking out."
         action={
@@ -1719,6 +1721,7 @@ export function CheckoutSignInPrompt() {
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { LucideShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useCallback, useState } from "react";
@@ -1802,6 +1805,7 @@ export function RegisteredCheckoutContent({ addresses }: RegisteredCheckoutConte
   if (!cart || cart.items.length === 0) {
     return (
       <EmptyState
+        icon={<LucideShoppingBag className="size-6" />}
         title="Your cart is empty"
         description="Add something to your cart before checking out."
         action={

@@ -1,6 +1,7 @@
 "use client";
 
 import { LucideTrash2 } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog/confirm-dialog";
@@ -82,14 +83,9 @@ export function CartSummary({
             </div>
           </dl>
 
-          <div className="flex flex-col gap-2">
-            <Button type="button" disabled>
-              Proceed to Checkout
-            </Button>
-            <p className="text-center text-xs text-muted-foreground">
-              Checkout is coming soon.
-            </p>
-          </div>
+          <Button render={<Link href="/checkout" />} nativeButton={false}>
+            Proceed to Checkout
+          </Button>
         </CardContent>
         <CardFooter className="justify-center">
           <ConfirmDialog

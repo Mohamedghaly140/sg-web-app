@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import FormControl from "@/components/shared/form-control";
 import type { ActionState } from "@/components/shared/form/utils/to-action-state";
@@ -30,6 +30,11 @@ export type AddressFormFieldsProps = {
   namePrefix?: string;
   defaultValues?: AddressFieldValues;
   actionState?: ActionState;
+  onDestinationChange?: (destination: {
+    country: string;
+    governorate: string;
+    city: string;
+  }) => void;
 };
 
 export function AddressFormFields({
@@ -37,6 +42,7 @@ export function AddressFormFields({
   namePrefix,
   defaultValues,
   actionState,
+  onDestinationChange,
 }: AddressFormFieldsProps) {
   const name = (field: string) =>
     namePrefix ? `${namePrefix}.${field}` : field;
@@ -60,6 +66,12 @@ export function AddressFormFields({
     (governorate === (defaultValues?.governorate ?? "")
       ? (defaultValues?.city ?? "")
       : "");
+  const [city, setCity] = useState(cityDefault);
+
+  useEffect(() => {
+    onDestinationChange?.({ country: DEFAULT_COUNTRY, governorate, city });
+  }, [governorate, city, onDestinationChange]);
+
   const seededCityOptions = getCitiesForGovernorate(governorate);
   const cityOptions =
     cityDefault && !seededCityOptions.includes(cityDefault)
@@ -95,7 +107,14 @@ export function AddressFormFields({
         placeholder="Select governorate"
         defaultValue={governorate}
         actionState={actionState}
-        onValueChange={setGovernorate}
+        onValueChange={(next) => {
+          setGovernorate(next);
+          setCity(
+            getCitiesForGovernorate(next).includes(cityDefault)
+              ? cityDefault
+              : "",
+          );
+        }}
       />
 
       <SelectField
@@ -109,6 +128,9 @@ export function AddressFormFields({
         defaultValue={cityDefault}
         disabled={!governorate || cityOptions.length === 0}
         actionState={actionState}
+        onValueChange={(next) => {
+          setCity(next);
+        }}
       />
 
       <FormControl

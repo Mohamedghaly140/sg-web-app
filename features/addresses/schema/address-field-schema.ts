@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const optionalBlankToUndefined = (value: unknown) =>
+export const optionalBlankToUndefined = (value: unknown) =>
   typeof value === "string" && value.trim() === "" ? undefined : value;
 
 export const aliasSchema = z.string().trim().min(1).max(120);
