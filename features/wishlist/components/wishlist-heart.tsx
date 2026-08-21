@@ -22,7 +22,13 @@ export function WishlistHeart({ product, className }: WishlistHeartProps) {
   const isWishlisted = (data ?? []).some(
     (entry) => entry.product.id === product.id,
   );
-  const toggle = useToggleWishlist((message) => toast.error(message));
+  const toggle = useToggleWishlist(
+    (message) => toast.error(message),
+    (isWishlisted) =>
+      toast.success(
+        isWishlisted ? "Added to wishlist" : "Removed from wishlist",
+      ),
+  );
   // useWishlist()'s query is disabled while signed out, so `data` never
   // resolves away from undefined in that case — only gate on hydration once
   // we know the visitor is signed in; a confirmed-signed-out visitor must
