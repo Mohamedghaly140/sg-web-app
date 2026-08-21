@@ -163,7 +163,7 @@ Cache-update rules:
 - Coupon preview belongs to interactive state but never mutates cart totals locally; render only the server response from `POST /coupons/validate`.
 - Checkout success replaces `cartKeys.current` with the canonical empty-cart shape and the checkout action calls `revalidatePath("/account/orders")`. Do not derive the empty state by subtracting lines.
 
-Do not put catalog lists, product detail, categories, public review pages, addresses, or orders in the query cache. Those reads belong in Server Components, with URL navigation or `router.refresh()` when a fresh render is required.
+Do not put catalog lists, product detail, categories, public review pages, addresses, or orders in the query cache. Those reads belong in Server Components, with URL navigation or `router.refresh()` when a fresh render is required. The one documented exception: `features/orders/components/orders-results-boundary.tsx` retains the last successfully rendered order-list subtree in local Client Component state so a failed manual Refresh (`docs/phase-6-orders.md` §6.1) does not blank out a page the customer already sees. This is UI-resilience state only — it holds no independently fetched or revalidated data, and every render still originates from a fresh Server Component read; it never substitutes for the URL-driven RSC fetch or introduces a second source of truth.
 
 ## 4. Money, dates, and IDs
 

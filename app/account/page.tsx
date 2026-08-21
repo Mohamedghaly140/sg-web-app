@@ -15,11 +15,16 @@ export default function AccountPage() {
     <EmptyState
       icon={<LucideUserRound className="size-6 text-muted-foreground" aria-hidden />}
       title="Nothing here yet"
-      description="Orders are coming soon. Manage your name, email, and phone from the account menu."
+      description="Manage your name, email, phone, and orders from the account menu."
       action={
-        <Button render={<Link href="/account/addresses" />} nativeButton={false}>
-          Manage addresses
-        </Button>
+        <div className="flex gap-2">
+          <Button render={<Link href="/account/addresses" />} nativeButton={false}>
+            Manage addresses
+          </Button>
+          <Button render={<Link href="/account/orders" />} nativeButton={false}>
+            View orders
+          </Button>
+        </div>
       }
     />
   );

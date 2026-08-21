@@ -22,7 +22,7 @@
 | 3 | [phase-3-auth-cart-merge.md](./phase-3-auth-cart-merge.md) | **done** | Clerk auth, account gate, optional/auth BFF modes, implicit guest-cart merge | 00 (auth) |
 | 4 | [phase-4-account.md](./phase-4-account.md) | **done** | Authenticated wishlist, own-review CRUD, and saved addresses | 03 (write), 04, 08 |
 | 5 | [phase-5-checkout.md](./phase-5-checkout.md) | **in progress** | Shipping estimate, coupon preview, registered and guest CASH checkout | 06, 07, 09 |
-| 6 | [phase-6-orders.md](./phase-6-orders.md) | **not started** | Account order history/detail, guest tracking/claim, self-cancel | 10 |
+| 6 | [phase-6-orders.md](./phase-6-orders.md) | **in progress** | Account order history/detail, guest tracking/claim, self-cancel | 10 |
 | 7 | [phase-7-hardening-release.md](./phase-7-hardening-release.md) | **not started** | Performance, resilience, accessibility, security, SEO, and production readiness | — |
 
 ## Non-goals (v1)
