@@ -1,14 +1,14 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import {
-  Show,
-  SignInButton,
-  SignUpButton,
-  UserButton,
-} from "@clerk/nextjs";
+import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 
-import { LucideLogIn, LucideMapPin, LucideUser, LucideUserPlus } from "lucide-react";
+import {
+  LucideLogIn,
+  LucideMapPin,
+  LucideUser,
+  LucideUserPlus,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -40,12 +40,12 @@ export function HeaderAuthControls() {
           <UserButton.MenuItems>
             <UserButton.Link
               label="Account"
-              labelIcon={<LucideUser />}
+              labelIcon={<LucideUser size={16} />}
               href="/account"
             />
             <UserButton.Link
               label="Addresses"
-              labelIcon={<LucideMapPin />}
+              labelIcon={<LucideMapPin size={16} />}
               href="/account/addresses"
             />
           </UserButton.MenuItems>
