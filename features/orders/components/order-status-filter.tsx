@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useOrdersParams } from "@/features/orders/hooks/use-orders-params";
 import {
   ORDER_STATUSES,
@@ -23,33 +16,45 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
   REFUNDED: "Refunded",
 };
 
+const FILTER_OPTIONS = [
+  { value: "all", label: "All" },
+  ...ORDER_STATUSES.map((status) => ({
+    value: status,
+    label: STATUS_LABELS[status],
+  })),
+] as const;
+
 export function OrderStatusFilter() {
   const [params, setParams] = useOrdersParams();
+  const selected = params.status ?? "all";
 
   return (
-    <Select
-      value={params.status ?? "all"}
-      onValueChange={(value) => {
-        if (value === null) return;
+    <ToggleGroup
+      className="flex max-w-full flex-wrap"
+      variant="outline"
+      size="sm"
+      spacing={0}
+      aria-label="Filter by order status"
+      value={[selected]}
+      onValueChange={(next) => {
+        const value = next[next.length - 1];
+        if (!value) return;
         setParams({
           status: value === "all" ? null : (value as OrderStatus),
           page: 1,
         });
       }}
     >
-      <SelectTrigger>
-        <SelectValue placeholder="Status" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectItem value="all">All statuses</SelectItem>
-          {ORDER_STATUSES.map((status) => (
-            <SelectItem key={status} value={status}>
-              {STATUS_LABELS[status]}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+      {FILTER_OPTIONS.map((option) => (
+        <ToggleGroupItem
+          key={option.value}
+          value={option.value}
+          type="button"
+          className="shrink-0 px-2.5"
+        >
+          {option.label}
+        </ToggleGroupItem>
+      ))}
+    </ToggleGroup>
   );
 }
