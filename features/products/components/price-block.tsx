@@ -1,5 +1,5 @@
+import { Money } from "@/components/shared/money";
 import { DiscountBadge } from "@/features/products/components/discount-badge";
-import { formatEGP } from "@/lib/format";
 
 type PriceBlockProps = {
   price: string;
@@ -17,12 +17,12 @@ export function PriceBlock({
   return (
     <div className="flex flex-wrap items-center gap-3">
       <span className="text-2xl font-semibold tracking-tight text-foreground">
-        {formatEGP(priceAfterDiscount)}
+        <Money value={priceAfterDiscount} />
       </span>
       {isDiscounted && (
         <>
           <span className="text-muted-foreground line-through">
-            {formatEGP(price)}
+            <Money value={price} />
           </span>
           <DiscountBadge discount={discount} />
         </>

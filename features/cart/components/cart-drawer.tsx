@@ -7,6 +7,7 @@ import { LucideShoppingBag, LucideTriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 
 import { EmptyState } from "@/components/shared/empty-state";
+import { Money } from "@/components/shared/money";
 import Spinner from "@/components/shared/spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +24,6 @@ import { CartDrawerLine } from "@/features/cart/components/cart-drawer-line";
 import { cartKeys } from "@/features/cart/hooks/cart-keys";
 import { fetchCurrentCart, useCart } from "@/features/cart/hooks/use-cart";
 import { useRemoveCartItem } from "@/features/cart/hooks/use-remove-cart-item";
-import { formatEGP } from "@/lib/format";
 
 export function CartDrawer() {
   const { data: cart, isPending, isError, refetch } = useCart();
@@ -165,11 +165,11 @@ export function CartDrawer() {
           <SheetFooter>
             <div className="flex items-center justify-between gap-4 text-muted-foreground">
               <span>Cart total</span>
-              <span>{formatEGP(cart.totalCartPrice)}</span>
+              <span><Money value={cart.totalCartPrice} /></span>
             </div>
             <div className="flex items-center justify-between gap-4 text-sm font-medium text-foreground">
               <span>Total after discount</span>
-              <span>{formatEGP(cart.totalPriceAfterDiscount)}</span>
+              <span><Money value={cart.totalPriceAfterDiscount} /></span>
             </div>
             <SheetClose
               nativeButton={false}

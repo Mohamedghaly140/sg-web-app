@@ -4,8 +4,9 @@ import { LucideLoaderCircle, LucideTrash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Money } from "@/components/shared/money";
 import type { CartItem } from "@/features/cart/types/cart";
-import { cldUrl, formatEGP } from "@/lib/format";
+import { cldUrl } from "@/lib/format";
 
 type CartDrawerLineProps = {
   item: CartItem;
@@ -60,10 +61,10 @@ export function CartDrawerLine({
         ) : null}
 
         <p className="text-xs text-muted-foreground">
-          {item.quantity} &times; {formatEGP(item.price)}
+          {item.quantity} &times; <Money value={item.price} />
         </p>
         <p className="text-sm font-medium text-foreground">
-          {formatEGP(item.lineTotal)}
+          <Money value={item.lineTotal} />
         </p>
       </div>
 

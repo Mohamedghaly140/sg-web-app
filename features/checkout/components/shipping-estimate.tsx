@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 
+import { Money } from "@/components/shared/money";
 import { Badge } from "@/components/ui/badge";
 import { getShippingFeeAction } from "@/features/checkout/actions/get-shipping-fee";
 import type { ShippingFee } from "@/features/checkout/types/shipping";
-import { formatEGP } from "@/lib/format";
 
 export type ShippingEstimateProps = {
   country: string;
@@ -86,7 +86,7 @@ export function ShippingEstimate({
           </Badge>
         )}
       </span>
-      <span className="font-medium text-foreground">{formatEGP(fee.fee)}</span>
+      <span className="font-medium text-foreground"><Money value={fee.fee} /></span>
     </div>
   );
 }

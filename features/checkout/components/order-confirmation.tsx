@@ -1,8 +1,9 @@
 import { LucideCircleCheck } from "lucide-react";
 import Link from "next/link";
 
+import { Money } from "@/components/shared/money";
 import { Button } from "@/components/ui/button";
-import { formatEGP, isSameDecimal } from "@/lib/format";
+import { isSameDecimal } from "@/lib/format";
 
 export type OrderConfirmationProps = {
   humanOrderId: string;
@@ -40,22 +41,22 @@ export function OrderConfirmation({
       <dl className="w-full max-w-sm flex flex-col gap-2 text-left text-sm">
         <div className="flex items-center justify-between">
           <dt className="text-muted-foreground">Items subtotal</dt>
-          <dd>{formatEGP(itemsSubtotal)}</dd>
+          <dd><Money value={itemsSubtotal} /></dd>
         </div>
         {hasDiscount ? (
           <div className="flex items-center justify-between">
             <dt className="text-muted-foreground">Discount</dt>
-            <dd>-{formatEGP(discountApplied)}</dd>
+            <dd>-<Money value={discountApplied} /></dd>
           </div>
         ) : null}
         <div className="flex items-center justify-between">
           <dt className="text-muted-foreground">Shipping</dt>
-          <dd>{formatEGP(shippingFees)}</dd>
+          <dd><Money value={shippingFees} /></dd>
         </div>
         <div className="flex items-center justify-between">
           <dt className="font-medium text-foreground">Total</dt>
           <dd className="text-lg font-semibold text-foreground">
-            {formatEGP(totalOrderPrice)}
+            <Money value={totalOrderPrice} />
           </dd>
         </div>
       </dl>

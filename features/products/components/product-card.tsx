@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { Money } from "@/components/shared/money";
 import { RatingSummary } from "@/components/shared/rating-summary";
 import { DiscountBadge } from "@/features/products/components/discount-badge";
 import { StockBadge } from "@/features/products/components/stock-badge";
 import type { ProductSummary } from "@/features/products/types/product";
 import { WishlistHeart } from "@/features/wishlist/components/wishlist-heart";
-import { formatEGP } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type ProductCardProps = {
@@ -49,11 +49,11 @@ export function ProductCard({ product, className }: ProductCardProps) {
         />
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-foreground">
-            {formatEGP(product.priceAfterDiscount)}
+            <Money value={product.priceAfterDiscount} />
           </span>
           {isDiscounted && (
             <span className="text-xs text-muted-foreground line-through">
-              {formatEGP(product.price)}
+              <Money value={product.price} />
             </span>
           )}
         </div>

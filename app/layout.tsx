@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Inter, Playfair_Display } from "next/font/google";
+import { Cormorant_Garamond, Lora } from "next/font/google";
 import Providers from "./providers";
 import { Header } from "@/components/shared/header";
 import { Footer } from "@/components/shared/footer";
@@ -8,16 +8,20 @@ import { cn } from "@/lib/utils";
 import { getInitialCart } from "@/features/cart/queries/get-initial-cart";
 import { getInitialWishlist } from "@/features/wishlist/queries/get-initial-wishlist";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-
-const playfairDisplay = Playfair_Display({
+const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  weight: ["400", "600"],
+  variable: "--font-cormorant",
+  display: "swap",
+  preload: false,
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const lora = Lora({
   subsets: ["latin"],
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-lora",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -41,10 +45,9 @@ export default async function RootLayout({
       className={cn(
         "h-full",
         "antialiased",
-        geistMono.variable,
         "font-sans",
-        inter.variable,
-        playfairDisplay.variable
+        cormorantGaramond.variable,
+        lora.variable
       )}
     >
       <body className="min-h-full flex flex-col">

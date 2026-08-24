@@ -6,10 +6,10 @@ import { PaymentMethodSelect } from "@/features/checkout/components/payment-meth
 import type { ShippingFee } from "@/features/checkout/types/shipping";
 import type { Cart } from "@/features/cart/types/cart";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
+import { Money } from "@/components/shared/money";
 import SubmitButton from "@/components/shared/submit-button";
 import { Button } from "@/components/ui/button";
 import type { StockErrorEntry, VariantErrorEntry } from "@/lib/api/api-error";
-import { formatEGP } from "@/lib/format";
 
 export type GuestReviewStepProps = {
   active: boolean;
@@ -43,7 +43,7 @@ export function GuestReviewStep({
       {shippingFee ? (
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Shipping</span>
-          <span className="font-medium text-foreground">{formatEGP(shippingFee.fee)}</span>
+          <span className="font-medium text-foreground"><Money value={shippingFee.fee} /></span>
         </div>
       ) : null}
 

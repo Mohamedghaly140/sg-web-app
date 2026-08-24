@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog/confirm-dialog";
+import { Money } from "@/components/shared/money";
 import { QuantityStepper } from "@/components/shared/quantity-stepper";
 import Spinner from "@/components/shared/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -22,7 +23,7 @@ import {
 import { useRemoveCartItem } from "@/features/cart/hooks/use-remove-cart-item";
 import { useUpdateCartItemQuantity } from "@/features/cart/hooks/use-update-cart-item-quantity";
 import type { CartActionResult, CartItem } from "@/features/cart/types/cart";
-import { cldUrl, formatEGP, isSameDecimal } from "@/lib/format";
+import { cldUrl, isSameDecimal } from "@/lib/format";
 
 type CartLineItemProps = {
   item: CartItem;
@@ -130,7 +131,7 @@ export function CartLineItem({
           {priceChanged ? (
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               <Badge variant="info">Price updated</Badge>
-              <span>Current price {formatEGP(item.product.priceAfterDiscount)}</span>
+              <span>Current price <Money value={item.product.priceAfterDiscount} /></span>
             </div>
           ) : null}
         </div>
@@ -139,12 +140,12 @@ export function CartLineItem({
           <dl className="flex flex-col gap-1 text-sm sm:items-end">
             <div className="flex items-baseline justify-between gap-4 sm:justify-end">
               <dt className="text-xs text-muted-foreground">Unit price</dt>
-              <dd>{formatEGP(item.price)}</dd>
+              <dd><Money value={item.price} /></dd>
             </div>
             <div className="flex items-baseline justify-between gap-4 sm:justify-end">
               <dt className="text-xs text-muted-foreground">Line total</dt>
               <dd className="font-semibold text-foreground">
-                {formatEGP(item.lineTotal)}
+                <Money value={item.lineTotal} />
               </dd>
             </div>
           </dl>

@@ -1,8 +1,9 @@
 import Image from "next/image";
 
+import { Money } from "@/components/shared/money";
 import { Badge } from "@/components/ui/badge";
 import type { OrderItem } from "@/features/checkout/types/order";
-import { cldUrl, formatEGP } from "@/lib/format";
+import { cldUrl } from "@/lib/format";
 
 type OrderItemRowProps = {
   item: OrderItem;
@@ -44,12 +45,12 @@ export function OrderItemRow({ item }: OrderItemRowProps) {
       <dl className="col-span-2 flex flex-col gap-1 text-sm sm:col-span-1 sm:min-w-36 sm:items-end">
         <div className="flex items-baseline justify-between gap-4 sm:justify-end">
           <dt className="text-xs text-muted-foreground">Unit price</dt>
-          <dd>{formatEGP(item.price)}</dd>
+          <dd><Money value={item.price} /></dd>
         </div>
         <div className="flex items-baseline justify-between gap-4 sm:justify-end">
           <dt className="text-xs text-muted-foreground">Line total</dt>
           <dd className="font-semibold text-foreground">
-            {formatEGP(item.lineTotal)}
+            <Money value={item.lineTotal} />
           </dd>
         </div>
       </dl>

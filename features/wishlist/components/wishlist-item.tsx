@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { Money } from "@/components/shared/money";
 import { RatingSummary } from "@/components/shared/rating-summary";
 import { WishlistHeart } from "@/features/wishlist/components/wishlist-heart";
 import type { WishlistEntry } from "@/features/wishlist/types/wishlist";
-import { cldUrl, formatEGP } from "@/lib/format";
+import { cldUrl } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type WishlistItemProps = {
@@ -55,11 +56,11 @@ export function WishlistItem({ entry }: WishlistItemProps) {
       />
       <div className="flex items-center gap-2">
         <span className="text-sm font-semibold text-foreground">
-          {formatEGP(product.priceAfterDiscount)}
+          <Money value={product.priceAfterDiscount} />
         </span>
         {isDiscounted ? (
           <span className="text-xs text-muted-foreground line-through">
-            {formatEGP(product.price)}
+            <Money value={product.price} />
           </span>
         ) : null}
       </div>

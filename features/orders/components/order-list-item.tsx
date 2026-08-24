@@ -1,10 +1,11 @@
 import { Package as LucidePackage } from "lucide-react";
 import Link from "next/link";
 
+import { Money } from "@/components/shared/money";
 import { OrderStatusBadge } from "@/components/shared/order-status-badge";
 import { OrderStatusStepper } from "@/features/orders/components/order-status-stepper";
 import type { OrderSummary } from "@/features/orders/types/order";
-import { formatDate, formatEGP } from "@/lib/format";
+import { formatDate } from "@/lib/format";
 
 type OrderListItemProps = {
   order: OrderSummary;
@@ -56,7 +57,7 @@ export function OrderListItem({ order }: OrderListItemProps) {
         <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-3">
           <OrderStatusBadge status={order.status} />
           <p className="text-sm font-medium text-foreground">
-            {formatEGP(order.totalOrderPrice)}
+            <Money value={order.totalOrderPrice} />
           </p>
         </div>
       </Link>

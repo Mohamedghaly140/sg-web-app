@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 
+import { Money } from "@/components/shared/money";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useValidateCoupon } from "@/features/checkout/hooks/use-validate-coupon";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
-import { formatEGP } from "@/lib/format";
 
 const COUPON_ERROR_COPY: Record<string, string> = {
   RESOURCE_NOT_FOUND: "We couldn't find that coupon code.",
@@ -63,7 +63,7 @@ export function CouponForm({ applied, onApplied }: CouponFormProps) {
       {applied ? (
         <div className="flex items-center justify-between text-sm">
           <Badge variant="success">{applied.code} applied</Badge>
-          <span className="text-muted-foreground">-{formatEGP(applied.discountApplied)}</span>
+          <span className="text-muted-foreground">-<Money value={applied.discountApplied} /></span>
         </div>
       ) : null}
       {errorMessage ? (

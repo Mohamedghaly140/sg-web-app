@@ -5,6 +5,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog/confirm-dialog";
+import { Money } from "@/components/shared/money";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +18,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useClearCart } from "@/features/cart/hooks/use-clear-cart";
-import { formatEGP, isSameDecimal } from "@/lib/format";
+import { isSameDecimal } from "@/lib/format";
 
 type CartSummaryProps = {
   totalCartPrice: string;
@@ -64,7 +65,7 @@ export function CartSummary({
           <dl className="flex flex-col gap-3 text-sm">
             <div className="flex items-center justify-between gap-4">
               <dt className="text-muted-foreground">Subtotal</dt>
-              <dd>{formatEGP(totalCartPrice)}</dd>
+              <dd><Money value={totalCartPrice} /></dd>
             </div>
             {hasSavings ? (
               <div className="flex items-center justify-between gap-4">
@@ -78,7 +79,7 @@ export function CartSummary({
             <div className="flex items-end justify-between gap-4">
               <dt className="font-medium text-foreground">Total</dt>
               <dd className="text-xl font-semibold tracking-tight text-foreground">
-                {formatEGP(totalPriceAfterDiscount)}
+                <Money value={totalPriceAfterDiscount} />
               </dd>
             </div>
           </dl>

@@ -2,8 +2,7 @@ const DEFAULT_LOCALE = "en-EG";
 const DEFAULT_TIME_ZONE = "Africa/Cairo";
 
 const egpFormatter = new Intl.NumberFormat(DEFAULT_LOCALE, {
-  style: "currency",
-  currency: "EGP",
+  style: "decimal",
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 });
@@ -56,7 +55,7 @@ export function formatEGP(amount: string | number): string {
     throw new TypeError(`Invalid EGP amount: ${amount}`);
   }
 
-  return egpFormatter.format(value);
+  return `${egpFormatter.format(value)} EGP`;
 }
 
 /**

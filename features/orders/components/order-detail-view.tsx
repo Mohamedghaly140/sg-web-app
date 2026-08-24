@@ -1,6 +1,7 @@
 import { LucideArrowLeft } from "lucide-react";
 import Link from "next/link";
 
+import { Money } from "@/components/shared/money";
 import { OrderStatusBadge } from "@/components/shared/order-status-badge";
 import { PaymentStatusBadge } from "@/components/shared/payment-status-badge";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +17,7 @@ import { CancelOrderButton } from "@/features/orders/components/cancel-order-but
 import { OrderItemRow } from "@/features/orders/components/order-item-row";
 import { OrderStatusStepper } from "@/features/orders/components/order-status-stepper";
 import { PAYMENT_METHODS } from "@/lib/constants/payment-methods";
-import { formatDate, formatEGP, isSameDecimal } from "@/lib/format";
+import { formatDate, isSameDecimal } from "@/lib/format";
 
 type OrderDetailViewProps = {
   order: OrderDetail;
@@ -106,23 +107,23 @@ export function OrderDetailView({
             <dl className="flex flex-col gap-3 text-sm">
               <div className="flex items-center justify-between gap-4">
                 <dt className="text-muted-foreground">Items subtotal</dt>
-                <dd>{formatEGP(order.itemsSubtotal)}</dd>
+                <dd><Money value={order.itemsSubtotal} /></dd>
               </div>
               {hasDiscount ? (
                 <div className="flex items-center justify-between gap-4">
                   <dt className="text-muted-foreground">Discount</dt>
-                  <dd>-{formatEGP(order.discountApplied)}</dd>
+                  <dd>-<Money value={order.discountApplied} /></dd>
                 </div>
               ) : null}
               <div className="flex items-center justify-between gap-4">
                 <dt className="text-muted-foreground">Shipping</dt>
-                <dd>{formatEGP(order.shippingFees)}</dd>
+                <dd><Money value={order.shippingFees} /></dd>
               </div>
               <Separator />
               <div className="flex items-end justify-between gap-4">
                 <dt className="font-medium text-foreground">Total</dt>
                 <dd className="text-xl font-semibold tracking-tight text-foreground">
-                  {formatEGP(order.totalOrderPrice)}
+                  <Money value={order.totalOrderPrice} />
                 </dd>
               </div>
             </dl>

@@ -2,12 +2,13 @@ import { LucideTriangleAlert } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { Money } from "@/components/shared/money";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import type { Cart } from "@/features/cart/types/cart";
 import type { StockErrorEntry, VariantErrorEntry } from "@/lib/api/api-error";
-import { cldUrl, formatEGP } from "@/lib/format";
+import { cldUrl } from "@/lib/format";
 
 export type CheckoutCartSummaryProps = {
   cart: Cart;
@@ -84,7 +85,7 @@ export function CheckoutCartSummary({
                 ) : null}
               </div>
               <span className="text-sm font-medium text-foreground">
-                {formatEGP(item.lineTotal)}
+                <Money value={item.lineTotal} />
               </span>
             </li>
           );
@@ -96,12 +97,12 @@ export function CheckoutCartSummary({
       <dl className="flex flex-col gap-2 text-sm">
         <div className="flex items-center justify-between">
           <dt className="text-muted-foreground">Subtotal</dt>
-          <dd>{formatEGP(cart.totalCartPrice)}</dd>
+          <dd><Money value={cart.totalCartPrice} /></dd>
         </div>
         <div className="flex items-center justify-between">
           <dt className="font-medium text-foreground">Estimated total</dt>
           <dd className="text-lg font-semibold text-foreground">
-            {formatEGP(cart.totalPriceAfterDiscount)}
+            <Money value={cart.totalPriceAfterDiscount} />
           </dd>
         </div>
       </dl>

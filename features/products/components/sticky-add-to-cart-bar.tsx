@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { LucideLoader2, LucideShoppingBag, LucideZap } from "lucide-react";
 
+import { Money } from "@/components/shared/money";
 import { Button } from "@/components/ui/button";
 import { useProductPurchase } from "@/features/products/components/product-purchase-provider";
-import { formatEGP } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type StickyAddToCartBarProps = {
@@ -72,7 +72,7 @@ export function StickyAddToCartBar({
     >
       <div className="mx-auto flex max-w-lg items-center gap-2">
         <span className="mr-auto text-sm font-semibold text-foreground">
-          {formatEGP(priceAfterDiscount)}
+          <Money value={priceAfterDiscount} />
         </span>
         <Button
           type="button"
