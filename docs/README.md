@@ -23,7 +23,25 @@
 | 4 | [phase-4-account.md](./phase-4-account.md) | **done** | Authenticated wishlist, own-review CRUD, and saved addresses | 03 (write), 04, 08 |
 | 5 | [phase-5-checkout.md](./phase-5-checkout.md) | **in progress** | Shipping estimate, coupon preview, registered and guest CASH checkout | 06, 07, 09 |
 | 6 | [phase-6-orders.md](./phase-6-orders.md) | **in progress** | Account order history/detail, guest tracking/claim, self-cancel | 10 |
-| 7 | [phase-7-hardening-release.md](./phase-7-hardening-release.md) | **not started** | Performance, resilience, accessibility, security, SEO, and production readiness | — |
+| 7 | [phase-7-classical-foundation.md](./phase-7-classical-foundation.md) | not started | Classical tokens, ramps, type scale, fonts, shadows, radius, `.plate`, tabular figures, money format | — |
+| 8 | [phase-8-primitives-and-shell.md](./phase-8-primitives-and-shell.md) | not started | All `components/ui` primitives, shared kit, header/footer/sidenav, account sub-nav, density flip | — |
+| 9 | [phase-9-catalogue-surfaces.md](./phase-9-catalogue-surfaces.md) | not started | S1 Home, S2 Listing, S3 Product detail, S8 Categories | 01, 02, 03 (read) |
+| 10 | [phase-10-bag-and-checkout.md](./phase-10-bag-and-checkout.md) | not started | S4 Cart, S5 registered, S6 guest, S7 confirmation, shared step rail | 05, 06, 07, 09 |
+| 11 | [phase-11-contact-and-order-help.md](./phase-11-contact-and-order-help.md) | not started | S9 Contact — new route and feature; order-help lookup | 10 (guest lookup) |
+| 12 | [phase-12-account-area.md](./phase-12-account-area.md) | not started | S10 Overview (new), S11 Addresses, S12 Orders, S13 Order detail, profile, wishlist | 04, 08, 10, 11 |
+| 13 | [phase-13-responsive.md](./phase-13-responsive.md) | not started | Derived mobile and tablet behaviour across all fifteen screens | — |
+| 14 | [phase-14-dark-classical.md](./phase-14-dark-classical.md) | not started | Derived dark palette plus the theme provider that does not exist yet | — |
+| 15 | [phase-15-hardening-release.md](./phase-15-hardening-release.md) | not started | Performance, resilience, accessibility, security, SEO, and production readiness | — |
+
+### The Classical re-skin (Phases 7–14)
+
+Phases 7–14 apply the approved visual design in `docs/design_handoff_sg_storefront/` to the existing storefront. **They change how the storefront looks, not what it does** — the data layer, Server Actions, queries, cart-session lifecycle and TanStack wiring are out of scope throughout.
+
+Hardening was renumbered from 7 to 15 rather than left in place. Its own prerequisite already read *"final brand tokens and production content available"*, and the handoff **is** those tokens: measuring LCP against Inter/Playfair, or running a contrast pass on a palette we are about to replace, measures a skin the storefront is about to discard. Note that the "Phase 7" references in `docs/integration/storefront/` refer to the **backend's** phase numbering (Geidea card payments), which is a separate namespace.
+
+**Hard gate:** Phases 2, 5 and 6 must read **done** before Phase 7 starts. Re-skinning underneath in-flight cart, checkout and orders work collides in exactly the files Phases 10 and 12 rewrite hardest.
+
+**Two open product decisions** are recorded in `phase-8-primitives-and-shell.md` §8.10 and must be answered by a person, not resolved inside a commit: the brand-name conflict (the app ships "Safa Ghaly", every designed screen reads "SG·COUTURE"), and "The Makers", which appears in the designed nav and on the home page with no backend content source and no route.
 
 ## Non-goals (v1)
 

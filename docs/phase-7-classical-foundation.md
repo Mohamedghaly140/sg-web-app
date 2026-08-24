@@ -1,0 +1,91 @@
+# Phase 7 — Classical Foundation (tokens, type, fonts, plate, money format)
+
+**Objective:** re-express the whole storefront in the Classical design system's colour, typography, density and elevation by rewriting the token layer alone, so that no feature component has to be edited for the app to change skin.
+
+**Prerequisites:** Phases 0–6 DoD. **Phases 2, 5 and 6 must read `done` in `docs/README.md` before this phase starts** — re-skinning underneath in-flight cart, checkout and orders work collides in exactly the files Phases 10 and 12 rewrite hardest.
+
+**API surface:** none. This phase touches no endpoint.
+
+**Design source:** `docs/design_handoff_sg_storefront/tokens/classical-styles.css` is the source of truth for every value; `tokens/classical-readme.md` carries the intent. When a value here disagrees with that stylesheet, the stylesheet wins — except for the two contrast deviations recorded in 7.1, which are deliberate and documented.
+
+## Design language in one paragraph
+
+Classical is editorial and book-like on a soft near-white ground. **Colour is applied as stroke, never as fill:** buttons are outlined, cards are bordered and unfilled, sections are separated by hairlines. Bold is avoided — the bigger the text, the lighter it sets. Photographs sit matted like tipped-in book plates. Elevation is a whisper. Every figure is tabular; running prose is not.
+
+## Tasks
+
+### 7.1 Colour tokens
+
+- [ ] Rewrite `:root` in `app/globals.css` from oklch to the Classical values, written as **hex literals, not oklch**. A reviewer must be able to diff `:root` against `tokens/classical-styles.css` by eye; converting to oklch makes the mapping unverifiable. Use `color-mix()` only where a value is *derived* (tints, hover states), never to restate a value the stylesheet already gives.
+- [ ] Map the roles as follows. `--background` `#f3f2f2`; `--foreground` `#201f1d`; `--card` `#f3f2f2` (cards render unfilled, but the token stays opaque because `@clerk/ui/themes/shadcn.css` needs a real surface); `--card-foreground` `#201f1d`; `--popover` `#eae9e9` (`.dialog` sits on surface, not ground); `--primary` `#b68235`; `--primary-foreground` `#f3f2f2`; `--secondary` `color-mix(in oklab, #201f1d 7%, transparent)` (exactly `.btn-secondary:hover`); `--secondary-foreground` `#201f1d`; `--muted` `#eae9e9`; `--accent` `#b68235`; `--accent-foreground` `#5a3b0a`; `--border` and `--input` both `color-mix(in srgb, #201f1d 16%, transparent)`; `--ring` `#b68235`.
+- [ ] Add a new role token **`--accent-strong: #7d5411`** (`accent-700`), exposed through `@theme inline` as `--color-accent-strong`. Establish the rule that governs it: **`text-accent` (`#b68235`) is only for 1px strokes, icons, and type at 24px or larger; any accent-coloured text below 24px uses `text-accent-strong`.** The measured reason: `#b68235` on `#f3f2f2` is **3.02:1**, matching the design system's own warning that the accent pair is tuned for "icons, large text and interface chrome, not for body copy"; `#7d5411` on the same ground is **≈6.6:1**. The handoff only flags body copy, but a 14px gold button label fails AA identically. Making this a token rather than a convention is also what lets Phase 14 invert it — on light "strong" means darker, on dark it means lighter.
+- [ ] Sweep the seven existing `text-accent` sites in `features/` onto `text-accent-strong` **in the same commit as the token flip**. They are 13–14px and drop to 3:1 the instant `--accent` becomes gold. This is not deferrable to a later phase.
+- [ ] Set `--muted-foreground` to `#605d5d` (`neutral-700`) rather than the handoff's ink-at-55%. **Record this as a deliberate deviation in a comment**, with the reason: 55% ink composites to ≈`#7f7e7c` = **3.9:1**, which fails AA for the 12–12.5px secondary text it is used on throughout the design; `neutral-700` is the nearest ramp step at ≈5.6:1. Without the comment, a later reader will "correct" it back.
+- [ ] Expose both tonal ramps as flat `--neutral-100…900` and `--accent-100…900` in `:root`, mapped through `@theme inline` to `--color-neutral-*` / `--color-accent-*`, so `bg-accent-100` and `text-neutral-800` generate. Tailwind resolves `bg-accent` and `bg-accent-100` independently — there is no collision.
+- [ ] **Do not ship `--color-accent-2-*`.** The design system's readme is explicit that this ramp is a machine-derived stand-in for the same role in a mono scheme; publishing it invites a future contributor to treat it as a second brand colour.
+- [ ] Verify the `bg-primary` sweep. A gold `--primary` turns every `bg-primary` into a filled accent block, which the system forbids. There are exactly four consumers and all are already scheduled: `components/ui/button.tsx` and `components/ui/badge.tsx` `default` variants (Phase 8), `features/products/components/gallery.tsx` active-thumbnail dot (Phase 9), and `features/cart/components/cart-drawer.tsx` count dot (Phase 8, replaced by the `Bag · N` outlined button). Confirm no fifth consumer has appeared; do not resolve them here.
+
+### 7.2 Semantic status roles in a mono palette
+
+- [ ] Keep `--destructive`, `--success`, `--warning` and `--info` defined. Classical is a mono scheme, but order status needs six distinguishable states, `docs/01-conventions.md` §7 mandates semantic badge variants, and `components/shared/order-status-badge.tsx`, `payment-status-badge.tsx` and `active-badge.tsx` all depend on them. Retune rather than delete.
+- [ ] Alias `--warning` to `--accent-strong`. Gold *is* the caution colour in this palette; introducing a second yellow is noise.
+- [ ] Alias `--info` to `--neutral-700`. Blue is the one hue that would visibly break the mono scheme.
+- [ ] Retune `--destructive` to a deep desaturated oxide and `--success` to a deep desaturated moss, both dark enough to read as text on a tint. Genuine errors must not read as decoration, which is why destructive survives at all.
+- [ ] Leave the four `*-foreground` tokens defined because Clerk reads them, but note in a comment that our own badges stop using them: Phase 8 renders semantic badges as `bg-<role>/10 text-<role>` tints, never as filled blocks.
+
+### 7.3 Density, radius and elevation
+
+- [ ] Override `--shadow-sm`, `--shadow-md` and `--shadow-lg` in `@theme` with the three whisper values from the stylesheet. Every existing `shadow-lg` (sheet, alert-dialog, select content) becomes a whisper with **zero class edits**. Delete nothing.
+- [ ] Replace the `--radius-*` calc chain with literals: `--radius-sm: 2px`, `--radius-md: 4px`, `--radius-lg: 7px`, plus `--radius-xs: 3px` for the tag's `calc(--radius-md * 0.75)`. Keep a plain `--radius: 4px` in `:root` because Clerk's shadcn theme reads it directly. Drop `--radius-xl/2xl/3xl/4xl`; nothing consumes them once the chain is gone.
+- [ ] Do **not** perform the `rounded-none` → `rounded-md` sweep here. It belongs with the primitives in Phase 8, together with the governance work described there, because splitting the CSS change from the comment deletions is how the decision gets reverted.
+- [ ] Leave `--spacing` alone in this phase. The density flip lands in Phase 8 — see 8.1 for why it must be coupled to the primitives rewrite.
+
+### 7.4 Fonts
+
+- [ ] In `app/layout.tsx`, replace `Inter` and `Playfair_Display` with `Cormorant_Garamond` (weights 400 and 600) and `Lora` (weights 400 and 600, **including `style: ["normal","italic"]`** — the design sets review excerpts and the courier note in italic). Both take `display: "swap"` and the `latin` subset only.
+- [ ] **Remove `Geist_Mono` entirely** — the import, the `--font-geist-mono` variable, and `--font-mono` from `@theme inline`. Verified: `font-mono` appears nowhere in `app/`, `components/`, `features/` or `lib/`. Classical's tabular figures come from the `tnum` feature on the serif faces, not from a mono family.
+- [ ] Wire `@theme inline` as `--font-heading: var(--font-cormorant)`, `--font-body: var(--font-lora)`, and `--font-sans: var(--font-lora)`. **Keep the `--font-sans` alias** so `html { @apply font-sans }`, `.text-eyebrow`'s `font-sans`, and Clerk's theme all keep resolving without a codebase-wide sweep. It is a serif under the name "sans", which is a lie — mitigate by adding `--font-body` as the name new code uses, and record the alias in `01-conventions.md` §7 so nobody "fixes" it.
+- [ ] Add `@layer base` weight rules: `h1, h2 { font-weight: 400 }` because display text takes the normal cut, and `h3, h4, h5, h6 { font-weight: 600 }` because interface headings need the weight at small sizes. This encodes the system's "bold is avoided; the bigger the text, the lighter it sets" rule structurally rather than per-component.
+- [ ] Bake the performance mitigations in here rather than deferring them to Phase 15: two serif families are a real LCP and CLS risk. `next/font` generates a size-adjusted local fallback, which is the mechanism that protects CLS — do not bypass it with a raw `@import`. Preload the body face only.
+
+### 7.5 Type scale
+
+- [ ] Retune Tailwind's type ramp in `@theme` rather than editing call sites. The primitives are `text-xs` (12px) almost everywhere and Classical's ladder is 15px body / 13.5px controls / 12.5px secondary / 12px meta / 11.5–11px notes, so retuning the ramp lands every existing `text-xs` and `text-sm` on a Classical value for free. Set `--text-2xs: 0.6875rem` (11px, a **new** step), `--text-xs: 0.78125rem` (12.5px), `--text-sm: 0.84375rem` (13.5px), `--text-base: 0.9375rem` with `--text-base--line-height: 1.55` (15px), `--text-lg: 1.0625rem` (17px), `--text-xl: 1.25rem` (20px), `--text-2xl: 1.5625rem` (25px), `--text-3xl: 2rem` (32px), `--text-4xl: 2.625rem` (42px).
+- [ ] Retune the existing `.text-eyebrow` utility **in place** rather than renaming it — it has nine call sites across the header, footer, sidenav and category tiles. Its Classical form is the kicker: 11px, `0.14em` tracking, uppercase, muted.
+- [ ] Add a sibling `.text-kicker` in `text-accent-strong`. The design uses two kickers with different roles — a muted one ("AUTUMN · 2026", "DELIVERING TO") and an accent one (`.card-kicker`, "IN PROGRESS", "ORDER PLACED") — and collapsing them into one loses the distinction.
+- [ ] Add a `.measure` utility for justified body copy: `text-align: justify`, `hyphens: auto`, `max-width: 52ch`. **`hyphens: auto` is mandatory, not decorative** — justified serif text without hyphenation produces rivers at the 44–58ch measure the design specifies, which is precisely the failure mode that makes editorial systems look amateurish.
+- [ ] Set global `:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px }` and an accent-tinted `::selection` in `@layer base`. The system's rule is that states are themed, never browser defaults.
+
+### 7.6 Money format
+
+- [ ] **Fix the currency order in `lib/format.ts`.** `formatEGP` currently uses `Intl.NumberFormat("en-EG", { style: "currency", currency: "EGP" })`, which returns `"EGP 2,040.00"`. Every screen in the design renders `"2,040.00 EGP"` — currency **after** the number. Change to `style: "decimal"` with a `" EGP"` suffix, keeping `minimumFractionDigits: 2` and `maximumFractionDigits: 2`. This is a genuine behavioural change, not a cosmetic one.
+- [ ] Introduce `components/shared/money/index.tsx` rendering `<span className="tabular-nums">{formatEGP(value)}</span>`, and migrate all **49 `formatEGP` call sites across 16 files** onto it. Doing the currency-order fix and the tabular-figure application as one mechanical replacement means every money surface corrects together rather than drifting.
+- [ ] Keep `formatEGP`'s existing non-finite guard and its `string | number` signature. Money stays a variable-scale decimal string from the API, formatted only for display; **this phase introduces no client-side money arithmetic.**
+- [ ] Add a `.figures` utility (`@apply tabular-nums`) for non-money numerals — order ids, dates, counts, quantities, pagination, phone numbers, "4 of 12 pieces". Use Tailwind's built-in `tabular-nums`; it emits `font-variant-numeric: tabular-nums`, which activates `tnum` on both faces, so no custom `font-feature-settings` declaration is needed.
+- [ ] Record the rule in `01-conventions.md` §7: **numerals in figure positions carry tabular figures; running prose must not.** Lora's tabular feature also widens its word-spaces and punctuation, which loosens prose visibly.
+
+### 7.7 The `.plate` image treatment
+
+- [ ] Define `@utility plate` with `box-sizing: border-box`, `filter: sepia(.22) saturate(.82) contrast(1.05)`, `border: 6px solid var(--color-muted)` and `outline: 1px solid var(--color-border)`. Add `@utility plate-sm { border-width: 3px }` for thumbnails at 64px and below (the 46/48/52px order and cart lines), and `@utility plate-selected { outline-color: var(--color-accent) }` for the PDP thumbnail strip.
+- [ ] Document that **the class goes on a wrapper containing only the image.** `filter` applies to every descendant, so a stock badge or wishlist heart placed inside the plate would be sepia-toned along with the photograph. The required structure is an outer `relative` element, an inner `.plate` wrapping the `<Image>`, and overlays as **siblings** of the inner plate.
+- [ ] Document that **`filter` creates a containing block for `position: fixed` and establishes a new stacking context.** Anything sticky or fixed inside a plated ancestor breaks. `features/products/components/sticky-add-to-cart-bar.tsx` is the live risk and must be verified in Phase 9.
+- [ ] Note that `box-sizing: border-box` keeps the 6px mat inside the element box, so the plate's inner dimensions are 12px smaller than the outer box. `cldUrl()` in `lib/format.ts` already exists for width-aware Cloudinary transforms — do not compute `sizes` from the outer width on small thumbnails.
+
+### 7.8 Conventions and tracker
+
+- [ ] Amend `docs/01-conventions.md` §7 with the four rules this phase establishes: the `text-accent-strong` threshold, the tabular-figures rule, the `--font-sans` compatibility alias, and a note that Classical tokens live in `@theme` and are never restated as literals in feature code.
+- [ ] Update the phase-map table in `docs/README.md` to mark Phase 7 in progress, then done.
+
+## Definition of Done
+
+- Every one of the fourteen routes renders on the Classical ground with ink text, gold strokes and the Cormorant/Lora pairing; no route throws and no console errors appear.
+- The **Clerk sign-in modal** opens and inherits the new tokens. Clerk reads the CSS variables directly, so this phase restyles it silently — it must be looked at, not assumed.
+- All money renders as `"2,040.00 EGP"` with tabular figures, on the cart, both checkouts, the confirmation, and every order surface.
+- Sonner toasts, skeletons and dialogs sit on the Classical ground rather than the old neutral one.
+- No geometry work is expected yet: controls still carry pre-Classical sizing, corners and heights. **This phase is browser-verifiable but not releasable on its own** — it is a checkpoint, not a deployment.
+- `bun run build` succeeds.
+- `bun lint` and `bunx tsc --noEmit` pass.
+
+## Out of scope
+
+Component geometry, corner radius application, control heights and the spacing flip belong to Phase 8. Screen layout belongs to Phases 9–12. Responsive behaviour is Phase 13, and the dark palette is Phase 14 — which is why `--accent-strong` and the ramps are introduced as tokens here rather than as hardcoded values.

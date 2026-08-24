@@ -1,7 +1,7 @@
 # Backend Contract Gaps — Questions & Requests
 
 > **Audience:** backend team (`sg-couture-api`).
-> **Source:** web storefront dev-plan review against `docs/integration/storefront/` (contract snapshot dated 2026-07-18).
+> **Source:** web storefront dev-plan review against `docs/integration/storefront/` (contract snapshot dated 2026-07-18), plus a second pass reviewing the approved UI design in `docs/design_handoff_sg_storefront/` against the same contract (2026-08-24).
 > **Status:** open — each item lists what blocks us, what we need, and our fallback if the contract stays as-is.
 >
 > Resolutions should land as updates to the integration guide (and `API_SPECIFICATION.md` where behavior changes), then this file gets updated/pruned.
@@ -57,7 +57,9 @@
 
 ## GAP-4 · Order detail contains no shipping address
 
-**Blocks:** nothing in the current plan — Phase 6 renders an "address-free" detail by design. **Severity: product decision needed.**
+**Blocks:** Phase 12 (account area). **Severity: high** — *escalated 2026-08-24.*
+
+> **Escalation note.** This was previously "nothing blocked — Phase 6 renders an address-free detail by design; severity: product decision needed." The approved design now **depends** on this data: screen S13 (Order detail) specifies a two-column band reading `DELIVERING TO` (full address plus a muted phone) and `NOTE FOR THE COURIER` (the `notes` value, set in italic). The storefront will ship S13 with that band omitted until the contract answers, but the designed screen is incomplete without it.
 
 **Contract today:** the order detail shape (`09-checkout.md`, reused by `GET /orders/:id` and `GET /orders/guest/:token`) has items, totals, status, payment fields — but **no shipping address and no contact/notes**. Customers therefore can never see *where* an order is being delivered, and support conversations ("which address did I use?") have no storefront answer. Deleting a saved address also severs the order's address relation (`08-addresses.md`), so the data may genuinely be gone unless it's snapshotted.
 
@@ -70,6 +72,114 @@
 
 ---
 
+## GAP-5 · No contact / message endpoint
+
+**Blocks:** Phase 11 (contact and order help). **Severity: medium** — half of a designed screen has nowhere to submit.
+
+**Contract today:** there is no contact, message, enquiry, or support endpoint anywhere in `docs/integration/storefront/`. There is also no newsletter-subscribe endpoint (already known; the storefront ships that control visibly disabled rather than faking it).
+
+**What the design needs:** screen S9 (Contact us) specifies a "Write to us" form with `name`, optional `phone`, `email`, a single `topic` chosen from six fixed values (A piece I want · Sizing & fit · Alterations · Delivery · Returns · Something else), and a free-text `message`. **Three separate surfaces depend on this one endpoint**, so it is worth resolving once:
+
+1. S9's contact form.
+2. S13's "Message the atelier" secondary button on the order-detail rail.
+3. The `SHIPPING_NOT_AVAILABLE` recovery path, which the design wants to end in a "message the atelier" fallback.
+
+**What we need:**
+
+- **Preferred:** `POST /contact` — Auth mode **Optional** (so a signed-in customer's identity can be attached server-side without the form asking for it again), body `{ name, email, phone?, topic, message, orderId? }`, strict-body like every other route. It needs its own rate limit; something near the coupon-validate tier (10/60s per IP) is sensible, and it should be lower than the 100/60s global because it is an unauthenticated write that sends mail.
+- Confirmation of the topic enum's canonical values, so the storefront sends wire-format strings rather than inventing labels.
+- If a `VALIDATION_ERROR` shape differs from the standard envelope for this route, document it.
+
+**Our fallback:** render the designed form, validate it client-side with Zod, then hand the composed message to the customer's own mail client via a `mailto:` link (topic in the subject, message in the body) with a WhatsApp deep link beside it — the design already promises "WhatsApp on the same number". The primary control is a link, not a submit, and a visible note says the message opens in your mail app. **No server action and no success state we cannot prove.** This works, but it loses delivery confirmation, loses the message in our own systems, and drops the attach-signed-in-identity behaviour entirely.
+
+---
+
+## GAP-6 · Delivery options and delivery-time estimates are not in the contract
+
+**Blocks:** Phase 10 (checkout). **Severity: medium** — the design shows a choice the API cannot offer, and a promise the API cannot substantiate.
+
+**Contract today:** `GET /shipping/fee` resolves a destination to **one** zone and returns a single fee:
+
+```json
+{ "fee": "65.00", "zone": { "country": "Egypt", "governorate": "Cairo", "city": null } }
+```
+
+There is no set of options, no service tiers, and **no duration, ETA, or working-day estimate anywhere in the shipping or checkout responses.**
+
+**Two distinct problems:**
+
+1. **Selectable delivery options.** Screen S5 (registered checkout) devotes its entire step `02 Delivery` to *two selectable cards*, each with a name, a sub-line and its own fee right-aligned. Nothing in the contract can populate a second row. We are not going to invent courier tiers.
+2. **Delivery-time copy.** The design states delivery duration as fact in at least four places — S3's PDP row ("Cairo, 2–4 days · 65 EGP"), S6's guest shipping step, S7's confirmation meta band ("Nasr City, Cairo · 2–4 working days"), and S13's timeline estimate ("2–4 working days"). That figure has no source field. Hardcoding a shipping promise in the frontend is exactly the kind of claim that should be server-owned and per-zone.
+
+**What we need (either, ideally both):**
+
+- **For (1), preferred:** confirmation that a single fee is the intended model for v1, so we can collapse the step. If multiple delivery options *are* planned, we need the shape before building the step — e.g. `GET /shipping/options?country=&governorate=&city=` returning an array of `{ id, name, description, fee, estimatedDays }`, with the chosen `id` accepted by `POST /orders` and `POST /orders/guest`.
+- **For (2):** add an estimate to the existing zone payload — `zone.estimatedDaysMin` / `estimatedDaysMax`, or a preformatted `estimatedDelivery` string — so the storefront renders a server-owned promise instead of a hardcoded one.
+
+**Our fallback:** collapse the registered checkout rail from the designed four steps to `01 Address / 02 Payment / 03 Review`, and render the single `GET /shipping/fee` result as one **non-selectable** summary row. For the duration copy, omit the day range entirely rather than hardcode it — the design's delivery rows degrade to fee-only. The guest rail is unaffected, because its step `02` is the address form, which is real.
+
+---
+
+## GAP-7 · No receipt document or receipt re-send endpoint
+
+**Blocks:** Phase 12 (account area). **Severity: low** — one designed card is dropped.
+
+**Contract today:** `09-checkout.md` notes that a successful checkout "sends a confirmation email", but there is no endpoint to retrieve a receipt document and none to re-send that email. `10-orders.md` exposes no receipt or invoice field.
+
+**What the design needs:** S13 (Order detail) closes its right rail with a **Receipt** card offering `Download PDF` and `Email again`.
+
+**What we need (either):**
+
+- `GET /orders/:id/receipt` returning a PDF (Auth), with a guest equivalent keyed on the tracking token; and/or
+- `POST /orders/:id/receipt/email` to re-send the confirmation mail, rate-limited (this is a mail trigger, so tighter than global).
+- If receipts are deliberately email-only and never retrievable, say so in `10-orders.md` and we will drop the card permanently.
+
+**Our fallback:** omit the Receipt card. **We will not ship dead buttons** — an inert "Download PDF" is worse than no card at all.
+
+---
+
+## GAP-8 · Order lines carry `productId` but the catalogue is addressed by `slug`
+
+**Blocks:** Phase 12 (account area). **Severity: medium** — two designed actions cannot be wired.
+
+**Contract today:** an order item is:
+
+```json
+{ "productId": "ckvprod123", "name": "…", "imageUrl": "…", "quantity": 2,
+  "color": "Black", "size": "M", "price": "552.50", "lineTotal": "1105.00" }
+```
+
+But product detail is **`GET /products/:slug`** — there is no `GET /products/:id`, and no lookup that turns a `productId` into a slug. The storefront's product route is `/products/[slug]` to match.
+
+**What the design needs:** S13 gives every order line a `View piece` and a `Buy again` ghost action, and S12 puts `Buy again` on delivered and cancelled order cards. All of them need to reach the product page or re-add to cart from an order line, and none of them can.
+
+**What we need (any one, cheapest first):**
+
+- **Preferred:** add `slug` to the order item shape. It is a snapshot-friendly field and costs one column.
+- **Alternative:** accept an id at the detail route (`GET /products/:idOrSlug`), or add a slug-resolution lookup.
+- Note that `POST /cart/items` takes `productId`, so **"Buy again" as a pure cart re-add already works** — it is only the *link to the product page* that is blocked. If the answer is "no slug", we would keep `Buy again` and drop `View piece`.
+
+**Our fallback:** render `Buy again` (it only needs `productId`) and omit `View piece` from order lines. The order line's product name and image stay unlinked.
+
+---
+
+## GAP-9 · No filter-facet source for the product listing
+
+**Blocks:** Phase 9 (catalogue surfaces). **Severity: low** — works today, but the filter UI is lying by omission.
+
+**Contract today:** `GET /products` accepts `sizes` and `colors` as CSV filters, and each product in the list response correctly carries its own `sizes: []` and `colors: []` arrays. What does **not** exist is any endpoint describing *which* sizes and colours are available — globally, or within a category.
+
+**Consequence:** the storefront currently hardcodes `SIZE_OPTIONS` and `COLOR_OPTIONS` as literal arrays in `features/products/components/products-filters.tsx`. The design's S2 filter drawer makes this more visible, not less: it presents Size and Colour as tag toggles and captions the results with "4 of 12 pieces", so an option that yields nothing in the current category reads as a broken filter rather than an honest empty set.
+
+**What we need (either):**
+
+- **Preferred:** facet counts on the existing listing response — e.g. `meta.facets: { sizes: [{ value, count }], colors: [{ value, count }] }` scoped to the active query minus that facet. This also lets us disable zero-count options, which is the same treatment the design already mandates for zero-count sub-categories on S8 ("a zero is a real answer, not a missing page").
+- **Alternative:** a static `GET /products/filters?category=` returning the available values.
+
+**Our fallback:** keep the hardcoded arrays and let empty results speak for themselves. Acceptable for v1, but it drifts silently the moment merchandising adds a colour.
+
+---
+
 ## Resolution log
 
 | Gap | Status | Resolved by / notes |
@@ -77,4 +187,20 @@
 | GAP-1 | open | — |
 | GAP-2 | open | — |
 | GAP-3 | open | — |
-| GAP-4 | open | — |
+| GAP-4 | open | **Escalated 2026-08-24** — severity raised to high; the approved S13 design depends on it |
+| GAP-5 | open | Raised 2026-08-24 from the design review (S9, S13) |
+| GAP-6 | open | Raised 2026-08-24 from the design review (S5, S3, S6, S7, S13) |
+| GAP-7 | open | Raised 2026-08-24 from the design review (S13) |
+| GAP-8 | open | Raised 2026-08-24 from the design review (S12, S13) |
+| GAP-9 | open | Raised 2026-08-24 from the design review (S2) |
+
+---
+
+## Not gaps (checked and confirmed present)
+
+Recorded so the same questions are not re-asked:
+
+- **Product-card colour subtitle** — S1/S2's `Evening · Black, Emerald` subtitle needs colours on the *list* response. `GET /products` already returns `sizes` and `colors` per item. ✅
+- **Guest cart expiry copy** — S4's "Guest bags are kept for seven days" is backed by the anonymous cart `expiresAt`. ✅
+- **Sub-category counts** — S8's per-row counts come from the existing unpaginated `GET /categories` tree. ✅
+- **Order status stages** — S10/S13's four-stage track maps onto the documented status enum. ✅

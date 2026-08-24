@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link rel="stylesheet" href="_ds/classical-a5ac0350-1550-4bd9-b4b8-c0b72e3a0665/styles.css"><script src="_ds/classical-a5ac0350-1550-4bd9-b4b8-c0b72e3a0665/_ds_bundle.js"></script><style>body{margin:0;background:#e7e5e2}.sc{padding:34px 44px;border-bottom:1px solid rgba(32,31,29,.1)}.sc-hd{display:flex;align-items:baseline;gap:10px;margin:0 0 16px}.sc-id{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#201f1d;color:#f3f2f2;border-radius:4px;text-decoration:none}.sc-nm{font:400 16px/1.2 "Cormorant Garamond",serif;color:#201f1d}.sc-note{font:400 11.5px/1.4 "Lora",serif;color:rgba(32,31,29,.55);max-width:70ch}.frame{width:1280px;flex:none;background:#f3f2f2;border:1px solid rgba(32,31,29,.14);box-shadow:0 2px 10px rgba(45,43,43,.1)}.row{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}.sub{font:400 10px/1 "Lora",serif;letter-spacing:.14em;text-transform:uppercase;color:rgba(32,31,29,.45)}</style></helmet>
+
+<section class="sc" id="s1" data-screen-label="Home">
+<div class="sc-hd"><a class="sc-id" href="#s1">S1</a><span class="sc-nm">Home</span></div>
+<p class="sc-note">Categories come from <em>GET /categories</em> (name, slug, productCount); the row below is <em>GET /products?featured=true&amp;limit=4</em>.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6)">
+    <div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:var(--space-6)">SG<span style="color:var(--color-accent)">·</span>COUTURE</div>
+    <div style="display:flex;gap:var(--space-4);margin-right:auto;font-size:13.5px"><a href="#s1" aria-current="page">New In</a><a href="#s2">Dresses</a><a href="#s2">Abayas</a><a href="#s2">Sets</a><a href="#s1">The Makers</a></div>
+    <div style="position:relative;width:230px"><input class="input" placeholder="Search the atelier" style="padding-left:28px"><span style="position:absolute;left:9px;top:9px;color:var(--color-neutral-600)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg></span></div>
+    <div style="display:flex;gap:var(--space-2);align-items:center"><button class="btn btn-icon btn-ghost" aria-label="Wishlist"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button><a class="btn btn-primary" href="#s4" style="text-decoration:none">Bag · 2</a></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:var(--space-8);padding:var(--space-8) var(--space-6)">
+    <div class="plate" style="height:520px;background:var(--color-surface);display:grid;place-items:center"><span class="sub">Campaign image</span></div>
+    <div style="align-self:center">
+      <div class="sub">Autumn · 2026</div>
+      <h1 style="font-weight:400;font-size:52px;line-height:1.03;margin:var(--space-3) 0">A world of timeless designs</h1>
+      <p class="text-muted" style="text-align:justify;max-width:44ch">Made to honour the people who make them and the places they are made. Cut, sewn and finished in our Cairo atelier — pieces meant to outlast the season they were drawn for.</p>
+      <div style="display:flex;gap:var(--space-2);margin-top:var(--space-4)"><a class="btn btn-primary" href="#s2" style="text-decoration:none">Shop new in</a><a class="btn btn-secondary" href="#s1" style="text-decoration:none">Meet the makers</a></div>
+    </div>
+  </div>
+  <div style="padding:0 var(--space-6) var(--space-8)">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-2)"><h3 style="margin:0;font-weight:400">The collections</h3><a href="#s2" style="font-size:12.5px">All categories</a></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6);margin-top:var(--space-4)">
+      <div><div class="plate" style="aspect-ratio:4/3;background:var(--color-surface);display:grid;place-items:center"><span class="sub">Dresses</span></div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--space-2)"><span style="font:400 19px var(--font-heading)">Dresses</span><span class="text-muted" style="font-size:12px;font-feature-settings:'tnum'">12 pieces</span></div></div>
+      <div><div class="plate" style="aspect-ratio:4/3;background:var(--color-surface);display:grid;place-items:center"><span class="sub">Abayas</span></div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--space-2)"><span style="font:400 19px var(--font-heading)">Abayas</span><span class="text-muted" style="font-size:12px;font-feature-settings:'tnum'">8 pieces</span></div></div>
+      <div><div class="plate" style="aspect-ratio:4/3;background:var(--color-surface);display:grid;place-items:center"><span class="sub">Sets</span></div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--space-2)"><span style="font:400 19px var(--font-heading)">Sets</span><span class="text-muted" style="font-size:12px;font-feature-settings:'tnum'">6 pieces</span></div></div>
+    </div>
+  </div>
+  <div style="padding:0 var(--space-6) var(--space-8)">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-2)"><h3 style="margin:0;font-weight:400">New in</h3><a href="#s2" style="font-size:12.5px">See all</a></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);margin-top:var(--space-4)">
+      <div class="card" style="padding:0;gap:0"><div style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;position:relative;border-bottom:1px solid var(--color-divider)"><span class="sub">Image</span><span class="tag tag-outline" style="position:absolute;top:var(--space-3);left:var(--space-3);background:var(--color-bg)">Only 3 left</span><button class="btn btn-icon btn-ghost" aria-label="Save" style="position:absolute;top:var(--space-2);right:var(--space-2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button></div><div style="padding:var(--space-3)"><div style="font:400 18px/1.15 var(--font-heading)">Satin Cowl-Neck Dress</div><div class="text-muted" style="font-size:12px;margin-top:2px">Evening · Black, Emerald</div><div style="display:flex;align-items:baseline;gap:var(--space-2);margin-top:var(--space-2);font-feature-settings:'tnum'"><span style="font-size:14.5px">2,040 EGP</span><span class="text-muted" style="font-size:12px;text-decoration:line-through">2,400</span><span class="tag tag-accent" style="margin-left:auto">−15%</span></div></div></div>
+      <div class="card" style="padding:0;gap:0"><div style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;position:relative;border-bottom:1px solid var(--color-divider)"><span class="sub">Image</span><button class="btn btn-icon btn-ghost" aria-label="Save" style="position:absolute;top:var(--space-2);right:var(--space-2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button></div><div style="padding:var(--space-3)"><div style="font:400 18px/1.15 var(--font-heading)">Linen Wrap Abaya</div><div class="text-muted" style="font-size:12px;margin-top:2px">Daywear · Sand, Ivory</div><div style="display:flex;align-items:baseline;gap:var(--space-2);margin-top:var(--space-2);font-feature-settings:'tnum'"><span style="font-size:14.5px">3,150 EGP</span></div></div></div>
+      <div class="card" style="padding:0;gap:0"><div style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;position:relative;border-bottom:1px solid var(--color-divider)"><span class="sub">Image</span><span class="tag tag-neutral" style="position:absolute;top:var(--space-3);left:var(--space-3)">Sold out</span><button class="btn btn-icon btn-ghost" aria-label="Save" style="position:absolute;top:var(--space-2);right:var(--space-2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button></div><div style="padding:var(--space-3);opacity:.6"><div style="font:400 18px/1.15 var(--font-heading)">Poplin Shirtdress</div><div class="text-muted" style="font-size:12px;margin-top:2px">Daywear · Ivory</div><div style="display:flex;align-items:baseline;gap:var(--space-2);margin-top:var(--space-2);font-feature-settings:'tnum'"><span style="font-size:14.5px">1,980 EGP</span></div></div></div>
+      <div class="card" style="padding:0;gap:0"><div style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;position:relative;border-bottom:1px solid var(--color-divider)"><span class="sub">Image</span><button class="btn btn-icon btn-ghost" aria-label="Save" style="position:absolute;top:var(--space-2);right:var(--space-2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button></div><div style="padding:var(--space-3)"><div style="font:400 18px/1.15 var(--font-heading)">Crepe Column Gown</div><div class="text-muted" style="font-size:12px;margin-top:2px">Evening · Black</div><div style="display:flex;align-items:baseline;gap:var(--space-2);margin-top:var(--space-2);font-feature-settings:'tnum'"><span style="font-size:14.5px">4,200 EGP</span></div></div></div>
+    </div>
+  </div>
+  <div style="border-top:1px solid var(--color-divider);padding:var(--space-8) var(--space-6);display:grid;grid-template-columns:1fr 1fr;gap:var(--space-8)">
+    <div><div class="sub">The makers</div><p style="font:400 24px/1.35 var(--font-heading);margin:var(--space-3) 0 0;max-width:34ch">“Six weeks pass between the pattern table and the final press. You can feel every one of them.”</p><div class="text-muted" style="font-size:12px;margin-top:var(--space-3)">Amira H. · head of atelier, Zamalek</div></div>
+    <div class="plate" style="height:260px;background:var(--color-surface);display:grid;place-items:center"><span class="sub">Atelier image</span></div>
+  </div>
+  <div style="border-top:1px solid var(--color-divider);padding:var(--space-4) var(--space-6);display:flex;gap:var(--space-6);font-size:12px" class="text-muted"><span>Cash on delivery across Egypt</span><span>Delivery from 65 EGP</span><span>Track an order</span><span style="margin-left:auto">© 2026 SG Couture</span></div>
+</div>
+</section>
+
+<section class="sc" id="s2" data-screen-label="Product listing">
+<div class="sc-hd"><a class="sc-id" href="#s2">S2</a><span class="sc-nm">Product listing — Dresses (filters applied, drawer closed)</span></div>
+<p class="sc-note"><em>GET /products?category=dresses&amp;sizes=S,M&amp;colors=Black&amp;minPrice=500&amp;maxPrice=2500&amp;sort=top_rated</em>. Sold-out cards use the advisory <em>quantity</em> field; the drawer is <a href="#s3">1h</a>'s panel.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6)">
+    <div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:var(--space-6)">SG<span style="color:var(--color-accent)">·</span>COUTURE</div>
+    <div style="display:flex;gap:var(--space-4);margin-right:auto;font-size:13.5px"><a href="#s1">New In</a><a href="#s2" aria-current="page">Dresses</a><a href="#s2">Abayas</a><a href="#s2">Sets</a><a href="#s1">The Makers</a></div>
+    <div style="position:relative;width:230px"><input class="input" placeholder="Search the atelier" style="padding-left:28px"><span style="position:absolute;left:9px;top:9px;color:var(--color-neutral-600)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg></span></div>
+    <div style="display:flex;gap:var(--space-2);align-items:center"><button class="btn btn-icon btn-ghost" aria-label="Wishlist"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button><a class="btn btn-primary" href="#s4" style="text-decoration:none">Bag · 2</a></div>
+  </div>
+  <div style="padding:var(--space-6);display:flex;gap:var(--space-6);align-items:baseline;border-bottom:1px solid var(--color-divider)">
+    <h2 style="margin:0;font-weight:400;font-size:34px;flex:none">Dresses</h2>
+    <p class="text-muted" style="margin:0;font-size:13px;max-width:56ch;text-align:justify">Twelve pieces, cut and finished in the Cairo atelier. Evening, day and bridal — filter by the size and colour you actually wear.</p>
+  </div>
+  <div style="padding:var(--space-6)">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-3)">
+      <div style="display:flex;gap:var(--space-3);align-items:center"><button class="btn btn-primary">Filter (5)</button><span class="text-muted" style="font-size:12.5px;font-feature-settings:'tnum'">4 of 12 pieces</span></div>
+      <span style="font-size:13px">Sort: <span style="color:var(--color-accent)">Top rated ▾</span></span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center;padding:var(--space-3) 0"><span class="sub">Applied</span><span class="tag tag-outline">Evening ✕</span><span class="tag tag-outline">S ✕</span><span class="tag tag-outline">M ✕</span><span class="tag tag-outline">Black ✕</span><span class="tag tag-outline">500 – 2,500 EGP ✕</span><a href="#s2" style="font-size:11.5px;margin-left:var(--space-2)">Clear all</a></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4)">
+      <div class="card" style="padding:0;gap:0"><div style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;position:relative;border-bottom:1px solid var(--color-divider)"><span class="sub">Image</span><span class="tag tag-outline" style="position:absolute;top:var(--space-3);left:var(--space-3);background:var(--color-bg)">Only 3 left</span><button class="btn btn-icon btn-ghost" aria-label="Save" style="position:absolute;top:var(--space-2);right:var(--space-2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button></div><div style="padding:var(--space-3)"><div style="font:400 18px/1.15 var(--font-heading)">Satin Cowl-Neck Dress</div><div class="text-muted" style="font-size:12px;margin-top:2px">Evening · Black, Emerald</div><div style="display:flex;align-items:baseline;gap:var(--space-2);margin-top:var(--space-2);font-feature-settings:'tnum'"><span style="font-size:14.5px">2,040 EGP</span><span class="text-muted" style="font-size:12px;text-decoration:line-through">2,400</span><span class="tag tag-accent" style="margin-left:auto">−15%</span></div></div></div>
+      <div class="card" style="padding:0;gap:0"><div style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;position:relative;border-bottom:1px solid var(--color-divider)"><span class="sub">Image</span><button class="btn btn-icon btn-ghost" aria-label="Save" style="position:absolute;top:var(--space-2);right:var(--space-2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button></div><div style="padding:var(--space-3)"><div style="font:400 18px/1.15 var(--font-heading)">Silk Slip Dress</div><div class="text-muted" style="font-size:12px;margin-top:2px">Evening · Black</div><div style="display:flex;align-items:baseline;gap:var(--space-2);margin-top:var(--space-2);font-feature-settings:'tnum'"><span style="font-size:14.5px">1,760 EGP</span></div></div></div>
+      <div class="card" style="padding:0;gap:0"><div style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;position:relative;border-bottom:1px solid var(--color-divider)"><span class="sub">Image</span><span class="tag tag-neutral" style="position:absolute;top:var(--space-3);left:var(--space-3)">Sold out</span><button class="btn btn-icon btn-ghost" aria-label="Save" style="position:absolute;top:var(--space-2);right:var(--space-2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button></div><div style="padding:var(--space-3);opacity:.6"><div style="font:400 18px/1.15 var(--font-heading)">Velvet Bias Dress</div><div class="text-muted" style="font-size:12px;margin-top:2px">Evening · Black</div><div style="display:flex;align-items:baseline;gap:var(--space-2);margin-top:var(--space-2);font-feature-settings:'tnum'"><span style="font-size:14.5px">2,890 EGP</span></div></div></div>
+      <div class="card" style="padding:0;gap:0"><div style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;position:relative;border-bottom:1px solid var(--color-divider)"><span class="sub">Image</span><button class="btn btn-icon btn-ghost" aria-label="Save" style="position:absolute;top:var(--space-2);right:var(--space-2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button></div><div style="padding:var(--space-3)"><div style="font:400 18px/1.15 var(--font-heading)">Draped Jersey Dress</div><div class="text-muted" style="font-size:12px;margin-top:2px">Evening · Black</div><div style="display:flex;align-items:baseline;gap:var(--space-2);margin-top:var(--space-2);font-feature-settings:'tnum'"><span style="font-size:14.5px">2,310 EGP</span></div></div></div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:var(--space-2);margin-top:var(--space-6);align-items:center;font-size:13px;font-feature-settings:'tnum'"><button class="btn btn-secondary" disabled>Previous</button><span class="text-muted">Page 1 of 1</span><button class="btn btn-secondary" disabled>Next</button></div>
+  </div>
+</div>
+</section>
+
+<section class="sc" id="s3" data-screen-label="Product detail">
+<div class="sc-hd"><a class="sc-id" href="#s3">S3</a><span class="sc-nm">Product detail</span></div>
+<p class="sc-note"><em>GET /products/:slug</em> for gallery and taxonomy, <em>GET /products/:id/reviews</em> below the fold, <em>GET /shipping/fee</em> for the delivery line. L is disabled because that variant has no stock — <em>POST /cart/items</em> would return INVALID_VARIANT / INSUFFICIENT_STOCK.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6)">
+    <div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:var(--space-6)">SG<span style="color:var(--color-accent)">·</span>COUTURE</div>
+    <div style="display:flex;gap:var(--space-4);margin-right:auto;font-size:13.5px"><a href="#s1">New In</a><a href="#s2" aria-current="page">Dresses</a><a href="#s2">Abayas</a><a href="#s2">Sets</a><a href="#s1">The Makers</a></div>
+    <div style="position:relative;width:230px"><input class="input" placeholder="Search the atelier" style="padding-left:28px"><span style="position:absolute;left:9px;top:9px;color:var(--color-neutral-600)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg></span></div>
+    <div style="display:flex;gap:var(--space-2);align-items:center"><button class="btn btn-icon btn-ghost" aria-label="Wishlist"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button><a class="btn btn-primary" href="#s4" style="text-decoration:none">Bag · 2</a></div>
+  </div>
+  <div style="padding:var(--space-3) var(--space-6);border-bottom:1px solid var(--color-divider);font-size:12px" class="text-muted"><a href="#s1">Home</a> · <a href="#s2">Dresses</a> · <a href="#s2">Evening Dresses</a> · Satin Cowl-Neck Dress</div>
+  <div style="padding:var(--space-6);display:grid;grid-template-columns:1fr 380px;gap:var(--space-8)">
+    <div style="display:grid;grid-template-columns:1fr 108px;gap:var(--space-3);align-items:start">
+      <div class="plate" style="height:660px;background:var(--color-surface);display:grid;place-items:center"><span class="sub">Hero image</span></div>
+      <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+        <div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;outline-color:var(--color-accent)"><span class="sub">Front</span></div>
+        <div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="sub">Detail</span></div>
+        <div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="sub">Back</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:var(--space-3);align-self:start">
+      <div class="sub">Dresses · Evening</div>
+      <h2 style="margin:0;font-weight:400;font-size:31px">Satin Cowl-Neck Dress</h2>
+      <div style="display:flex;align-items:baseline;gap:var(--space-3);font-feature-settings:'tnum'"><span style="font-size:22px;font-family:var(--font-heading)">2,040 EGP</span><span class="text-muted" style="text-decoration:line-through;font-size:13px">2,400</span><span class="tag tag-accent">−15%</span></div>
+      <div class="text-muted" style="font-size:12.5px;font-feature-settings:'tnum'">★ 4.5 · 12 reviews</div>
+      <div class="hr" style="margin:var(--space-2) 0"></div>
+      <div><div class="sub" style="margin-bottom:var(--space-2)">Colour — Black</div><div style="display:flex;gap:var(--space-2)"><span style="width:26px;height:26px;border-radius:50%;background:#201f1d;outline:1px solid var(--color-accent);outline-offset:2px"></span><span style="width:26px;height:26px;border-radius:50%;background:#3a5c48"></span></div></div>
+      <div><div style="display:flex;justify-content:space-between"><span class="sub" style="margin-bottom:var(--space-2)">Size</span><a href="#s3" style="font-size:11.5px">Size guide</a></div><div class="seg"><label class="seg-opt"><input type="radio" name="z3">S</label><label class="seg-opt"><input type="radio" name="z3" checked>M</label><label class="seg-opt" style="opacity:.4"><input type="radio" name="z3" disabled>L</label></div></div>
+      <div class="tag tag-accent" style="align-self:flex-start">Only 3 left in this size</div>
+      <button class="btn btn-primary btn-block" style="min-height:44px">Add to bag</button>
+      <button class="btn btn-secondary btn-block">Save to wishlist</button>
+      <p class="text-muted" style="font-size:12.5px;text-align:justify;margin:var(--space-2) 0 0">Floor-length satin evening dress, bias-cut with a draped cowl and covered back zip. Cut and finished in our Cairo atelier.</p>
+      <div class="hr" style="margin:var(--space-2) 0"></div>
+      <div style="display:flex;flex-direction:column;gap:var(--space-2);font-size:12.5px">
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Delivery</span><span>Cairo, 2–4 days · 65 EGP</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Payment</span><span>Cash on delivery</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Returns</span><span>14 days, unworn</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:0 var(--space-6) var(--space-8);display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-8);border-top:1px solid var(--color-divider);padding-top:var(--space-6)">
+    <div><div class="sub" style="margin-bottom:var(--space-2)">The making</div><p class="text-muted" style="font-size:12.5px;text-align:justify;margin:0">Cut on the bias from a single length of satin so the drape falls without a seam at the hip. Six weeks between the pattern table and the final press.</p></div>
+    <div><div class="sub" style="margin-bottom:var(--space-2)">Care</div><p class="text-muted" style="font-size:12.5px;text-align:justify;margin:0">Dry clean only. Store on a padded hanger; press on the reverse at low heat.</p></div>
+    <div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:var(--space-2)"><span class="sub">Reviews · 12</span><a href="#s3" style="font-size:11.5px">Write a review</a></div><p style="font-size:12.5px;margin:0;font-style:italic">“Beautiful fabric and fit.”</p><div class="text-muted" style="font-size:11.5px;margin-top:4px;font-feature-settings:'tnum'">Mona A. · ★ 4.5 · 18 Jul 2026</div><div class="hr" style="margin:var(--space-3) 0"></div><p style="font-size:12.5px;margin:0;font-style:italic">“Runs slightly long — worth the hem.”</p><div class="text-muted" style="font-size:11.5px;margin-top:4px;font-feature-settings:'tnum'">Yasmin K. · ★ 4.0 · 02 Jul 2026</div></div>
+  </div>
+</div>
+</section>
+
+<section class="sc" id="s4" data-screen-label="Cart">
+<div class="sc-hd"><a class="sc-id" href="#s4">S4</a><span class="sc-nm">Cart — filled, and empty</span></div>
+<p class="sc-note"><em>GET /cart</em> shape: line <em>price</em> snapshot, live <em>product.priceAfterDiscount</em>, <em>totalCartPrice</em> vs <em>totalPriceAfterDiscount</em>. Coupon field previews via <em>POST /coupons/validate</em>. Guest carts show the <em>expiresAt</em> note.</p>
+<div class="row">
+<div class="frame" style="width:1280px">
+  <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6)"><div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:var(--space-6)">SG<span style="color:var(--color-accent)">·</span>COUTURE</div><div style="display:flex;gap:var(--space-4);margin-right:auto;font-size:13.5px"><a href="#s1">New In</a><a href="#s2">Dresses</a><a href="#s2">Abayas</a><a href="#s2">Sets</a><a href="#s1">The Makers</a></div><div style="display:flex;gap:var(--space-2);align-items:center"><a class="btn btn-primary" href="#s4" style="text-decoration:none">Bag · 2</a></div></div>
+  <div style="padding:var(--space-6);display:grid;grid-template-columns:1fr 350px;gap:var(--space-8)">
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><h3 style="margin:0;font-weight:400">Your bag</h3><button class="btn btn-ghost">Clear bag</button></div>
+      <div class="hr"></div>
+      <div style="display:flex;gap:var(--space-4);padding-bottom:var(--space-4);border-bottom:1px solid var(--color-divider)">
+        <div class="plate" style="width:100px;aspect-ratio:3/4;background:var(--color-surface);flex:none;display:grid;place-items:center"><span class="sub">Image</span></div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:400 19px var(--font-heading)">Satin Cowl-Neck Dress</div><span style="font-size:14.5px;font-feature-settings:'tnum'">4,080.00</span></div>
+          <div class="text-muted" style="font-size:12.5px;margin-top:3px">Black · M · 2,040.00 each</div>
+          <div style="display:flex;align-items:center;gap:var(--space-3);margin-top:var(--space-3)">
+            <div class="seg"><label class="seg-opt">−</label><label class="seg-opt" style="min-width:38px;justify-content:center;font-feature-settings:'tnum'">2</label><label class="seg-opt">+</label></div>
+            <span class="tag tag-accent">3 left</span>
+            <button class="btn btn-ghost" style="margin-left:auto">Remove</button>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:var(--space-4);padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider)">
+        <div class="plate" style="width:100px;aspect-ratio:3/4;background:var(--color-surface);flex:none;display:grid;place-items:center"><span class="sub">Image</span></div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:400 19px var(--font-heading)">Linen Wrap Abaya</div><span style="font-size:14.5px;font-feature-settings:'tnum'">3,150.00</span></div>
+          <div class="text-muted" style="font-size:12.5px;margin-top:3px">Sand · L · 3,150.00 each</div>
+          <div style="display:flex;align-items:center;gap:var(--space-3);margin-top:var(--space-3)"><div class="seg"><label class="seg-opt">−</label><label class="seg-opt" style="min-width:38px;justify-content:center;font-feature-settings:'tnum'">1</label><label class="seg-opt">+</label></div><button class="btn btn-ghost" style="margin-left:auto">Remove</button></div>
+        </div>
+      </div>
+      <a href="#s2" style="display:inline-block;font-size:12.5px;margin-top:var(--space-4)">← Continue shopping</a>
+    </div>
+    <aside class="card" style="align-self:start;gap:var(--space-3)">
+      <div class="card-title">Summary</div>
+      <div style="display:flex;gap:var(--space-2)"><input class="input" placeholder="Coupon code" style="letter-spacing:.06em"><button class="btn btn-secondary">Apply</button></div>
+      <div class="hr" style="margin:var(--space-1) 0"></div>
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:13px;font-feature-settings:'tnum'">
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Before discounts</span><span class="text-muted" style="text-decoration:line-through">7,950.00</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Items subtotal</span><span>7,230.00</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Shipping</span><span>calculated at checkout</span></div>
+      </div>
+      <div class="hr" style="margin:var(--space-1) 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:400 17px var(--font-heading)">Subtotal</span><span style="font:400 21px var(--font-heading);font-feature-settings:'tnum'">7,230.00 EGP</span></div>
+      <a class="btn btn-primary btn-block" href="#s5" style="min-height:44px;text-decoration:none">Checkout</a>
+      <p class="text-muted" style="font-size:11px;margin:0;text-align:justify">Stock is reserved when the order is placed, not while it sits in your bag. Guest bags are kept for seven days.</p>
+    </aside>
+  </div>
+</div>
+<div>
+<div class="sc-hd" style="margin:0 0 10px"><a class="sc-id" href="#s4">S4b</a><span class="sc-nm">Empty bag</span></div>
+<div class="frame" style="width:520px">
+  <div class="nav" style="padding:var(--space-3) var(--space-4)"><div class="nav-brand" style="font-size:18px">SG<span style="color:var(--color-accent)">·</span>COUTURE</div><span class="text-muted" style="font-size:12.5px">Bag · 0</span></div>
+  <div style="padding:var(--space-8) var(--space-6);text-align:center">
+    <div class="plate" style="width:96px;height:120px;margin:0 auto;background:var(--color-surface);display:grid;place-items:center"><span class="sub">—</span></div>
+    <h3 style="font-weight:400;margin:var(--space-4) 0 var(--space-2)">Your bag is empty</h3>
+    <p class="text-muted" style="font-size:13px;max-width:38ch;margin:0 auto">Nothing here yet. The new-in pieces are a good place to start — twelve dresses, eight abayas, six sets.</p>
+    <div style="display:flex;gap:var(--space-2);justify-content:center;margin-top:var(--space-4)"><a class="btn btn-primary" href="#s2" style="text-decoration:none">Shop new in</a><a class="btn btn-secondary" href="#s1" style="text-decoration:none">Track an order</a></div>
+  </div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sc" id="s5" data-screen-label="Checkout registered">
+<div class="sc-hd"><a class="sc-id" href="#s5">S5</a><span class="sc-nm">Checkout — registered, stepped</span></div>
+<p class="sc-note"><em>POST /orders</em> with <em>shippingAddressId</em>, <em>paymentMethod: "CASH"</em>, optional <em>couponCode</em> and <em>notes</em>. CARD is disabled — the API returns PAYMENT_METHOD_UNAVAILABLE until Phase 7.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6)"><div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:auto">SG<span style="color:var(--color-accent)">·</span>COUTURE</div><span class="text-muted" style="font-size:12.5px">Secure checkout · signed in as sara@example.com</span></div>
+  <div style="padding:var(--space-6);display:grid;grid-template-columns:1fr 320px;gap:var(--space-8)">
+    <div>
+      <div style="display:flex;gap:var(--space-4);border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-3);font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-feature-settings:'tnum'"><span style="color:var(--color-accent)">01 Address ✓</span><span style="color:var(--color-accent);border-bottom:1px solid var(--color-accent);padding-bottom:2px">02 Delivery</span><span class="text-muted">03 Payment</span><span class="text-muted">04 Review</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider)"><div><div class="sub">01 · Address</div><div style="font-size:13.5px;margin-top:4px">Home — 12 Mostafa El Nahas St, District 7, Nasr City, Cairo · +20 100 000 0002</div></div><button class="btn btn-ghost">Change</button></div>
+      <div style="padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider)">
+        <h4 style="margin:0 0 var(--space-3);font-weight:400">02 · Delivery</h4>
+        <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+          <label class="card" style="flex-direction:row;align-items:center;gap:var(--space-3);border-color:var(--color-accent);cursor:pointer"><span style="width:16px;height:16px;border-radius:50%;border:1.5px solid var(--color-accent);background:var(--color-accent);box-shadow:inset 0 0 0 4px var(--color-bg);flex:none"></span><div style="flex:1;font-size:14px">Standard — Nasr City, Cairo<div class="text-muted" style="font-size:12px">2–4 working days</div></div><span style="font-size:13.5px;font-feature-settings:'tnum'">65.00 EGP</span></label>
+          <label class="card" style="flex-direction:row;align-items:center;gap:var(--space-3);cursor:pointer"><span style="width:16px;height:16px;border-radius:50%;border:1.5px solid var(--color-divider);flex:none"></span><div style="flex:1;font-size:14px">Collect from the atelier<div class="text-muted" style="font-size:12px">Zamalek, next working day</div></div><span style="font-size:13.5px;font-feature-settings:'tnum'">0.00 EGP</span></label>
+        </div>
+        <div class="field" style="margin-top:var(--space-4)"><label>Notes for the courier (optional)</label><textarea class="input" placeholder="Please call before delivery." style="min-height:64px"></textarea></div>
+        <button class="btn btn-primary" style="margin-top:var(--space-3)">Continue to payment</button>
+      </div>
+      <div style="padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider);display:flex;justify-content:space-between"><div class="sub">03 · Payment</div><span class="text-muted" style="font-size:12.5px">Cash on delivery — card payments coming soon</span></div>
+      <div style="padding:var(--space-4) 0" class="sub">04 · Review &amp; place order</div>
+    </div>
+    <aside class="card" style="align-self:start;gap:var(--space-3)">
+      <div class="card-title">Summary</div>
+      <div style="display:flex;gap:var(--space-3)"><div class="plate" style="width:48px;aspect-ratio:3/4;background:var(--color-surface);flex:none"></div><div style="flex:1;font-size:12.5px"><div>Satin Cowl-Neck Dress</div><div class="text-muted" style="font-size:11.5px">Black · M · ×2</div></div><span style="font-size:12.5px;font-feature-settings:'tnum'">4,080</span></div>
+      <div style="display:flex;gap:var(--space-3)"><div class="plate" style="width:48px;aspect-ratio:3/4;background:var(--color-surface);flex:none"></div><div style="flex:1;font-size:12.5px"><div>Linen Wrap Abaya</div><div class="text-muted" style="font-size:11.5px">Sand · L · ×1</div></div><span style="font-size:12.5px;font-feature-settings:'tnum'">3,150</span></div>
+      <div class="hr" style="margin:var(--space-1) 0"></div>
+      <div style="display:flex;gap:var(--space-2)"><input class="input" value="SAVE20" style="letter-spacing:.06em"><button class="btn btn-secondary">Apply</button></div>
+      <div style="font-size:11.5px;color:var(--color-accent-700)">SAVE20 applied — 20% off items</div>
+      <div class="hr" style="margin:var(--space-1) 0"></div>
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:13px;font-feature-settings:'tnum'">
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Items subtotal</span><span>7,230.00</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Coupon discount</span><span>−1,446.00</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Shipping</span><span>65.00</span></div>
+      </div>
+      <div class="hr" style="margin:var(--space-1) 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:400 16px var(--font-heading)">Total so far</span><span style="font:400 20px var(--font-heading);font-feature-settings:'tnum'">5,849.00</span></div>
+      <p class="text-muted" style="font-size:11px;margin:0;text-align:justify">Confirmed at step 04. Nothing is reserved until you place the order.</p>
+    </aside>
+  </div>
+</div>
+</section>
+
+<section class="sc" id="s6" data-screen-label="Guest checkout">
+<div class="sc-hd"><a class="sc-id" href="#s6">S6</a><span class="sc-nm">Guest checkout — contact + shipping, no account</span></div>
+<p class="sc-note"><em>POST /orders/guest</em> with nested <em>contact</em> and <em>shipping</em> objects, sent on the anonymous cart session. The email receives the confirmation and the 30-day claim link.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6)"><div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:auto">SG<span style="color:var(--color-accent)">·</span>COUTURE</div><a href="#s6" style="font-size:12.5px">Have an account? Sign in</a></div>
+  <div style="padding:var(--space-6);display:grid;grid-template-columns:1fr 320px;gap:var(--space-8)">
+    <div>
+      <div style="display:flex;gap:var(--space-4);border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-3);font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-feature-settings:'tnum'"><span style="color:var(--color-accent);border-bottom:1px solid var(--color-accent);padding-bottom:2px">01 Contact</span><span class="text-muted">02 Shipping</span><span class="text-muted">03 Payment</span><span class="text-muted">04 Review</span></div>
+      <div style="padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider)">
+        <h4 style="margin:0 0 var(--space-3);font-weight:400">01 · Contact</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)">
+          <div class="field"><label>Full name</label><input class="input" value="Sara Ghaly"></div>
+          <div class="field"><label>Phone</label><input class="input" value="+20 100 000 0001"></div>
+          <div class="field" style="grid-column:1/-1"><label>Email — receives the receipt and your tracking link</label><input class="input" value="sara@example.com"></div>
+        </div>
+      </div>
+      <div style="padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider)">
+        <h4 style="margin:0 0 var(--space-3);font-weight:400">02 · Shipping</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-3)">
+          <div class="field"><label>Country</label><input class="input" value="Egypt"></div>
+          <div class="field"><label>Governorate</label><input class="input" value="Cairo"></div>
+          <div class="field"><label>City</label><input class="input" value="Nasr City"></div>
+          <div class="field"><label>Area</label><input class="input" value="District 7"></div>
+          <div class="field"><label>Phone at this address</label><input class="input" value="+20 100 000 0002"></div>
+          <div class="field"><label>Postal code (optional)</label><input class="input" value="11765" style="font-feature-settings:'tnum'"></div>
+          <div class="field" style="grid-column:1/-1"><label>Street address</label><input class="input" value="12 Mostafa El Nahas Street"></div>
+          <div class="field" style="grid-column:1/-1"><label>Details for the courier</label><input class="input" value="Building 4, floor 3, apartment 8"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:var(--space-3);font-size:12.5px"><span class="text-muted">Delivery to Nasr City, Cairo</span><span style="font-feature-settings:'tnum'">65.00 EGP</span></div>
+        <button class="btn btn-primary" style="margin-top:var(--space-3)">Continue to payment</button>
+      </div>
+      <div style="padding:var(--space-4) 0;display:flex;justify-content:space-between"><div class="sub">03 · Payment — cash on delivery</div><span class="text-muted" style="font-size:12.5px">Card payments coming soon</span></div>
+    </div>
+    <aside class="card" style="align-self:start;gap:var(--space-3)">
+      <div class="card-title">Summary</div>
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:13px;font-feature-settings:'tnum'">
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">3 items</span><span>7,230.00</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Shipping</span><span>65.00</span></div>
+      </div>
+      <div class="hr" style="margin:var(--space-1) 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:400 16px var(--font-heading)">Total so far</span><span style="font:400 20px var(--font-heading);font-feature-settings:'tnum'">7,295.00</span></div>
+      <div class="hr" style="margin:var(--space-1) 0"></div>
+      <p class="text-muted" style="font-size:11.5px;margin:0;text-align:justify">Checking out as a guest. We email a tracking link valid for 30 days — sign in with the same email later to keep the order in your account.</p>
+    </aside>
+  </div>
+</div>
+</section>
+
+<section class="sc" id="s7" data-screen-label="Order confirmation">
+<div class="sc-hd"><a class="sc-id" href="#s7">S7</a><span class="sc-nm">Order confirmation</span></div>
+<p class="sc-note">The 201 response from checkout is the truth: <em>humanOrderId</em>, snapshot line prices, <em>itemsSubtotal − discountApplied + shippingFees = totalOrderPrice</em>. Guest orders also show the claim invitation.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6)"><div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:auto">SG<span style="color:var(--color-accent)">·</span>COUTURE</div><a href="#s2" style="font-size:12.5px">Continue shopping</a></div>
+  <div style="padding:var(--space-8) var(--space-6);max-width:760px;margin:0 auto">
+    <div class="sub">Order placed · 24 August 2026</div>
+    <h2 style="font-weight:400;font-size:36px;margin:var(--space-3) 0 var(--space-2)">Thank you, Sara.</h2>
+    <p class="text-muted" style="font-size:13.5px;max-width:56ch;text-align:justify;margin:0">Order <span style="font-feature-settings:'tnum';color:var(--color-text)">ORD-000042</span> is with the atelier. A receipt is on its way to sara@example.com, and you can follow it from the link in that email at any time.</p>
+    <div class="hr"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6);font-size:12.5px">
+      <div><div class="sub" style="margin-bottom:5px">Status</div><span class="tag tag-accent">Pending</span></div>
+      <div><div class="sub" style="margin-bottom:5px">Payment</div><div>Cash on delivery · 5,849.00 EGP</div></div>
+      <div><div class="sub" style="margin-bottom:5px">Delivery</div><div>Nasr City, Cairo · 2–4 working days</div></div>
+    </div>
+    <div class="hr"></div>
+    <table class="table">
+      <thead><tr><th>Piece</th><th>Variant</th><th style="text-align:right">Qty</th><th style="text-align:right">Line total</th></tr></thead>
+      <tbody>
+        <tr><td>Satin Cowl-Neck Dress</td><td class="text-muted">Black · M</td><td style="text-align:right;font-feature-settings:'tnum'">2</td><td style="text-align:right;font-feature-settings:'tnum'">4,080.00</td></tr>
+        <tr><td>Linen Wrap Abaya</td><td class="text-muted">Sand · L</td><td style="text-align:right;font-feature-settings:'tnum'">1</td><td style="text-align:right;font-feature-settings:'tnum'">3,150.00</td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex;justify-content:flex-end;margin-top:var(--space-3)">
+      <div style="width:300px;display:flex;flex-direction:column;gap:7px;font-size:13px;font-feature-settings:'tnum'">
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Items subtotal</span><span>7,230.00</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Discount · SAVE20</span><span>−1,446.00</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-muted">Shipping</span><span>65.00</span></div>
+        <div class="hr" style="margin:var(--space-1) 0"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:400 17px var(--font-heading)">Total</span><span style="font:400 21px var(--font-heading)">5,849.00 EGP</span></div>
+      </div>
+    </div>
+    <div class="hr"></div>
+    <div class="card" style="flex-direction:row;align-items:center;gap:var(--space-4)"><div style="flex:1"><div class="card-title">Keep this order in an account</div><p class="card-body" style="margin-top:4px">Create an account with sara@example.com and this order moves into your history — cancel, re-order and track from one place.</p></div><button class="btn btn-primary" style="flex:none">Create account</button></div>
+    <div style="display:flex;gap:var(--space-2);margin-top:var(--space-4)"><a class="btn btn-secondary" href="#s7" style="text-decoration:none">Track this order</a><a class="btn btn-ghost" href="#s2" style="text-decoration:none">Continue shopping</a></div>
+  </div>
+</div>
+</section>
+
+
+<section class="sc" id="s8" data-screen-label="Categories">
+<div class="sc-hd"><a class="sc-id" href="#s8">S8</a><span class="sc-nm">Categories — the whole tree on one page</span></div>
+<p class="sc-note"><em>GET /categories</em> returns the unpaginated tree with <em>productCount</em> per category and sub-category, so the page can be a real index rather than a menu: every sub-category is a direct link into <em>GET /products?subCategory=…</em>. Counts are display hints and may drift from a cached tree.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6)">
+    <div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:var(--space-6)">SG<span style="color:var(--color-accent)">·</span>COUTURE</div>
+    <div style="display:flex;gap:var(--space-4);margin-right:auto;font-size:13.5px"><a href="#s1">New In</a><a href="#s8" aria-current="page">Dresses</a><a href="#s8">Abayas</a><a href="#s8">Sets</a><a href="#s9">The Makers</a></div>
+    <div style="position:relative;width:230px"><input class="input" placeholder="Search the atelier" style="padding-left:28px"><span style="position:absolute;left:9px;top:9px;color:var(--color-neutral-600)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg></span></div>
+    <div style="display:flex;gap:var(--space-2);align-items:center"><button class="btn btn-icon btn-ghost" aria-label="Wishlist"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button><a class="btn btn-primary" href="#s4" style="text-decoration:none">Bag · 2</a></div>
+  </div>
+  <div style="padding:var(--space-6);display:flex;gap:var(--space-6);align-items:baseline;border-bottom:1px solid var(--color-divider)">
+    <h2 style="margin:0;font-weight:400;font-size:34px;flex:none">The index</h2>
+    <p class="text-muted" style="margin:0;font-size:13px;max-width:58ch;text-align:justify">Three collections, twenty-six pieces. Every line below goes straight to what is in stock under it.</p>
+    <span class="text-muted" style="margin-left:auto;font-size:12px;font-feature-settings:'tnum'">Updated hourly</span>
+  </div>
+  <div style="padding:var(--space-6);display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-8)">
+    <div>
+      <div class="plate" style="aspect-ratio:4/3;background:var(--color-surface);display:grid;place-items:center"><span class="sub">Dresses</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--space-3);border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-2)"><a href="#s2" style="font:400 24px var(--font-heading);text-decoration:none;color:var(--color-text)">Dresses</a><span class="text-muted" style="font-size:12px;font-feature-settings:'tnum'">12</span></div>
+      <div style="display:flex;flex-direction:column">
+        <a href="#s2" style="display:flex;justify-content:space-between;padding:var(--space-2) 0;border-bottom:1px solid var(--color-divider);font-size:13.5px;text-decoration:none;color:var(--color-text)">Evening Dresses <span class="text-muted" style="font-feature-settings:'tnum'">4</span></a>
+        <a href="#s2" style="display:flex;justify-content:space-between;padding:var(--space-2) 0;border-bottom:1px solid var(--color-divider);font-size:13.5px;text-decoration:none;color:var(--color-text)">Day Dresses <span class="text-muted" style="font-feature-settings:'tnum'">5</span></a>
+        <a href="#s2" style="display:flex;justify-content:space-between;padding:var(--space-2) 0;border-bottom:1px solid var(--color-divider);font-size:13.5px;text-decoration:none;color:var(--color-text)">Bridal <span class="text-muted" style="font-feature-settings:'tnum'">3</span></a>
+      </div>
+    </div>
+    <div>
+      <div class="plate" style="aspect-ratio:4/3;background:var(--color-surface);display:grid;place-items:center"><span class="sub">Abayas</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--space-3);border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-2)"><a href="#s2" style="font:400 24px var(--font-heading);text-decoration:none;color:var(--color-text)">Abayas</a><span class="text-muted" style="font-size:12px;font-feature-settings:'tnum'">8</span></div>
+      <div style="display:flex;flex-direction:column">
+        <a href="#s2" style="display:flex;justify-content:space-between;padding:var(--space-2) 0;border-bottom:1px solid var(--color-divider);font-size:13.5px;text-decoration:none;color:var(--color-text)">Linen <span class="text-muted" style="font-feature-settings:'tnum'">5</span></a>
+        <a href="#s2" style="display:flex;justify-content:space-between;padding:var(--space-2) 0;border-bottom:1px solid var(--color-divider);font-size:13.5px;text-decoration:none;color:var(--color-text)">Embroidered <span class="text-muted" style="font-feature-settings:'tnum'">3</span></a>
+        <span style="display:flex;justify-content:space-between;padding:var(--space-2) 0;border-bottom:1px solid var(--color-divider);font-size:13.5px;opacity:.45">Occasion <span style="font-feature-settings:'tnum'">0</span></span>
+      </div>
+      <p class="text-muted" style="font-size:11.5px;margin:var(--space-2) 0 0">Empty sub-categories stay visible but unlinked — a zero count is a real answer, not a missing page.</p>
+    </div>
+    <div>
+      <div class="plate" style="aspect-ratio:4/3;background:var(--color-surface);display:grid;place-items:center"><span class="sub">Sets</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--space-3);border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-2)"><a href="#s2" style="font:400 24px var(--font-heading);text-decoration:none;color:var(--color-text)">Sets</a><span class="text-muted" style="font-size:12px;font-feature-settings:'tnum'">6</span></div>
+      <div style="display:flex;flex-direction:column">
+        <a href="#s2" style="display:flex;justify-content:space-between;padding:var(--space-2) 0;border-bottom:1px solid var(--color-divider);font-size:13.5px;text-decoration:none;color:var(--color-text)">Two-piece <span class="text-muted" style="font-feature-settings:'tnum'">4</span></a>
+        <a href="#s2" style="display:flex;justify-content:space-between;padding:var(--space-2) 0;border-bottom:1px solid var(--color-divider);font-size:13.5px;text-decoration:none;color:var(--color-text)">Loungewear <span class="text-muted" style="font-feature-settings:'tnum'">2</span></a>
+      </div>
+    </div>
+  </div>
+  <div style="border-top:1px solid var(--color-divider);padding:var(--space-4) var(--space-6);display:flex;gap:var(--space-3);align-items:center">
+    <span class="sub">Shortcuts</span>
+    <div style="display:flex;gap:var(--space-2)"><a href="#s2" class="tag tag-outline" style="text-decoration:none">New in</a><a href="#s2" class="tag tag-outline" style="text-decoration:none">Under 2,000 EGP</a><a href="#s2" class="tag tag-outline" style="text-decoration:none">Ready to ship</a><a href="#s2" class="tag tag-outline" style="text-decoration:none">Top rated</a></div>
+  </div>
+</div>
+</section>
+
+<section class="sc" id="s9" data-screen-label="Contact us">
+<div class="sc-hd"><a class="sc-id" href="#s9">S9</a><span class="sc-nm">Contact us</span></div>
+<p class="sc-note">No storefront contact endpoint exists in the API docs — the form needs a backend route (or an email/WhatsApp handoff) before it can submit. The order-help path is real, though: it routes into <em>GET /orders/guest/:token</em> tracking rather than asking the customer to describe their order.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6)">
+    <div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:var(--space-6)">SG<span style="color:var(--color-accent)">·</span>COUTURE</div>
+    <div style="display:flex;gap:var(--space-4);margin-right:auto;font-size:13.5px"><a href="#s1">New In</a><a href="#s8">Dresses</a><a href="#s8">Abayas</a><a href="#s8">Sets</a><a href="#s9" aria-current="page">The Makers</a></div>
+    <div style="display:flex;gap:var(--space-2);align-items:center"><a class="btn btn-primary" href="#s4" style="text-decoration:none">Bag · 2</a></div>
+  </div>
+  <div style="padding:var(--space-8) var(--space-6);display:grid;grid-template-columns:1fr 1fr;gap:var(--space-8)">
+    <div>
+      <div class="sub">Get in touch</div>
+      <h2 style="font-weight:400;font-size:38px;margin:var(--space-3) 0 var(--space-3);line-height:1.06">Speak to the atelier</h2>
+      <p class="text-muted" style="font-size:13.5px;text-align:justify;max-width:46ch;margin:0">Fittings, alterations, a piece you want in another colour — the people who cut and sew are the people who answer. Replies within one working day.</p>
+      <div class="hr"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);font-size:13px">
+        <div><div class="sub" style="margin-bottom:5px">The atelier</div><div>14 Bahgat Ali Street<br>Zamalek, Cairo</div><div class="text-muted" style="font-size:12px;margin-top:4px">Sun–Thu, 11:00–19:00</div></div>
+        <div><div class="sub" style="margin-bottom:5px">Direct</div><div style="font-feature-settings:'tnum'">+20 100 000 0000</div><div><a href="#s9">hello@sgcouture.com</a></div><div class="text-muted" style="font-size:12px;margin-top:4px">WhatsApp on the same number</div></div>
+      </div>
+      <div class="hr"></div>
+      <div class="card" style="gap:var(--space-2)">
+        <div class="card-kicker">Order help</div>
+        <div class="card-title">Asking about an order you already placed?</div>
+        <p class="card-body" style="margin:0">Open it with the tracking link from your confirmation email — or paste the link's code here and we will pull the order up before you write anything.</p>
+        <div style="display:flex;gap:var(--space-2);margin-top:var(--space-2)"><input class="input" placeholder="Tracking code from your email"><button class="btn btn-primary" style="flex:none">Find order</button></div>
+      </div>
+      <div class="plate" style="height:220px;background:var(--color-surface);display:grid;place-items:center;margin-top:var(--space-6)"><span class="sub">Atelier map or photograph</span></div>
+    </div>
+    <div>
+      <div class="card" style="gap:var(--space-3)">
+        <div class="card-title" style="font-size:20px">Write to us</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)">
+          <div class="field"><label>Name</label><input class="input" placeholder="Sara Ghaly"></div>
+          <div class="field"><label>Phone (optional)</label><input class="input" placeholder="+20 100 000 0001"></div>
+          <div class="field" style="grid-column:1/-1"><label>Email</label><input class="input" placeholder="sara@example.com"></div>
+        </div>
+        <div class="field"><label>What is this about?</label>
+          <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:5px">
+            <label class="seg" style="border:0;gap:var(--space-2);flex-wrap:wrap"><span class="tag tag-outline">A piece I want</span><span class="tag tag-neutral">Sizing &amp; fit</span><span class="tag tag-neutral">Alterations</span><span class="tag tag-neutral">Delivery</span><span class="tag tag-neutral">Returns</span><span class="tag tag-neutral">Something else</span></label>
+          </div>
+        </div>
+        <div class="field"><label>Message</label><textarea class="input" placeholder="Tell us what you need — include the piece name if there is one." style="min-height:150px"></textarea></div>
+        <div class="text-muted" style="font-size:11.5px">We use your details only to answer this message.</div>
+        <button class="btn btn-primary btn-block" style="min-height:44px">Send message</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-top:var(--space-6)">
+        <div><div class="sub" style="margin-bottom:5px">Delivery</div><p class="text-muted" style="font-size:12.5px;text-align:justify;margin:0">Cash on delivery across Egypt, from 65 EGP. Cairo and Giza in 2–4 working days.</p></div>
+        <div><div class="sub" style="margin-bottom:5px">Returns</div><p class="text-muted" style="font-size:12.5px;text-align:justify;margin:0">14 days, unworn and with tags. Alterations are final sale.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="sc" id="s10" data-screen-label="Account">
+<div class="sc-hd"><a class="sc-id" href="#s10">S10</a><span class="sc-nm">Account — overview, the hub for orders and addresses</span></div>
+<p class="sc-note"><em>GET /users/me</em> for the profile, plus the first page of <em>GET /orders</em> and the default address from <em>GET /addresses</em>. The overview answers "where is my order" first — that is the only reason most people sign in.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6)"><div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:auto">SG<span style="color:var(--color-accent)">·</span>COUTURE</div><span class="text-muted" style="font-size:12.5px">Sara Ghaly</span><a class="btn btn-primary" href="#s4" style="text-decoration:none">Bag · 2</a></div>
+  <div style="padding:var(--space-6);display:grid;grid-template-columns:210px 1fr;gap:var(--space-8)">
+    <aside>
+      <div class="sub" style="margin-bottom:var(--space-3)">Your account</div>
+      <div style="display:flex;flex-direction:column">
+        <a href="#s10" style="padding:var(--space-2) 0 var(--space-2) 10px;border-left:1px solid var(--color-accent);color:var(--color-accent);font-size:13.5px;text-decoration:none">Overview</a>
+        <a href="#s12" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Orders</a>
+        <a href="#s11" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Addresses</a>
+        <a href="#s10" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Wishlist</a>
+        <a href="#s10" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Profile</a>
+      </div>
+      <div class="hr"></div>
+      <button class="btn btn-ghost" style="padding-left:0">Sign out</button>
+    </aside>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><h3 style="margin:0;font-weight:400">Good afternoon, Sara</h3><span class="text-muted" style="font-size:12px">Member since July 2026</span></div>
+      <div class="hr"></div>
+      <div class="card" style="gap:var(--space-3);border-color:var(--color-accent)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><div class="card-kicker">In progress</div><span class="tag tag-accent">Pending</span></div>
+        <div style="display:flex;gap:var(--space-4);align-items:center">
+          <div style="display:flex;gap:6px;flex:none"><div class="plate" style="width:52px;aspect-ratio:3/4;background:var(--color-surface)"></div><div class="plate" style="width:52px;aspect-ratio:3/4;background:var(--color-surface)"></div></div>
+          <div style="flex:1">
+            <div style="font:400 19px var(--font-heading);font-feature-settings:'tnum'">ORD-000042</div>
+            <div class="text-muted" style="font-size:12.5px">Placed 24 Aug · 2 lines · cash on delivery · 5,849.00 EGP</div>
+            <div style="display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-2);font-size:11px;letter-spacing:.06em;text-transform:uppercase">
+              <span style="color:var(--color-accent)">Placed</span><span style="flex:1;height:1px;background:var(--color-accent)"></span><span class="text-muted">Preparing</span><span style="flex:1;height:1px;background:var(--color-divider)"></span><span class="text-muted">Shipped</span><span style="flex:1;height:1px;background:var(--color-divider)"></span><span class="text-muted">Delivered</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-2);flex:none"><a class="btn btn-primary" href="#s13" style="text-decoration:none">View order</a><button class="btn btn-secondary">Cancel</button></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-top:var(--space-4)">
+        <div class="card" style="gap:var(--space-2)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div class="card-kicker">Default address</div><a href="#s11" style="font-size:11.5px">Manage</a></div>
+          <div style="font-size:13.5px">Home</div>
+          <p class="card-body" style="margin:0">12 Mostafa El Nahas Street, District 7, Nasr City, Cairo · +20 100 000 0002</p>
+          <div class="card-meta">Used for your last 3 orders</div>
+        </div>
+        <div class="card" style="gap:var(--space-2)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div class="card-kicker">Profile</div><a href="#s10" style="font-size:11.5px">Edit</a></div>
+          <div style="font-size:13.5px">Sara Ghaly</div>
+          <p class="card-body" style="margin:0">sara@example.com · +20 100 000 0001</p>
+          <div class="card-meta">Email is managed by your sign-in</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--space-6);border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-2)"><h4 style="margin:0;font-weight:400">Earlier orders</h4><a href="#s12" style="font-size:12.5px">All orders</a></div>
+      <table class="table">
+        <tbody>
+          <tr><td style="font-feature-settings:'tnum'">ORD-000039</td><td class="text-muted">12 Aug · 1 line</td><td><span class="tag tag-neutral">Delivered</span></td><td style="text-align:right;font-feature-settings:'tnum'">2,105.00</td><td style="text-align:right"><a href="#s13" style="font-size:12.5px">Details</a></td></tr>
+          <tr><td style="font-feature-settings:'tnum'">ORD-000031</td><td class="text-muted">28 Jul · 3 lines</td><td><span class="tag tag-neutral">Delivered</span></td><td style="text-align:right;font-feature-settings:'tnum'">6,480.00</td><td style="text-align:right"><a href="#s13" style="font-size:12.5px">Details</a></td></tr>
+        </tbody>
+      </table>
+      <div class="card" style="flex-direction:row;align-items:center;gap:var(--space-4);margin-top:var(--space-6)"><div style="flex:1"><div class="card-title">Ordered as a guest before?</div><p class="card-body" style="margin-top:4px">Paste the tracking code from that confirmation email and the order moves into this account. One-time, and it keeps your history in one place.</p></div><div style="display:flex;gap:var(--space-2);flex:none"><input class="input" placeholder="Tracking code" style="width:190px"><button class="btn btn-primary">Claim</button></div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="sc" id="s11" data-screen-label="Addresses">
+<div class="sc-hd"><a class="sc-id" href="#s11">S11</a><span class="sc-nm">Addresses — list, and the add/edit panel</span></div>
+<p class="sc-note"><em>GET /addresses</em> (default first), <em>POST</em> / <em>PATCH</em> / <em>DELETE /addresses/:id</em>, and <em>PATCH /addresses/:id/default</em> for the default — which is why "Make default" is its own action and not a checkbox in the edit form. Deleting the default silently promotes another, so the list says so out loud.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6)"><div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:auto">SG<span style="color:var(--color-accent)">·</span>COUTURE</div><span class="text-muted" style="font-size:12.5px">Sara Ghaly</span><a class="btn btn-primary" href="#s4" style="text-decoration:none">Bag · 2</a></div>
+  <div style="padding:var(--space-6);display:grid;grid-template-columns:210px 1fr;gap:var(--space-8)">
+    <aside>
+      <div class="sub" style="margin-bottom:var(--space-3)">Your account</div>
+      <div style="display:flex;flex-direction:column">
+        <a href="#s10" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Overview</a>
+        <a href="#s12" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Orders</a>
+        <a href="#s11" style="padding:var(--space-2) 0 var(--space-2) 10px;border-left:1px solid var(--color-accent);color:var(--color-accent);font-size:13.5px;text-decoration:none">Addresses</a>
+        <a href="#s10" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Wishlist</a>
+        <a href="#s10" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Profile</a>
+      </div>
+    </aside>
+    <div style="display:grid;grid-template-columns:1fr 400px;gap:var(--space-8);align-items:start">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><h3 style="margin:0;font-weight:400">Addresses</h3><button class="btn btn-primary">+ Add address</button></div>
+        <p class="text-muted" style="font-size:12.5px;margin:var(--space-2) 0 0">Three saved. The default is used at checkout unless you choose another.</p>
+        <div class="hr"></div>
+        <div class="card" style="gap:var(--space-2);border-color:var(--color-accent)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:400 19px var(--font-heading)">Home</div><span class="tag tag-accent">Default</span></div>
+          <p class="card-body" style="margin:0">12 Mostafa El Nahas Street, District 7, Nasr City, Cairo, Egypt · 11765<br>Building 4, floor 3, apartment 8 · +20 100 000 0002</p>
+          <div style="display:flex;gap:var(--space-2);margin-top:var(--space-1)"><button class="btn btn-secondary">Edit</button><button class="btn btn-ghost" disabled>Already default</button></div>
+        </div>
+        <div class="card" style="gap:var(--space-2);margin-top:var(--space-3)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:400 19px var(--font-heading)">Work</div><span class="text-muted" style="font-size:11.5px">Added 02 Aug</span></div>
+          <p class="card-body" style="margin:0">4 Kasr El Nil Street, Downtown, Cairo, Egypt<br>Reception desk, ask for Sara · +20 100 000 0003</p>
+          <div style="display:flex;gap:var(--space-2);margin-top:var(--space-1)"><button class="btn btn-secondary">Edit</button><button class="btn btn-ghost">Make default</button><button class="btn btn-ghost" style="margin-left:auto">Delete</button></div>
+        </div>
+        <div class="card" style="gap:var(--space-2);margin-top:var(--space-3)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:400 19px var(--font-heading)">Mum's</div><span class="text-muted" style="font-size:11.5px">Added 19 Jul</span></div>
+          <p class="card-body" style="margin:0">8 El Thawra Street, Heliopolis, Cairo, Egypt<br>Villa with the green gate · +20 100 000 0004</p>
+          <div style="display:flex;gap:var(--space-2);margin-top:var(--space-1)"><button class="btn btn-secondary">Edit</button><button class="btn btn-ghost">Make default</button><button class="btn btn-ghost" style="margin-left:auto">Delete</button></div>
+        </div>
+      </div>
+      <aside class="card" style="gap:var(--space-3)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><div class="card-title" style="font-size:19px">Edit “Work”</div><button class="btn btn-icon btn-ghost" aria-label="Close">✕</button></div>
+        <div class="field"><label>Label for this address</label><input class="input" value="Work"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)">
+          <div class="field"><label>Country</label><input class="input" value="Egypt"></div>
+          <div class="field"><label>Governorate</label><input class="input" value="Cairo"></div>
+          <div class="field"><label>City</label><input class="input" value="Downtown"></div>
+          <div class="field"><label>Area</label><input class="input" value="Kasr El Nil"></div>
+          <div class="field"><label>Phone</label><input class="input" value="+20 100 000 0003"></div>
+          <div class="field"><label>Postal code (optional)</label><input class="input" placeholder="11511" style="font-feature-settings:'tnum'"></div>
+        </div>
+        <div class="field"><label>Street address</label><input class="input" value="4 Kasr El Nil Street"></div>
+        <div class="field"><label>Details for the courier</label><textarea class="input" style="min-height:60px">Reception desk, ask for Sara</textarea></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;padding-top:var(--space-1)"><span class="text-muted">Delivery here</span><span style="font-feature-settings:'tnum'">65.00 EGP · 2–4 days</span></div>
+        <div class="hr" style="margin:var(--space-1) 0"></div>
+        <div style="display:flex;gap:var(--space-2)"><button class="btn btn-primary" style="flex:1">Save address</button><button class="btn btn-secondary">Cancel</button></div>
+        <p class="text-muted" style="font-size:11px;margin:0;text-align:justify">To change which address is the default, use “Make default” in the list — it moves the default in one step instead of leaving you without one.</p>
+      </aside>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="sc" id="s12" data-screen-label="Orders">
+<div class="sc-hd"><a class="sc-id" href="#s12">S12</a><span class="sc-nm">Orders — history with status filter</span></div>
+<p class="sc-note"><em>GET /orders?status=&amp;page=</em>. <em>itemsCount</em> is distinct lines, not units, so the copy says "lines". Cancel only renders when <em>status === "PENDING" &amp;&amp; !isPaid</em>; the 409 INVALID_STATUS_TRANSITION case is still handled by re-fetching.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6)"><div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:auto">SG<span style="color:var(--color-accent)">·</span>COUTURE</div><span class="text-muted" style="font-size:12.5px">Sara Ghaly</span><a class="btn btn-primary" href="#s4" style="text-decoration:none">Bag · 2</a></div>
+  <div style="padding:var(--space-6);display:grid;grid-template-columns:210px 1fr;gap:var(--space-8)">
+    <aside>
+      <div class="sub" style="margin-bottom:var(--space-3)">Your account</div>
+      <div style="display:flex;flex-direction:column">
+        <a href="#s10" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Overview</a>
+        <a href="#s12" style="padding:var(--space-2) 0 var(--space-2) 10px;border-left:1px solid var(--color-accent);color:var(--color-accent);font-size:13.5px;text-decoration:none">Orders</a>
+        <a href="#s11" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Addresses</a>
+        <a href="#s10" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Wishlist</a>
+        <a href="#s10" style="padding:var(--space-2) 0 var(--space-2) 11px;font-size:13.5px;text-decoration:none;color:var(--color-text)">Profile</a>
+      </div>
+    </aside>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><h3 style="margin:0;font-weight:400">Orders</h3><span class="text-muted" style="font-size:12.5px;font-feature-settings:'tnum'">7 orders · newest first</span></div>
+      <div style="display:flex;gap:var(--space-2);margin-top:var(--space-3);flex-wrap:wrap"><span class="tag tag-outline">All</span><span class="tag tag-neutral">Pending</span><span class="tag tag-neutral">Processing</span><span class="tag tag-neutral">Shipped</span><span class="tag tag-neutral">Delivered</span><span class="tag tag-neutral">Cancelled</span></div>
+      <div class="hr"></div>
+      <div class="card" style="gap:var(--space-3);border-color:var(--color-accent)">
+        <div style="display:flex;align-items:baseline;gap:var(--space-3)"><span style="font:400 20px var(--font-heading);font-feature-settings:'tnum'">ORD-000042</span><span class="tag tag-accent">Pending</span><span class="text-muted" style="font-size:12px;margin-left:auto;font-feature-settings:'tnum'">24 Aug 2026 · 2 lines</span></div>
+        <div style="display:flex;gap:var(--space-4);align-items:center">
+          <div style="display:flex;gap:6px;flex:none"><div class="plate" style="width:46px;aspect-ratio:3/4;background:var(--color-surface)"></div><div class="plate" style="width:46px;aspect-ratio:3/4;background:var(--color-surface)"></div></div>
+          <div style="flex:1;font-size:12.5px"><div>Satin Cowl-Neck Dress · Linen Wrap Abaya</div><div class="text-muted">Cash on delivery, unpaid · Nasr City, Cairo</div></div>
+          <div style="text-align:right;flex:none"><div style="font:400 18px var(--font-heading);font-feature-settings:'tnum'">5,849.00 EGP</div><div class="text-muted" style="font-size:11.5px">incl. 65.00 shipping</div></div>
+        </div>
+        <div style="display:flex;gap:var(--space-2)"><a class="btn btn-primary" href="#s13" style="text-decoration:none">View order</a><button class="btn btn-secondary">Cancel order</button><button class="btn btn-ghost" style="margin-left:auto">Need help with this order</button></div>
+      </div>
+      <div class="card" style="gap:var(--space-3);margin-top:var(--space-3)">
+        <div style="display:flex;align-items:baseline;gap:var(--space-3)"><span style="font:400 20px var(--font-heading);font-feature-settings:'tnum'">ORD-000039</span><span class="tag tag-neutral">Delivered</span><span class="text-muted" style="font-size:12px;margin-left:auto;font-feature-settings:'tnum'">12 Aug 2026 · 1 line</span></div>
+        <div style="display:flex;gap:var(--space-4);align-items:center">
+          <div class="plate" style="width:46px;aspect-ratio:3/4;background:var(--color-surface);flex:none"></div>
+          <div style="flex:1;font-size:12.5px"><div>Silk Slip Dress</div><div class="text-muted">Paid on delivery · delivered 15 Aug</div></div>
+          <div style="text-align:right;flex:none"><div style="font:400 18px var(--font-heading);font-feature-settings:'tnum'">2,105.00 EGP</div></div>
+        </div>
+        <div style="display:flex;gap:var(--space-2)"><a class="btn btn-secondary" href="#s13" style="text-decoration:none">View order</a><button class="btn btn-ghost">Buy again</button><button class="btn btn-ghost">Write a review</button></div>
+      </div>
+      <div class="card" style="gap:var(--space-3);margin-top:var(--space-3);opacity:.75">
+        <div style="display:flex;align-items:baseline;gap:var(--space-3)"><span style="font:400 20px var(--font-heading);font-feature-settings:'tnum'">ORD-000031</span><span class="tag tag-neutral">Cancelled</span><span class="text-muted" style="font-size:12px;margin-left:auto;font-feature-settings:'tnum'">28 Jul 2026 · 3 lines</span></div>
+        <div style="display:flex;gap:var(--space-4);align-items:center">
+          <div style="display:flex;gap:6px;flex:none"><div class="plate" style="width:46px;aspect-ratio:3/4;background:var(--color-surface)"></div><div class="plate" style="width:46px;aspect-ratio:3/4;background:var(--color-surface)"></div><div class="plate" style="width:46px;aspect-ratio:3/4;background:var(--color-surface)"></div></div>
+          <div style="flex:1;font-size:12.5px"><div>Crepe Column Gown and two more</div><div class="text-muted">Cancelled 29 Jul · stock returned, coupon released</div></div>
+          <div style="text-align:right;flex:none"><div style="font:400 18px var(--font-heading);font-feature-settings:'tnum'">6,480.00 EGP</div></div>
+        </div>
+        <div style="display:flex;gap:var(--space-2)"><a class="btn btn-secondary" href="#s13" style="text-decoration:none">View order</a><button class="btn btn-ghost">Buy again</button></div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:var(--space-2);margin-top:var(--space-6);align-items:center;font-size:13px;font-feature-settings:'tnum'"><button class="btn btn-secondary" disabled>Previous</button><span class="text-muted">Page 1 of 2</span><button class="btn btn-secondary">Next</button></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="sc" id="s13" data-screen-label="Order detail">
+<div class="sc-hd"><a class="sc-id" href="#s13">S13</a><span class="sc-nm">Order detail — status, snapshot lines, cancel</span></div>
+<p class="sc-note"><em>GET /orders/:id</em>. Line <em>price</em> and <em>lineTotal</em> are permanent snapshots, so the page says so where a customer would otherwise compare with today's shop price. Cancel is a confirmed action because it is irreversible and releases stock and the coupon.</p>
+<div class="frame">
+  <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6)"><div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:auto">SG<span style="color:var(--color-accent)">·</span>COUTURE</div><span class="text-muted" style="font-size:12.5px">Sara Ghaly</span><a class="btn btn-primary" href="#s4" style="text-decoration:none">Bag · 2</a></div>
+  <div style="padding:var(--space-3) var(--space-6);border-bottom:1px solid var(--color-divider);font-size:12px" class="text-muted"><a href="#s10">Account</a> · <a href="#s12">Orders</a> · ORD-000042</div>
+  <div style="padding:var(--space-6);display:grid;grid-template-columns:1fr 340px;gap:var(--space-8);align-items:start">
+    <div>
+      <div style="display:flex;align-items:baseline;gap:var(--space-3)"><h3 style="margin:0;font-weight:400;font-feature-settings:'tnum'">ORD-000042</h3><span class="tag tag-accent">Pending</span><span class="text-muted" style="font-size:12.5px;margin-left:auto">Placed 24 August 2026, 14:12</span></div>
+      <div class="hr"></div>
+      <div style="display:flex;align-items:flex-start;gap:0">
+        <div style="flex:1"><div style="height:1px;background:var(--color-accent);margin:6px 0 var(--space-2)"></div><div style="font-size:12.5px;color:var(--color-accent)">Placed</div><div class="text-muted" style="font-size:11.5px">24 Aug, 14:12</div></div>
+        <div style="flex:1"><div style="height:1px;background:var(--color-divider);margin:6px 0 var(--space-2)"></div><div class="text-muted" style="font-size:12.5px">Preparing</div><div class="text-muted" style="font-size:11.5px">expected 25 Aug</div></div>
+        <div style="flex:1"><div style="height:1px;background:var(--color-divider);margin:6px 0 var(--space-2)"></div><div class="text-muted" style="font-size:12.5px">Shipped</div><div class="text-muted" style="font-size:11.5px">—</div></div>
+        <div style="flex:1"><div style="height:1px;background:var(--color-divider);margin:6px 0 var(--space-2)"></div><div class="text-muted" style="font-size:12.5px">Delivered</div><div class="text-muted" style="font-size:11.5px">2–4 working days</div></div>
+      </div>
+      <div class="hr"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><h4 style="margin:0;font-weight:400">Two lines</h4><span class="text-muted" style="font-size:11.5px">Prices as they were when you ordered</span></div>
+      <div style="display:flex;gap:var(--space-4);padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider)">
+        <div class="plate" style="width:88px;aspect-ratio:3/4;background:var(--color-surface);flex:none;display:grid;place-items:center"><span class="sub">Image</span></div>
+        <div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:400 19px var(--font-heading)">Satin Cowl-Neck Dress</div><span style="font-size:14.5px;font-feature-settings:'tnum'">4,080.00</span></div><div class="text-muted" style="font-size:12.5px;margin-top:3px">Black · M · 2 × 2,040.00</div><div style="display:flex;gap:var(--space-2);margin-top:var(--space-2)"><a class="btn btn-ghost" href="#s3" style="text-decoration:none;padding-left:0">View piece</a><button class="btn btn-ghost">Buy again</button></div></div>
+      </div>
+      <div style="display:flex;gap:var(--space-4);padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider)">
+        <div class="plate" style="width:88px;aspect-ratio:3/4;background:var(--color-surface);flex:none;display:grid;place-items:center"><span class="sub">Image</span></div>
+        <div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:400 19px var(--font-heading)">Linen Wrap Abaya</div><span style="font-size:14.5px;font-feature-settings:'tnum'">3,150.00</span></div><div class="text-muted" style="font-size:12.5px;margin-top:3px">Sand · L · 1 × 3,150.00</div><div style="display:flex;gap:var(--space-2);margin-top:var(--space-2)"><a class="btn btn-ghost" href="#s3" style="text-decoration:none;padding-left:0">View piece</a><button class="btn btn-ghost">Buy again</button></div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);margin-top:var(--space-6)">
+        <div><div class="sub" style="margin-bottom:5px">Delivering to</div><p style="font-size:13px;margin:0">Home — 12 Mostafa El Nahas Street, District 7, Nasr City, Cairo<br><span class="text-muted">Building 4, floor 3, apartment 8 · +20 100 000 0002</span></p></div>
+        <div><div class="sub" style="margin-bottom:5px">Note for the courier</div><p class="text-muted" style="font-size:13px;margin:0;font-style:italic">“Please call before delivery.”</p></div>
+      </div>
+    </div>
+    <aside style="display:flex;flex-direction:column;gap:var(--space-4)">
+      <div class="card" style="gap:var(--space-3)">
+        <div class="card-title">Payment</div>
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:13px;font-feature-settings:'tnum'">
+          <div style="display:flex;justify-content:space-between"><span class="text-muted">Items subtotal</span><span>7,230.00</span></div>
+          <div style="display:flex;justify-content:space-between"><span class="text-muted">Discount · SAVE20</span><span>−1,446.00</span></div>
+          <div style="display:flex;justify-content:space-between"><span class="text-muted">Shipping</span><span>65.00</span></div>
+        </div>
+        <div class="hr" style="margin:var(--space-1) 0"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:400 17px var(--font-heading)">Total</span><span style="font:400 21px var(--font-heading);font-feature-settings:'tnum'">5,849.00 EGP</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px"><span class="text-muted">Cash on delivery</span><span class="tag tag-outline">Unpaid</span></div>
+        <p class="text-muted" style="font-size:11px;margin:0;text-align:justify">Pay the courier in cash when the parcel arrives.</p>
+      </div>
+      <div class="card" style="gap:var(--space-2)">
+        <div class="card-title" style="font-size:17px">Need to change something?</div>
+        <p class="card-body" style="margin:0">While an order is pending you can cancel it yourself. Once the atelier starts preparing it, message us instead.</p>
+        <button class="btn btn-primary btn-block">Cancel this order</button>
+        <a class="btn btn-secondary btn-block" href="#s9" style="text-decoration:none">Message the atelier</a>
+        <p class="text-muted" style="font-size:11px;margin:var(--space-1) 0 0;text-align:justify">Cancelling returns the pieces to the shop and frees your coupon. It cannot be undone.</p>
+      </div>
+      <div class="card" style="gap:var(--space-2)">
+        <div class="card-kicker">Receipt</div>
+        <div style="display:flex;gap:var(--space-2)"><button class="btn btn-secondary" style="flex:1">Download PDF</button><button class="btn btn-secondary" style="flex:1">Email again</button></div>
+      </div>
+    </aside>
+  </div>
+</div>
+</section>
+</x-dc>
+</body>
+</html>

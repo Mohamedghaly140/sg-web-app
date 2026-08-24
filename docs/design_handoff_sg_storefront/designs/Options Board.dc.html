@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link rel="stylesheet" href="_ds/classical-a5ac0350-1550-4bd9-b4b8-c0b72e3a0665/styles.css"><script src="_ds/classical-a5ac0350-1550-4bd9-b4b8-c0b72e3a0665/_ds_bundle.js"></script><style>body{margin:0;background:#f3f2f2}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#201f1d;color:#f3f2f2;border-radius:4px;text-decoration:none}.dv-tname{font:400 15px/1.2 "Cormorant Garamond",serif;color:#201f1d}.dv-opts{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(32,31,29,.09);color:#201f1d;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11.5px/1.3 "Lora",serif;color:rgba(32,31,29,.6)}.dv-card{max-width:100%;background:#f3f2f2;border:1px solid rgba(32,31,29,.12);border-radius:4px;box-shadow:0 1px 2px rgba(45,43,43,.1)}.dv-opt:target .dv-oid{background:#b68235;color:#fff}.dv-next{margin:24px 0 0;font:400 12.5px/1.6 "Lora",serif;color:rgba(32,31,29,.55)}.dv-sub{font:400 10px/1 "Lora",serif;letter-spacing:.14em;text-transform:uppercase;color:rgba(32,31,29,.45)}</style></helmet>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Card — <a class="dv-oid" href="#1d">1d</a>'s frame with <a class="dv-oid" href="#1c">1c</a>'s name, subtitle and price block</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="2a"><div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Hairline frame · name, subtitle, price + discount</div>
+<div class="dv-card" style="width:300px;padding:0">
+  <div style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;position:relative;border-bottom:1px solid var(--color-divider)">
+    <span class="dv-sub">Product image</span>
+    <span class="tag tag-outline" style="position:absolute;top:var(--space-3);left:var(--space-3);background:var(--color-bg)">Only 3 left</span>
+    <button class="btn btn-icon btn-ghost" aria-label="Save" style="position:absolute;top:var(--space-2);right:var(--space-2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button>
+  </div>
+  <div style="padding:var(--space-3)">
+    <div style="font:400 19px/1.15 var(--font-heading)">Satin Cowl-Neck Dress</div>
+    <div class="text-muted" style="font-size:12px;margin-top:2px">Evening · Black, Emerald</div>
+    <div style="display:flex;align-items:baseline;gap:var(--space-2);margin-top:var(--space-2);font-feature-settings:'tnum'">
+      <span style="font-size:15px">2,040 EGP</span>
+      <span class="text-muted" style="font-size:12px;text-decoration:line-through">2,400</span>
+      <span class="tag tag-accent" style="margin-left:auto">−15%</span>
+    </div>
+  </div>
+</div></div>
+</div>
+<p class="dv-next">Try next: “put <a class="dv-oid" href="#2a">2a</a> in the grid on <a class="dv-oid" href="#1f">1f</a>” · “drop the stock badge from <a class="dv-oid" href="#2a">2a</a>” · “build the full screens with <a class="dv-oid" href="#2a">2a</a>”</p>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">SG Couture storefront — the atoms you asked for options on: shell, product card, PLP filters, PDP, checkout</span></div>
+
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Shell — centred wordmark, utility rail above</div>
+<div class="dv-card" style="width:1180px">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:7px var(--space-6);border-bottom:1px solid var(--color-divider);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb,var(--color-text) 55%,transparent)">
+    <span>Free delivery over 3,000 EGP</span>
+    <div style="display:flex;gap:var(--space-4)"><span>Track an order</span><span>Sign in</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:var(--space-4) var(--space-6);border-bottom:1px solid var(--color-divider)">
+    <div style="display:flex;gap:var(--space-4);font-size:13.5px"><span>New In</span><span style="color:var(--color-accent)">Dresses</span><span>Abayas</span><span>Sets</span><span>Atelier</span></div>
+    <div style="text-align:center"><div style="font:400 27px/1 var(--font-heading);letter-spacing:.06em">SG COUTURE</div><div class="dv-sub" style="margin-top:5px">Cairo · est. 2019</div></div>
+    <div style="display:flex;gap:var(--space-3);justify-content:flex-end;font-size:13.5px"><span>Search</span><span>Wishlist</span><span style="border-bottom:1px solid var(--color-accent);color:var(--color-accent)">Bag (2)</span></div>
+  </div>
+  <div style="padding:var(--space-6);display:flex;gap:var(--space-6);align-items:baseline"><h2 style="margin:0;font-weight:400;font-size:34px">Dresses</h2><p class="text-muted" style="margin:0;font-size:13px;max-width:44ch;text-align:justify">Twelve pieces, cut and finished in the Cairo atelier. Made to be worn for years, by the people whose hands are in them.</p></div>
+</div></div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Shell — flush editorial bar, persistent search</div>
+<div class="dv-card" style="width:1180px">
+  <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6)">
+    <div class="nav-brand" style="font-size:22px;letter-spacing:.04em;margin-right:var(--space-6)">SG<span style="color:var(--color-accent)">·</span>COUTURE</div>
+    <div style="display:flex;gap:var(--space-4);margin-right:auto;font-size:13.5px"><a href="#1b" aria-current="page">New In</a><a href="#1b">Dresses</a><a href="#1b">Abayas</a><a href="#1b">Sets</a><a href="#1b">The Makers</a></div>
+    <div style="position:relative;width:230px"><input class="input" placeholder="Search the atelier" style="padding-left:28px"><span style="position:absolute;left:9px;top:9px;color:var(--color-neutral-600)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg></span></div>
+    <div style="display:flex;gap:var(--space-2);align-items:center">
+      <button class="btn btn-icon btn-ghost" aria-label="Wishlist"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button>
+      <a class="btn btn-primary" href="#1b" style="text-decoration:none">Bag · 2</a>
+    </div>
+  </div>
+  <div style="padding:var(--space-3) var(--space-6);border-bottom:1px solid var(--color-divider);display:flex;gap:var(--space-3);align-items:center">
+    <span class="dv-sub">Shop by</span>
+    <div style="display:flex;gap:var(--space-2)"><span class="tag tag-outline">Evening</span><span class="tag tag-neutral">Daywear</span><span class="tag tag-neutral">Bridal</span><span class="tag tag-neutral">Ready to ship</span></div>
+  </div>
+  <div style="padding:var(--space-6);display:flex;gap:var(--space-6)"><h2 style="margin:0;font-weight:400;font-size:34px;flex:none">Dresses</h2><p class="text-muted" style="margin:0;font-size:13px;max-width:52ch;text-align:justify">Twelve pieces, cut and finished in the Cairo atelier. Made to be worn for years, by the people whose hands are in them.</p></div>
+</div></div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Card — plate-matted, quiet</div>
+<div class="dv-card" style="width:300px;padding:var(--space-4)">
+  <div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Product image</span></div>
+  <div style="margin-top:var(--space-3)">
+    <div style="font:400 19px/1.15 var(--font-heading)">Satin Cowl-Neck Dress</div>
+    <div class="text-muted" style="font-size:12px;margin-top:2px">Evening · Black, Emerald</div>
+    <div style="display:flex;align-items:baseline;gap:var(--space-2);margin-top:var(--space-2);font-feature-settings:'tnum'">
+      <span style="font-size:15px">2,040 EGP</span>
+      <span class="text-muted" style="font-size:12px;text-decoration:line-through">2,400</span>
+      <span class="tag tag-accent" style="margin-left:auto">−15%</span>
+    </div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Card — hairline frame, swatches + rating</div>
+<div class="dv-card" style="width:300px;padding:0;border-color:var(--color-divider)">
+  <div style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;position:relative;border-bottom:1px solid var(--color-divider)">
+    <span class="dv-sub">Product image</span>
+    <span class="tag tag-outline" style="position:absolute;top:var(--space-3);left:var(--space-3);background:var(--color-bg)">Only 3 left</span>
+    <button class="btn btn-icon btn-ghost" aria-label="Save" style="position:absolute;top:var(--space-2);right:var(--space-2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button>
+  </div>
+  <div style="padding:var(--space-3)">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-2)">
+      <div style="font:400 18px/1.15 var(--font-heading)">Linen Wrap Abaya</div>
+      <span style="font-size:14.5px;font-feature-settings:'tnum'">3,150</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-2)">
+      <div style="display:flex;gap:5px">
+        <span style="width:13px;height:13px;border-radius:50%;background:#201f1d;outline:1px solid var(--color-divider);outline-offset:1px"></span>
+        <span style="width:13px;height:13px;border-radius:50%;background:#7d5411"></span>
+        <span style="width:13px;height:13px;border-radius:50%;background:#d7d3d3"></span>
+      </div>
+      <span class="text-muted" style="font-size:11.5px;margin-left:auto;font-feature-settings:'tnum'">★ 4.5 · 12 reviews</span>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:var(--space-3)"><span class="tag tag-neutral">S</span><span class="tag tag-neutral">M</span><span class="tag tag-neutral" style="opacity:.4;text-decoration:line-through">L</span></div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1e"><div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Card — numbered plate, catalogue voice</div>
+<div class="dv-card" style="width:300px;padding:var(--space-4);background:var(--color-bg)">
+  <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-2);margin-bottom:var(--space-3)">
+    <span class="dv-sub" style="font-feature-settings:'tnum'">Plate 04</span><span class="dv-sub">Ready to ship</span>
+  </div>
+  <div style="aspect-ratio:4/5;background:var(--color-surface);display:grid;place-items:center;outline:1px solid var(--color-divider)"><span class="dv-sub">Product image</span></div>
+  <div style="margin-top:var(--space-3);text-align:center">
+    <div style="font:400 21px/1.15 var(--font-heading)">Sculpted Poplin Shirtdress</div>
+    <div class="text-muted" style="font-size:12px;font-style:italic;margin-top:3px">Hand-finished in Cairo, six weeks' work</div>
+    <div class="hr" style="margin:var(--space-3) 0"></div>
+    <div style="display:flex;justify-content:center;align-items:baseline;gap:var(--space-2);font-feature-settings:'tnum'"><span style="font-size:16px">1,980 EGP</span></div>
+    <button class="btn btn-primary btn-block" style="margin-top:var(--space-3)">View piece</button>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1f"><div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>PLP filters — left rail, always open</div>
+<div class="dv-card" style="width:1180px;padding:var(--space-6);display:grid;grid-template-columns:212px 1fr;gap:var(--space-8)">
+  <aside style="display:flex;flex-direction:column;gap:var(--space-4)">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="dv-sub">Refine</span><a href="#1f" style="font-size:11.5px">Clear all</a></div>
+    <div><div style="font:400 15px/1 var(--font-heading);margin-bottom:var(--space-2)">Category</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="color:var(--color-accent);border-left:1px solid var(--color-accent);padding-left:8px">Evening Dresses (4)</span><span style="padding-left:9px" class="text-muted">Day Dresses (5)</span><span style="padding-left:9px" class="text-muted">Bridal (3)</span></div></div>
+    <div class="hr" style="margin:0"></div>
+    <div><div style="font:400 15px/1 var(--font-heading);margin-bottom:var(--space-2)">Size</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px"><span class="tag tag-outline">S</span><span class="tag tag-outline">M</span><span class="tag tag-neutral">L</span><span class="tag tag-neutral">XL</span></div></div>
+    <div class="hr" style="margin:0"></div>
+    <div><div style="font:400 15px/1 var(--font-heading);margin-bottom:var(--space-2)">Colour</div>
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:13px">
+        <label class="radio"><input type="radio" name="c1f" checked><span class="dot"></span>Black</label>
+        <label class="radio"><input type="radio" name="c1f"><span class="dot"></span>Emerald</label>
+        <label class="radio"><input type="radio" name="c1f"><span class="dot"></span>Ivory</label>
+      </div></div>
+    <div class="hr" style="margin:0"></div>
+    <div><div style="font:400 15px/1 var(--font-heading);margin-bottom:var(--space-2)">Price</div>
+      <div style="display:flex;gap:var(--space-2)"><input class="input" value="500" style="font-feature-settings:'tnum'"><input class="input" value="2500" style="font-feature-settings:'tnum'"></div></div>
+  </aside>
+  <div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-2)">
+      <span class="text-muted" style="font-size:12.5px;font-feature-settings:'tnum'">12 pieces · page 1 of 1</span>
+      <div class="seg"><label class="seg-opt"><input type="radio" name="s1f" checked>Newest</label><label class="seg-opt"><input type="radio" name="s1f">Price ↑</label><label class="seg-opt"><input type="radio" name="s1f">Price ↓</label><label class="seg-opt"><input type="radio" name="s1f">Top rated</label></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6);margin-top:var(--space-4)">
+      <div><div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Image</span></div><div style="font:400 17px/1.2 var(--font-heading);margin-top:var(--space-2)">Satin Cowl-Neck Dress</div><div style="font-size:13.5px;font-feature-settings:'tnum'">2,040 EGP</div></div>
+      <div><div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Image</span></div><div style="font:400 17px/1.2 var(--font-heading);margin-top:var(--space-2)">Linen Wrap Abaya</div><div style="font-size:13.5px;font-feature-settings:'tnum'">3,150 EGP</div></div>
+      <div><div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Image</span></div><div style="font:400 17px/1.2 var(--font-heading);margin-top:var(--space-2)">Poplin Shirtdress</div><div style="font-size:13.5px;font-feature-settings:'tnum'">1,980 EGP</div></div>
+    </div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1g"><div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>PLP filters — top bar, chips carry the state</div>
+<div class="dv-card" style="width:1180px;padding:var(--space-6)">
+  <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center;padding-bottom:var(--space-3);border-bottom:1px solid var(--color-divider)">
+    <button class="btn btn-secondary">Category ▾</button><button class="btn btn-secondary">Size ▾</button><button class="btn btn-secondary">Colour ▾</button><button class="btn btn-secondary">Price ▾</button>
+    <div class="seg" style="margin-left:auto"><label class="seg-opt"><input type="radio" name="s1g" checked>Newest</label><label class="seg-opt"><input type="radio" name="s1g">Best selling</label><label class="seg-opt"><input type="radio" name="s1g">Top rated</label></div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center;padding:var(--space-3) 0">
+    <span class="dv-sub">Applied</span>
+    <span class="tag tag-outline">Evening ✕</span><span class="tag tag-outline">S ✕</span><span class="tag tag-outline">M ✕</span><span class="tag tag-outline">Black ✕</span><span class="tag tag-outline">500 – 2,500 EGP ✕</span>
+    <a href="#1g" style="font-size:11.5px;margin-left:var(--space-2)">Clear all</a>
+    <span class="text-muted" style="font-size:12.5px;margin-left:auto;font-feature-settings:'tnum'">4 pieces</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-6);margin-top:var(--space-2)">
+    <div><div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Image</span></div><div style="font:400 17px/1.2 var(--font-heading);margin-top:var(--space-2)">Satin Cowl-Neck Dress</div><div style="font-size:13.5px;font-feature-settings:'tnum'">2,040 EGP</div></div>
+    <div><div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Image</span></div><div style="font:400 17px/1.2 var(--font-heading);margin-top:var(--space-2)">Crepe Column Gown</div><div style="font-size:13.5px;font-feature-settings:'tnum'">4,200 EGP</div></div>
+    <div><div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Image</span></div><div style="font:400 17px/1.2 var(--font-heading);margin-top:var(--space-2)">Silk Slip Dress</div><div style="font-size:13.5px;font-feature-settings:'tnum'">1,760 EGP</div></div>
+    <div><div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Image</span></div><div style="font:400 17px/1.2 var(--font-heading);margin-top:var(--space-2)">Velvet Bias Dress</div><div style="font-size:13.5px;font-feature-settings:'tnum'">2,890 EGP</div></div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1h"><div class="dv-olabel"><a class="dv-oid" href="#1h">1h</a>PLP filters — drawer, catalogue-wide grid</div>
+<div class="dv-card" style="width:1180px;padding:0;position:relative">
+  <div style="padding:var(--space-6)">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-3)">
+      <div style="display:flex;gap:var(--space-3);align-items:baseline"><button class="btn btn-primary">Filter (5)</button><span class="text-muted" style="font-size:12.5px;font-feature-settings:'tnum'">4 of 12 pieces</span></div>
+      <span style="font-size:13px">Sort: <span style="color:var(--color-accent)">Top rated ▾</span></span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-6);margin-top:var(--space-4);opacity:.45">
+      <div><div class="plate" style="aspect-ratio:3/4;background:var(--color-surface)"></div><div style="height:12px;background:var(--color-surface);margin-top:var(--space-2);width:70%"></div></div>
+      <div><div class="plate" style="aspect-ratio:3/4;background:var(--color-surface)"></div><div style="height:12px;background:var(--color-surface);margin-top:var(--space-2);width:60%"></div></div>
+      <div><div class="plate" style="aspect-ratio:3/4;background:var(--color-surface)"></div><div style="height:12px;background:var(--color-surface);margin-top:var(--space-2);width:75%"></div></div>
+      <div><div class="plate" style="aspect-ratio:3/4;background:var(--color-surface)"></div><div style="height:12px;background:var(--color-surface);margin-top:var(--space-2);width:55%"></div></div>
+    </div>
+  </div>
+  <div style="position:absolute;inset:0 auto 0 0;width:340px;background:var(--color-bg);border-right:1px solid var(--color-divider);box-shadow:var(--shadow-lg);padding:var(--space-6);display:flex;flex-direction:column;gap:var(--space-4)">
+    <div style="display:flex;justify-content:space-between;align-items:center"><h4 style="margin:0;font-weight:400">Refine</h4><button class="btn btn-icon btn-ghost" aria-label="Close">✕</button></div>
+    <div><div class="dv-sub" style="margin-bottom:var(--space-2)">Category</div><div style="display:flex;flex-direction:column;gap:7px;font-size:13.5px"><label class="radio"><input type="radio" name="k1h" checked><span class="dot"></span>Evening Dresses (4)</label><label class="radio"><input type="radio" name="k1h"><span class="dot"></span>Day Dresses (5)</label><label class="radio"><input type="radio" name="k1h"><span class="dot"></span>Bridal (3)</label></div></div>
+    <div class="hr" style="margin:0"></div>
+    <div><div class="dv-sub" style="margin-bottom:var(--space-2)">Size</div><div style="display:flex;gap:6px"><span class="tag tag-outline">S</span><span class="tag tag-outline">M</span><span class="tag tag-neutral">L</span><span class="tag tag-neutral">XL</span></div></div>
+    <div class="hr" style="margin:0"></div>
+    <div><div class="dv-sub" style="margin-bottom:var(--space-2)">Colour</div><div style="display:flex;gap:6px"><span class="tag tag-outline">Black</span><span class="tag tag-neutral">Emerald</span><span class="tag tag-neutral">Ivory</span></div></div>
+    <div class="hr" style="margin:0"></div>
+    <div><div class="dv-sub" style="margin-bottom:var(--space-2)">Price</div><div style="display:flex;gap:var(--space-2);align-items:center"><input class="input" value="500"><span class="text-muted">–</span><input class="input" value="2500"></div></div>
+    <div style="margin-top:auto;display:flex;gap:var(--space-2)"><button class="btn btn-secondary" style="flex:1">Clear</button><button class="btn btn-primary" style="flex:2">Show 4 pieces</button></div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1i"><div class="dv-olabel"><a class="dv-oid" href="#1i">1i</a>PDP — column of plates, buy box holds the rail</div>
+<div class="dv-card" style="width:1180px;padding:var(--space-6);display:grid;grid-template-columns:1fr 380px;gap:var(--space-8)">
+  <div style="display:grid;grid-template-columns:1fr 108px;gap:var(--space-3);align-items:start">
+    <div class="plate" style="height:660px;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Hero image</span></div>
+    <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+      <div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center;outline-color:var(--color-accent)"><span class="dv-sub">Front</span></div>
+      <div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Detail</span></div>
+      <div class="plate" style="aspect-ratio:3/4;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Back</span></div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:var(--space-3);align-self:start">
+    <div class="dv-sub">Dresses · Evening</div>
+    <h2 style="margin:0;font-weight:400;font-size:31px">Satin Cowl-Neck Dress</h2>
+    <div style="display:flex;align-items:baseline;gap:var(--space-3);font-feature-settings:'tnum'"><span style="font-size:22px;font-family:var(--font-heading)">2,040 EGP</span><span class="text-muted" style="text-decoration:line-through;font-size:13px">2,400</span><span class="tag tag-accent">−15%</span></div>
+    <div class="text-muted" style="font-size:12.5px;font-feature-settings:'tnum'">★ 4.5 · 12 reviews</div>
+    <div class="hr" style="margin:var(--space-2) 0"></div>
+    <div><div class="dv-sub" style="margin-bottom:var(--space-2)">Colour — Black</div><div style="display:flex;gap:var(--space-2)"><span style="width:26px;height:26px;border-radius:50%;background:#201f1d;outline:1px solid var(--color-accent);outline-offset:2px"></span><span style="width:26px;height:26px;border-radius:50%;background:#3a5c48"></span></div></div>
+    <div><div style="display:flex;justify-content:space-between"><span class="dv-sub" style="margin-bottom:var(--space-2)">Size</span><a href="#1i" style="font-size:11.5px">Size guide</a></div><div class="seg"><label class="seg-opt"><input type="radio" name="z1i">S</label><label class="seg-opt"><input type="radio" name="z1i" checked>M</label><label class="seg-opt" style="opacity:.4"><input type="radio" name="z1i" disabled>L</label></div></div>
+    <div class="tag tag-accent" style="align-self:flex-start">Only 3 left in this size</div>
+    <button class="btn btn-primary btn-block" style="min-height:44px">Add to bag</button>
+    <button class="btn btn-secondary btn-block">Save to wishlist</button>
+    <p class="text-muted" style="font-size:12.5px;text-align:justify;margin:var(--space-2) 0 0">Floor-length satin evening dress, bias-cut with a draped cowl and covered back zip. Cut and finished in our Cairo atelier.</p>
+    <div class="hr" style="margin:var(--space-2) 0"></div>
+    <div style="display:flex;flex-direction:column;gap:var(--space-2);font-size:12.5px">
+      <div style="display:flex;justify-content:space-between"><span class="text-muted">Delivery</span><span>Cairo, 2–4 days · 65 EGP</span></div>
+      <div style="display:flex;justify-content:space-between"><span class="text-muted">Payment</span><span>Cash on delivery</span></div>
+    </div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1j"><div class="dv-olabel"><a class="dv-oid" href="#1j">1j</a>PDP — single plate, buy box as justified spread</div>
+<div class="dv-card" style="width:1180px;padding:var(--space-6)">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-8);align-items:start">
+    <div>
+      <div class="plate" style="aspect-ratio:4/5;background:var(--color-surface);display:grid;place-items:center"><span class="dv-sub">Hero image</span></div>
+      <div style="display:flex;gap:var(--space-2);margin-top:var(--space-3)"><div style="width:56px;aspect-ratio:3/4;background:var(--color-surface);outline:1px solid var(--color-accent)"></div><div style="width:56px;aspect-ratio:3/4;background:var(--color-surface);outline:1px solid var(--color-divider)"></div><div style="width:56px;aspect-ratio:3/4;background:var(--color-surface);outline:1px solid var(--color-divider)"></div><div style="width:56px;aspect-ratio:3/4;background:var(--color-surface);outline:1px solid var(--color-divider)"></div></div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="dv-sub">Plate 01 · Evening</span><span class="dv-sub" style="font-feature-settings:'tnum'">★ 4.5 (12)</span></div>
+      <h2 style="margin:var(--space-3) 0 0;font-weight:400;font-size:40px;line-height:1.05">Satin<br>Cowl-Neck Dress</h2>
+      <p class="text-muted" style="font-size:13.5px;text-align:justify;margin-top:var(--space-3);max-width:46ch">Floor-length satin, bias-cut, with a draped cowl and covered back zip. Six weeks of work between the pattern table and the final press — a piece meant to outlast the season it was cut for.</p>
+      <div class="hr"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)">
+        <div><div class="dv-sub" style="margin-bottom:var(--space-2)">Colour</div><div style="display:flex;gap:var(--space-2)"><span style="width:24px;height:24px;border-radius:50%;background:#201f1d;outline:1px solid var(--color-accent);outline-offset:2px"></span><span style="width:24px;height:24px;border-radius:50%;background:#3a5c48"></span></div></div>
+        <div><div class="dv-sub" style="margin-bottom:var(--space-2)">Size</div><div style="display:flex;gap:6px"><span class="tag tag-neutral">S</span><span class="tag tag-outline">M</span><span class="tag tag-neutral" style="opacity:.4;text-decoration:line-through">L</span></div></div>
+      </div>
+      <div class="hr"></div>
+      <div style="display:flex;align-items:flex-end;gap:var(--space-4)">
+        <div><div class="dv-sub">Price</div><div style="font:400 30px/1.1 var(--font-heading);font-feature-settings:'tnum'">2,040 EGP</div><div class="text-muted" style="font-size:12px;font-feature-settings:'tnum'">was 2,400 · saving 360</div></div>
+        <button class="btn btn-primary" style="flex:1;min-height:48px;font-size:15px">Add to bag</button>
+        <button class="btn btn-icon btn-secondary" aria-label="Wishlist" style="width:48px;height:48px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"></path></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="hr" style="margin:var(--space-6) 0"></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-8)">
+    <div><div class="dv-sub" style="margin-bottom:var(--space-2)">The making</div><p class="text-muted" style="font-size:12.5px;text-align:justify;margin:0">Cut on the bias from a single length of satin so the drape falls without a seam at the hip.</p></div>
+    <div><div class="dv-sub" style="margin-bottom:var(--space-2)">Care</div><p class="text-muted" style="font-size:12.5px;text-align:justify;margin:0">Dry clean only. Store on a padded hanger; press on the reverse at low heat.</p></div>
+    <div><div class="dv-sub" style="margin-bottom:var(--space-2)">Reviews · 12</div><p style="font-size:12.5px;margin:0;font-style:italic">“Beautiful fabric and fit.”</p><div class="text-muted" style="font-size:11.5px;margin-top:4px;font-feature-settings:'tnum'">Mona A. · ★ 4.5 · 18 Jul</div></div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1k"><div class="dv-olabel"><a class="dv-oid" href="#1k">1k</a>Checkout — one page, summary rail</div>
+<div class="dv-card" style="width:1080px;padding:var(--space-6);display:grid;grid-template-columns:1fr 350px;gap:var(--space-8)">
+  <div>
+    <h3 style="margin:0 0 var(--space-4);font-weight:400">Checkout</h3>
+    <div class="dv-sub" style="margin-bottom:var(--space-2)">Deliver to</div>
+    <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+      <label class="card" style="flex-direction:row;gap:var(--space-3);align-items:flex-start;border-color:var(--color-accent);cursor:pointer"><input type="radio" name="a1k" checked style="display:none"><span style="width:16px;height:16px;border-radius:50%;border:1.5px solid var(--color-accent);background:var(--color-accent);box-shadow:inset 0 0 0 4px var(--color-bg);flex:none;margin-top:3px"></span><div><div style="font-size:14px">Home <span class="tag tag-accent" style="margin-left:6px">Default</span></div><div class="text-muted" style="font-size:12.5px">12 Mostafa El Nahas St, District 7, Nasr City, Cairo · +20 100 000 0002</div></div></label>
+      <label class="card" style="flex-direction:row;gap:var(--space-3);align-items:flex-start;cursor:pointer"><span style="width:16px;height:16px;border-radius:50%;border:1.5px solid var(--color-divider);flex:none;margin-top:3px"></span><div><div style="font-size:14px">Work</div><div class="text-muted" style="font-size:12.5px">Reception desk, 4 Kasr El Nil, Downtown, Cairo</div></div></label>
+      <button class="btn btn-ghost" style="align-self:flex-start">+ Add a new address</button>
+    </div>
+    <div class="hr"></div>
+    <div class="dv-sub" style="margin-bottom:var(--space-2)">Payment</div>
+    <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+      <label class="radio"><input type="radio" name="p1k" checked><span class="dot"></span>Cash on delivery</label>
+      <label class="radio" style="opacity:.45"><input type="radio" name="p1k" disabled><span class="dot"></span>Card — coming soon</label>
+    </div>
+    <div class="hr"></div>
+    <div class="field"><label>Notes for the courier (optional)</label><textarea class="input" placeholder="Please call before delivery."></textarea></div>
+  </div>
+  <aside class="card" style="align-self:start;gap:var(--space-3)">
+    <div class="card-title">Your order</div>
+    <div style="display:flex;gap:var(--space-3)"><div class="plate" style="width:56px;aspect-ratio:3/4;background:var(--color-surface);flex:none"></div><div style="flex:1;font-size:13px"><div>Satin Cowl-Neck Dress</div><div class="text-muted" style="font-size:11.5px">Black · M · ×2</div></div><span style="font-size:13px;font-feature-settings:'tnum'">4,080</span></div>
+    <div class="hr" style="margin:var(--space-1) 0"></div>
+    <div style="display:flex;gap:var(--space-2)"><input class="input" value="SAVE20" style="letter-spacing:.06em"><button class="btn btn-secondary">Apply</button></div>
+    <div style="font-size:11.5px;color:var(--color-accent-700)">Coupon SAVE20 applied — 20% off items</div>
+    <div class="hr" style="margin:var(--space-1) 0"></div>
+    <div style="display:flex;flex-direction:column;gap:7px;font-size:13px;font-feature-settings:'tnum'">
+      <div style="display:flex;justify-content:space-between"><span class="text-muted">Items subtotal</span><span>4,080.00</span></div>
+      <div style="display:flex;justify-content:space-between"><span class="text-muted">Coupon discount</span><span>−816.00</span></div>
+      <div style="display:flex;justify-content:space-between"><span class="text-muted">Shipping · Nasr City</span><span>65.00</span></div>
+    </div>
+    <div class="hr" style="margin:var(--space-1) 0"></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:400 17px var(--font-heading)">Total</span><span style="font:400 22px var(--font-heading);font-feature-settings:'tnum'">3,329.00 EGP</span></div>
+    <button class="btn btn-primary btn-block" style="min-height:44px">Place order</button>
+    <p class="text-muted" style="font-size:11px;margin:0;text-align:justify">Prices are confirmed when the order is placed. Stock is reserved at that moment, not before.</p>
+  </aside>
+</div></div>
+
+<div class="dv-opt" id="1l"><div class="dv-olabel"><a class="dv-oid" href="#1l">1l</a>Checkout — stepped, one decision at a time</div>
+<div class="dv-card" style="width:1080px;padding:var(--space-6);display:grid;grid-template-columns:1fr 320px;gap:var(--space-8)">
+  <div>
+    <div style="display:flex;gap:var(--space-4);border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-3);font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-feature-settings:'tnum'">
+      <span style="color:var(--color-accent)">01 Address ✓</span><span style="color:var(--color-accent);border-bottom:1px solid var(--color-accent);padding-bottom:2px">02 Delivery</span><span class="text-muted">03 Payment</span><span class="text-muted">04 Review</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider)">
+      <div><div class="dv-sub">01 · Address</div><div style="font-size:13.5px;margin-top:4px">Home — 12 Mostafa El Nahas St, Nasr City, Cairo</div></div>
+      <button class="btn btn-ghost">Change</button>
+    </div>
+    <div style="padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider)">
+      <h4 style="margin:0 0 var(--space-3);font-weight:400">02 · Delivery</h4>
+      <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+        <label class="card" style="flex-direction:row;align-items:center;gap:var(--space-3);border-color:var(--color-accent);cursor:pointer"><span style="width:16px;height:16px;border-radius:50%;border:1.5px solid var(--color-accent);background:var(--color-accent);box-shadow:inset 0 0 0 4px var(--color-bg);flex:none"></span><div style="flex:1;font-size:14px">Standard — Nasr City, Cairo<div class="text-muted" style="font-size:12px">2–4 working days</div></div><span style="font-size:13.5px;font-feature-settings:'tnum'">65.00 EGP</span></label>
+        <label class="card" style="flex-direction:row;align-items:center;gap:var(--space-3);cursor:pointer"><span style="width:16px;height:16px;border-radius:50%;border:1.5px solid var(--color-divider);flex:none"></span><div style="flex:1;font-size:14px">Collect from the atelier<div class="text-muted" style="font-size:12px">Zamalek, next working day</div></div><span style="font-size:13.5px;font-feature-settings:'tnum'">0.00 EGP</span></label>
+      </div>
+      <button class="btn btn-primary" style="margin-top:var(--space-4)">Continue to payment</button>
+    </div>
+    <div style="padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider);display:flex;justify-content:space-between"><div class="dv-sub">03 · Payment</div><span class="text-muted" style="font-size:12.5px">Cash on delivery — card payments coming soon</span></div>
+    <div style="padding:var(--space-4) 0" class="dv-sub">04 · Review &amp; place order</div>
+  </div>
+  <aside class="card" style="align-self:start;gap:var(--space-3)">
+    <div class="card-title">Summary</div>
+    <div style="display:flex;flex-direction:column;gap:7px;font-size:13px;font-feature-settings:'tnum'">
+      <div style="display:flex;justify-content:space-between"><span class="text-muted">2 items</span><span>4,080.00</span></div>
+      <div style="display:flex;justify-content:space-between"><span class="text-muted">Discount</span><span>−816.00</span></div>
+      <div style="display:flex;justify-content:space-between"><span class="text-muted">Shipping</span><span>65.00</span></div>
+    </div>
+    <div class="hr" style="margin:var(--space-1) 0"></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:400 16px var(--font-heading)">Total so far</span><span style="font:400 20px var(--font-heading);font-feature-settings:'tnum'">3,329.00</span></div>
+    <p class="text-muted" style="font-size:11px;margin:0;text-align:justify">Confirmed at step 04. Nothing is reserved until you place the order.</p>
+  </aside>
+</div></div>
+
+</div>
+<p class="dv-next">Try next: “build the full screens on <a class="dv-oid" href="#1b">1b</a> + <a class="dv-oid" href="#1d">1d</a> + <a class="dv-oid" href="#1f">1f</a> + <a class="dv-oid" href="#1j">1j</a> + <a class="dv-oid" href="#1k">1k</a>” · “mock the eight edge states next” · “more directions for the card”</p>
+</section>
+
+</x-dc>
+</body>
+</html>
