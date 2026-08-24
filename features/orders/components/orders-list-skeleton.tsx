@@ -4,7 +4,7 @@ const SKELETON_ROW_COUNT = 5;
 
 export function OrdersListSkeleton() {
   return (
-    <ul className="divide-y divide-border bg-card ring-1 ring-foreground/10">
+    <ul className="divide-y divide-border border border-border bg-card shadow-sm">
       {Array.from({ length: SKELETON_ROW_COUNT }).map((_, index) => (
         <li
           key={index}

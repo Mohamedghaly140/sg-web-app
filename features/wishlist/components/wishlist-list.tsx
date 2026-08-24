@@ -71,7 +71,7 @@ export function WishlistList() {
   }
 
   return (
-    <ul className="divide-y divide-border bg-card ring-1 ring-foreground/10">
+    <ul className="divide-y divide-border border border-border bg-card shadow-sm">
       {entries.map((entry) => (
         <WishlistItem entry={entry} key={entry.product.id} />
       ))}

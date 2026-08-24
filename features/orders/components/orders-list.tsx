@@ -7,7 +7,7 @@ export type OrdersListProps = {
 
 export function OrdersList({ orders }: OrdersListProps) {
   return (
-    <ul className="divide-y divide-border bg-card ring-1 ring-foreground/10">
+    <ul className="divide-y divide-border border border-border bg-card shadow-sm">
       {orders.map((order) => (
         <OrderListItem key={order.id} order={order} />
       ))}

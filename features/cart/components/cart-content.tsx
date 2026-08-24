@@ -169,7 +169,7 @@ export function CartContent() {
         <h2 id="cart-items-heading" className="sr-only">
           Cart items
         </h2>
-        <ul className="bg-card ring-1 ring-foreground/10">
+        <ul className="border border-border bg-card shadow-sm">
           {cart.items.map((item, index) => (
             <CartLineItem
               key={item.id}

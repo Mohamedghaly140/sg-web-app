@@ -25,7 +25,7 @@ export function AddressList({ addresses }: AddressListProps) {
   // client-re-sort — including after delete promotes a new default; trust
   // revalidatePath + the next server read.
   return (
-    <ul className="divide-y divide-border bg-card ring-1 ring-foreground/10">
+    <ul className="divide-y divide-border border border-border bg-card shadow-sm">
       {addresses.map((address) => (
         <AddressListItem key={address.id} address={address} />
       ))}
