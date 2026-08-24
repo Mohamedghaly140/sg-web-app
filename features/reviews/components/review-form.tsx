@@ -123,7 +123,7 @@ export function ReviewForm(props: ReviewFormProps) {
       action={formAction}
       actionState={actionState}
       onSuccess={() => onDone?.()}
-      className="rounded-none border border-border p-4"
+      className="rounded-md border border-border p-4"
     >
       <FormControl
         key={`title-${isCreate ? "create" : editReviewId}-${titleDefault}`}

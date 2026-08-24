@@ -85,7 +85,7 @@ export function AddressForm(props: AddressFormProps) {
       actionState={actionState}
       onSuccess={isCreate ? () => props.onDone?.() : undefined}
       suppressBuiltInToasts={!isCreate}
-      className="rounded-none border border-border p-4"
+      className="rounded-md border border-border p-4"
     >
       {!isCreate ? (
         <input type="hidden" name="id" value={props.address.id} />

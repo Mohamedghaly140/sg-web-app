@@ -20,7 +20,7 @@ export function CategoryCard({ category }: CategoryCardProps) {
     category.subCategories.length - visibleSubCategories.length;
 
   return (
-    <div className="flex flex-col gap-3 rounded-none border border-border p-3">
+    <div className="flex flex-col gap-3 rounded-md border border-border p-3">
       <Link
         href={`/categories/${category.slug}`}
         className="group flex flex-col gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"

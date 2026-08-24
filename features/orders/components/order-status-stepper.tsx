@@ -49,7 +49,7 @@ export function OrderStatusStepper({
             <span
               key={stage.key}
               className={cn(
-                "size-1.5 shrink-0 rounded-none",
+                "size-1.5 shrink-0 rounded-full",
                 index < currentIndex && "bg-foreground",
                 index === currentIndex && "bg-accent",
                 index > currentIndex && "bg-border",
@@ -96,7 +96,7 @@ export function OrderStatusStepper({
 
             <span
               className={cn(
-                "relative z-10 flex size-10 shrink-0 items-center justify-center rounded-none border",
+                "relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full border",
                 isComplete && "border-foreground bg-foreground text-background",
                 isCurrent && "border-accent bg-accent text-accent-foreground",
                 isUpcoming &&

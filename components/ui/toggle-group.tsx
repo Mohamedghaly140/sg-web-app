@@ -34,7 +34,7 @@ function ToggleGroup({
       data-spacing={spacing}
       style={{ "--tg-item-spacing": spacing } as React.CSSProperties}
       className={cn(
-        "group/toggle-group flex w-fit items-center gap-[calc(var(--tg-item-spacing)*0.25rem)] rounded-none data-[orientation=vertical]:flex-col",
+        "group/toggle-group flex w-fit items-center gap-[calc(var(--tg-item-spacing)*0.25rem)] rounded-sm data-[orientation=vertical]:flex-col",
         className
       )}
       {...props}
@@ -65,7 +65,7 @@ function ToggleGroupItem({
           variant: context.variant || variant,
           size: context.size || size,
         }),
-        "min-w-0 flex-1 shrink-0 rounded-none shadow-none first:border-l group-data-[orientation=vertical]/toggle-group:w-full group-data-[orientation=vertical]/toggle-group:first:border-t group-data-[orientation=vertical]/toggle-group:not-first:border-t-0 group-data-[spacing=0]/toggle-group:not-first:border-l-0",
+        "min-w-0 flex-1 shrink-0 rounded-sm shadow-none first:border-l group-data-[orientation=vertical]/toggle-group:w-full group-data-[orientation=vertical]/toggle-group:first:border-t group-data-[orientation=vertical]/toggle-group:not-first:border-t-0 group-data-[spacing=0]/toggle-group:not-first:border-l-0",
         className
       )}
       {...props}
