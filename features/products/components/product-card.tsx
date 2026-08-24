@@ -40,7 +40,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
             <DiscountBadge discount={product.discount} />
           </div>
         </div>
-        <p className="line-clamp-1 text-sm font-medium text-foreground transition-colors group-hover:text-accent">
+        <p className="line-clamp-1 text-sm font-medium text-foreground transition-colors group-hover:text-accent-strong">
           {product.name}
         </p>
         <RatingSummary

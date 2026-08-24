@@ -35,7 +35,26 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-strong: var(--accent-strong);
   --color-accent: var(--accent);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
+  --color-accent-100: var(--accent-100);
+  --color-accent-200: var(--accent-200);
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+  --color-accent-800: var(--accent-800);
+  --color-accent-900: var(--accent-900);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -56,30 +75,82 @@
 }
 
 :root {
-  --background: oklch(0.985 0.001 106.423);
-  --foreground: oklch(0.216 0.006 56.043);
-  --card: oklch(0.985 0.001 106.423);
-  --card-foreground: oklch(0.216 0.006 56.043);
-  --popover: oklch(0.985 0.001 106.423);
-  --popover-foreground: oklch(0.216 0.006 56.043);
-  --primary: oklch(0.216 0.006 56.043);
-  --primary-foreground: oklch(0.985 0.001 106.423);
-  --secondary: oklch(0.97 0.001 106.423);
-  --secondary-foreground: oklch(0.216 0.006 56.043);
-  --muted: oklch(0.97 0.001 106.423);
-  --muted-foreground: oklch(0.553 0.013 58.071);
-  --accent: oklch(0.58 0.15 78);
-  --accent-foreground: oklch(0.985 0.001 106.423);
-  --destructive: oklch(0.577 0.245 27.325);
-  --success: oklch(0.527 0.154 150.069);
-  --success-foreground: oklch(0.985 0 0);
-  --warning: oklch(0.769 0.188 70.08);
-  --warning-foreground: oklch(0.205 0 0);
-  --info: oklch(0.546 0.245 262.881);
-  --info-foreground: oklch(0.985 0 0);
-  --border: oklch(0.923 0.003 48.717);
-  --input: oklch(0.923 0.003 48.717);
-  --ring: oklch(0.709 0.01 56.259);
+  --background: #f3f2f2;
+  --foreground: #201f1d;
+  --card: #f3f2f2;
+  --card-foreground: #201f1d;
+  --popover: #eae9e9;
+  --popover-foreground: #201f1d;
+  --primary: #b68235;
+  --primary-foreground: #f3f2f2;
+  --secondary: color-mix(in srgb, #201f1d 7%, transparent);
+  --secondary-foreground: #201f1d;
+  --muted: #eae9e9;
+  /* Deviation from design handoff (docs/phase-7-classical-foundation.md §7.1):
+     using neutral-700 (#605d5d) instead of the handoff's ink-at-55% value.
+     Ink-at-55% composites to ~#7f7e7c (~3.9:1 on --background), which fails
+     WCAG AA for the 12-12.5px secondary text this token drives throughout
+     the app. neutral-700 measures ~5.6:1 on the same background and passes.
+     This is intentional -- do not "correct" it back to match the handoff. */
+  --muted-foreground: #605d5d;
+  --accent: #b68235;
+  --accent-strong: #7d5411;
+  --accent-foreground: #5a3b0a;
+  /* Classical status roles (Phase 7.2, docs/phase-7-classical-foundation.md
+     §7.2). Classical is a mono scheme, but order status still needs six
+     distinguishable states -- docs/01-conventions.md §7 mandates semantic
+     badge variants, and components/shared/order-status-badge.tsx,
+     payment-status-badge.tsx and active-badge.tsx all depend on these
+     four roles, so they're retuned rather than deleted.
+     --warning aliases to --accent-strong: gold is this palette's one
+     caution colour, a second yellow would be noise.
+     --info aliases to --neutral-700: blue is the one hue that would
+     visibly break the mono scheme.
+     --destructive and --success are retuned to a deep desaturated oxide
+     and moss (contrast ratios noted inline below) -- genuine errors must
+     not read as decoration, which is why --destructive survives at all.
+     The four *-foreground tokens stay defined because Clerk reads them,
+     but our own badges stop consuming them: Phase 8 renders semantic
+     badges as `bg-<role>/10 text-<role>` tints, never as filled
+     `bg-<role> text-<role>-foreground` blocks. Until Phase 8 lands,
+     components/ui/badge.tsx's success/warning/info variants still render
+     filled, so these foreground values remain visually live in the
+     running app. */
+  --destructive: #8c3a2b; /* deep desaturated oxide; 6.82:1 on --card (#f3f2f2) as text-on-tint */
+  --success: #4f5d3f; /* deep desaturated moss; 6.33:1 on --card (#f3f2f2) as text-on-tint */
+  --success-foreground: #f3f2f2; /* light-on-dark pairing unchanged; reformatted from oklch(0.985 0 0) to this file's hex-literal convention */
+  --warning: var(--accent-strong); /* alias, not a new colour: gold is already this palette's caution colour */
+  --warning-foreground: #f3f2f2; /* was oklch(0.205 0 0) (near-black), correct for the old bright warning fill but only ~3.06:1 against the new --accent-strong fill (#7d5411) -- fails WCAG AA. Fixed to match --primary-foreground's existing light-on-gold-fill pairing (5.97:1 on #7d5411) */
+  --info: var(--neutral-700); /* alias, not a new colour: blue is the one hue that would visibly break the mono scheme */
+  --info-foreground: #f3f2f2; /* light-on-dark pairing unchanged; reformatted from oklch(0.985 0 0), same rationale as --success-foreground above */
+  --border: color-mix(in srgb, #201f1d 16%, transparent);
+  --input: color-mix(in srgb, #201f1d 16%, transparent);
+  --ring: #b68235;
+  /* Classical tonal ramps (Phase 7.1), ported verbatim from
+     tokens/classical-styles.css as flat hex literals so :root stays
+     eyeball-diffable against the source. accent-2 is intentionally NOT
+     ported -- classical-readme.md calls it a machine-derived stand-in for
+     a second brand colour that doesn't exist in this mono scheme, "kept
+     only so both sets resolve"; treat accent and accent-2 as one role. */
+  --neutral-100: #f8f4f4;
+  --neutral-200: #eae7e7;
+  --neutral-300: #d7d3d3;
+  --neutral-400: #bab6b6;
+  --neutral-500: #9b9797;
+  --neutral-600: #7d7979;
+  --neutral-700: #605d5d;
+  --neutral-800: #444141;
+  --neutral-900: #2d2b2b;
+
+  --accent-100: #fff3e4;
+  --accent-200: #ffe3bf;
+  --accent-300: #facb8d;
+  --accent-400: #e1ad66;
+  --accent-500: #c28d41;
+  --accent-600: #a06f24;
+  --accent-700: #7d5411;
+  --accent-800: #5a3b0a;
+  --accent-900: #3a270d;
   --chart-1: oklch(0.879 0.169 91.605);
   --chart-2: oklch(0.769 0.188 70.08);
   --chart-3: oklch(0.666 0.179 58.318);
