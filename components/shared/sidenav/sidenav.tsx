@@ -6,6 +6,7 @@ import { LucideMenu } from "lucide-react";
 
 import { HeaderAuthControls } from "@/components/shared/header/header-auth-controls";
 import { HeaderWishlistLink } from "@/components/shared/header/header-wishlist-link";
+import { SearchField } from "@/components/shared/search-field";
 import type { Category } from "@/features/categories/types/category";
 import {
   Accordion,
@@ -23,11 +24,10 @@ import {
 } from "@/components/ui/sheet";
 
 type SidenavProps = {
-  navLinks: { href: string; label: string }[];
   categories: Category[];
 };
 
-export function Sidenav({ navLinks, categories }: SidenavProps) {
+export function Sidenav({ categories }: SidenavProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const close = () => setIsOpen(false);
@@ -49,26 +49,17 @@ export function Sidenav({ navLinks, categories }: SidenavProps) {
 
           <div className="flex flex-col gap-6 px-4 pb-4">
             <form action="/products" method="GET">
-              <input
-                type="search"
-                name="search"
-                placeholder="Search products..."
-                aria-label="Search products"
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              />
+              <SearchField className="w-full" />
             </form>
 
             <nav aria-label="Main" className="flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={close}
-                  className="text-eyebrow text-foreground"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              <Link
+                href="/products?sort=newest"
+                onClick={close}
+                className="text-eyebrow text-foreground"
+              >
+                New In
+              </Link>
               <HeaderWishlistLink variant="nav" onNavigate={close} />
             </nav>
 
