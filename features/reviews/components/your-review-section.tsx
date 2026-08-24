@@ -38,7 +38,7 @@ export function YourReviewSection({
           <p className="text-sm font-medium text-foreground">Your review</p>
           <p className="flex items-center gap-1 text-sm font-medium text-foreground">
             <LucideStar
-              className="size-4 fill-primary text-primary"
+              className="size-3.5 fill-primary text-primary"
               aria-hidden
             />
             {ownReview.ratings}

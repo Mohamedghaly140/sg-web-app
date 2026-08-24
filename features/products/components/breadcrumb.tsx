@@ -21,7 +21,7 @@ export function Breadcrumb({
         href={`/categories/${category.slug}`}
         className="inline-flex items-center gap-1 transition-colors hover:text-foreground sm:hidden"
       >
-        <LucideChevronLeft className="size-4" aria-hidden />
+        <LucideChevronLeft className="size-3.5" aria-hidden />
         {category.name}
       </Link>
 

@@ -32,7 +32,7 @@ export function OrderListItem({ order }: OrderListItemProps) {
             className="flex size-12 shrink-0 items-center justify-center rounded-none bg-muted sm:size-14"
             aria-hidden
           >
-            <LucidePackage className="size-4 text-muted-foreground" />
+            <LucidePackage className="size-3.5 text-muted-foreground" />
           </span>
 
           <div className="flex min-w-0 flex-col gap-1.5">

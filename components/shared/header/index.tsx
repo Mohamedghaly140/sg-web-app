@@ -18,7 +18,7 @@ export async function Header() {
 
   return (
     <header className="border-b border-border">
-      <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-[1280px] items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/">
           <Image
             src="/brand/logo-mark.png"

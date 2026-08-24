@@ -48,7 +48,7 @@ export function OrderDetailView({
           href={back.href}
           className="inline-flex w-fit items-center gap-2 text-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
-          <LucideArrowLeft className="size-4" aria-hidden />
+          <LucideArrowLeft className="size-3.5" aria-hidden />
           {back.label}
         </Link>
       ) : null}

@@ -37,7 +37,7 @@ export function ReviewList({ reviews, currentUserId }: ReviewListProps) {
             <div className="flex flex-wrap items-center gap-2">
               <p className="flex items-center gap-1 text-sm font-medium text-foreground">
                 <LucideStar
-                  className="size-4 fill-primary text-primary"
+                  className="size-3.5 fill-primary text-primary"
                   aria-hidden
                 />
                 {review.ratings}

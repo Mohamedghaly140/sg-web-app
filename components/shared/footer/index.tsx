@@ -13,7 +13,7 @@ const SHOP_LINKS = [
 export function Footer() {
   return (
     <footer className="border-t border-border">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 sm:px-6 lg:flex-row lg:justify-between lg:px-8">
+      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-4 py-10 sm:px-6 lg:flex-row lg:justify-between lg:px-8">
         <div className="flex flex-col gap-3">
           <Image
             src="/brand/logo-lockup.png"
@@ -78,7 +78,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-3 border-t border-border px-4 py-4 text-sm text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center justify-between gap-3 border-t border-border px-4 py-4 text-sm text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
         <p>© {new Date().getFullYear()} Safa Ghaly. All rights reserved.</p>
         <span className="rounded-full border border-border px-3 py-1 text-xs font-medium">
           Cash on Delivery

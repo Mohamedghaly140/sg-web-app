@@ -33,7 +33,7 @@ export function HeaderWishlistLink({
             className="w-full justify-start gap-2 px-0 text-eyebrow text-foreground hover:bg-transparent"
             onClick={handleClick}
           >
-            <LucideHeart className="size-4" />
+            <LucideHeart className="size-3.5" />
             Wishlist
           </Button>
         }

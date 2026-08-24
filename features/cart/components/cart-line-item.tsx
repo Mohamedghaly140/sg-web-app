@@ -184,7 +184,7 @@ export function CartLineItem({
               className="flex items-center gap-2 text-xs text-muted-foreground"
               role="status"
             >
-              <Spinner className="size-4" />
+              <Spinner className="size-3.5" />
               Updating cart…
             </div>
           ) : null}

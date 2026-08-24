@@ -103,7 +103,7 @@ export function OrderStatusStepper({
                   "border-border bg-muted text-muted-foreground",
               )}
             >
-              <Icon className="size-4" aria-hidden />
+              <Icon className="size-3.5" aria-hidden />
             </span>
 
             <div className="flex min-w-0 flex-col gap-0.5 pt-2 sm:items-center sm:pt-0 sm:text-center">
