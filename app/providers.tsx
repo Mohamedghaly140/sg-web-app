@@ -56,7 +56,20 @@ export default function Providers({
             <AccountDisabledBridge />
             <NuqsAdapter>
               {children}
-              <Toaster />
+              <Toaster
+                toastOptions={{
+                  classNames: {
+                    toast:
+                      "bg-popover text-popover-foreground border border-border shadow-none",
+                    title: "text-foreground font-heading",
+                    description: "text-muted-foreground",
+                    actionButton:
+                      "bg-transparent text-accent-strong border border-primary font-heading",
+                    cancelButton:
+                      "bg-transparent text-muted-foreground border border-border",
+                  },
+                }}
+              />
             </NuqsAdapter>
           </WishlistInitialDataProvider>
         </CartInitialDataProvider>

@@ -35,7 +35,12 @@ export function QuantityStepper({
   };
 
   return (
-    <div className={cn("flex items-center border border-border", className)}>
+    <div
+      className={cn(
+        "flex items-center border border-border rounded-md overflow-hidden",
+        className,
+      )}
+    >
       <Button
         type="button"
         variant="ghost"
@@ -46,13 +51,17 @@ export function QuantityStepper({
       >
         <LucideMinus data-icon="inline-start" />
       </Button>
-      <output className="min-w-8 text-center text-sm tabular-nums" aria-live="polite">
+      <output
+        className="min-w-[38px] border-l border-border text-center text-sm tabular-nums"
+        aria-live="polite"
+      >
         {value}
       </output>
       <Button
         type="button"
         variant="ghost"
         size="icon-sm"
+        className="border-l border-border"
         aria-label={`Increase quantity${suffix}`}
         disabled={disabled || outOfStock || value >= max}
         onClick={() => step(value + 1)}
