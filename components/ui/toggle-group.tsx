@@ -34,7 +34,7 @@ function ToggleGroup({
       data-spacing={spacing}
       style={{ "--tg-item-spacing": spacing } as React.CSSProperties}
       className={cn(
-        "group/toggle-group flex w-fit items-center gap-[calc(var(--tg-item-spacing)*0.25rem)] rounded-sm data-[orientation=vertical]:flex-col",
+        "group/toggle-group flex w-fit items-center gap-[calc(var(--tg-item-spacing)*0.25rem)] border border-border rounded-md overflow-hidden data-[orientation=vertical]:flex-col",
         className
       )}
       {...props}
