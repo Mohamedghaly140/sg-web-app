@@ -66,15 +66,15 @@ Classical is editorial and book-like on a soft near-white ground. **Colour is ap
 
 ### 7.7 The `.plate` image treatment
 
-- [ ] Define `@utility plate` with `box-sizing: border-box`, `filter: sepia(.22) saturate(.82) contrast(1.05)`, `border: 6px solid var(--color-muted)` and `outline: 1px solid var(--color-border)`. Add `@utility plate-sm { border-width: 3px }` for thumbnails at 64px and below (the 46/48/52px order and cart lines), and `@utility plate-selected { outline-color: var(--color-accent) }` for the PDP thumbnail strip.
-- [ ] Document that **the class goes on a wrapper containing only the image.** `filter` applies to every descendant, so a stock badge or wishlist heart placed inside the plate would be sepia-toned along with the photograph. The required structure is an outer `relative` element, an inner `.plate` wrapping the `<Image>`, and overlays as **siblings** of the inner plate.
-- [ ] Document that **`filter` creates a containing block for `position: fixed` and establishes a new stacking context.** Anything sticky or fixed inside a plated ancestor breaks. `features/products/components/sticky-add-to-cart-bar.tsx` is the live risk and must be verified in Phase 9.
-- [ ] Note that `box-sizing: border-box` keeps the 6px mat inside the element box, so the plate's inner dimensions are 12px smaller than the outer box. `cldUrl()` in `lib/format.ts` already exists for width-aware Cloudinary transforms — do not compute `sizes` from the outer width on small thumbnails.
+- [x] Define `@utility plate` with `box-sizing: border-box`, `filter: sepia(.22) saturate(.82) contrast(1.05)`, `border: 6px solid var(--color-muted)` and `outline: 1px solid var(--color-border)`. Add `@utility plate-sm { border-width: 3px }` for thumbnails at 64px and below (the 46/48/52px order and cart lines), and `@utility plate-selected { outline-color: var(--color-accent) }` for the PDP thumbnail strip.
+- [x] Document that **the class goes on a wrapper containing only the image.** `filter` applies to every descendant, so a stock badge or wishlist heart placed inside the plate would be sepia-toned along with the photograph. The required structure is an outer `relative` element, an inner `.plate` wrapping the `<Image>`, and overlays as **siblings** of the inner plate.
+- [x] Document that **`filter` creates a containing block for `position: fixed` and establishes a new stacking context.** Anything sticky or fixed inside a plated ancestor breaks. `features/products/components/sticky-add-to-cart-bar.tsx` is the live risk and must be verified in Phase 9.
+- [x] Note that `box-sizing: border-box` keeps the 6px mat inside the element box, so the plate's inner dimensions are 12px smaller than the outer box. `cldUrl()` in `lib/format.ts` already exists for width-aware Cloudinary transforms — do not compute `sizes` from the outer width on small thumbnails.
 
 ### 7.8 Conventions and tracker
 
-- [ ] Amend `docs/01-conventions.md` §7 with the four rules this phase establishes: the `text-accent-strong` threshold, the tabular-figures rule, the `--font-sans` compatibility alias, and a note that Classical tokens live in `@theme` and are never restated as literals in feature code.
-- [ ] Update the phase-map table in `docs/README.md` to mark Phase 7 in progress, then done.
+- [x] Amend `docs/01-conventions.md` §7 with the four rules this phase establishes: the `text-accent-strong` threshold, the tabular-figures rule, the `--font-sans` compatibility alias, and a note that Classical tokens live in `@theme` and are never restated as literals in feature code.
+- [x] Update the phase-map table in `docs/README.md` to mark Phase 7 in progress, then done.
 
 ## Definition of Done
 

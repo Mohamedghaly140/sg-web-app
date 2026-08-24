@@ -273,3 +273,32 @@
 @utility figures {
   font-variant-numeric: tabular-nums;
 }
+
+/* The `.plate` image treatment (Phase 7.7, docs/phase-7-classical-foundation.md
+   §7.7). Apply to a wrapper containing ONLY the <Image> -- `filter` applies to
+   every descendant, so a stock badge or wishlist heart placed inside the plate
+   would be sepia-toned along with the photograph. Required structure: an
+   outer `relative` element, an inner `.plate` wrapping the <Image>, and any
+   overlays as SIBLINGS of the inner plate, not children.
+   `filter` also creates a containing block for `position: fixed` and starts a
+   new stacking context -- anything sticky/fixed inside a plated ancestor
+   breaks. features/products/components/sticky-add-to-cart-bar.tsx is the live
+   risk (`fixed inset-x-0 bottom-0`) and must be verified in Phase 9.
+   `box-sizing: border-box` keeps the 6px mat inside the element box, so the
+   plate's inner content area is 12px smaller than the outer box on each axis
+   -- do not compute cldUrl()'s (lib/format.ts) width-aware `sizes` from the
+   outer box on small thumbnails. */
+@utility plate {
+  box-sizing: border-box;
+  filter: sepia(0.22) saturate(0.82) contrast(1.05);
+  border: 6px solid var(--color-muted);
+  outline: 1px solid var(--color-border);
+}
+
+@utility plate-sm {
+  border-width: 3px;
+}
+
+@utility plate-selected {
+  outline-color: var(--color-accent);
+}

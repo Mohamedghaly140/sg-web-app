@@ -209,6 +209,10 @@ Do not use component state as the source of truth for filters or pagination.
 - Component prop types are named `<ComponentName>Props`, files are kebab-case, and each feature's default export is a named `<Name>Feature` Server Component.
 - Keep `app/` pages thin. Components, actions, queries, schemas, hooks, and types belong to their feature; `components/ui/` contains shadcn primitives only.
 - Image radius is two-tier by intent: square corners (`rounded-none`) on interactive UI chrome and product photography; soft-rounded corners (`rounded-md`) on navigational or decorative imagery such as category tiles and the home hero panel. Do not "normalize" one toward the other.
+- **Accent text contrast:** `text-accent` (`#b68235`, 3.02:1 on `--background`) is reserved for 1px strokes, icons, and type at 24px or larger. Any accent-coloured text below 24px uses `text-accent-strong` (`#7d5411`, ~6.6:1) instead.
+- **Tabular figures:** numerals in figure positions — order IDs, dates, counts, quantities, pagination, phone numbers — carry tabular figures via the `.figures` utility or the `<Money>` component (`components/shared/money`). Running prose must not: Lora's tabular feature widens word-spacing and punctuation, which visibly loosens body text.
+- **`--font-sans` is a compatibility alias, not a real sans-serif:** it resolves to the serif `Lora` (`--font-body`), kept only so `html { @apply font-sans }`, `.text-eyebrow`, and Clerk's theme keep resolving without a codebase-wide sweep. New code should reference `--font-body` / `--font-heading` by name, not `--font-sans`.
+- **Classical tokens live in `@theme`/`:root` in `app/globals.css` only.** Never restate a token's literal value (hex colour, shadow, radius, type size) in feature code — reference the token or its Tailwind utility.
 
 ## 8. Testing baseline (applies to every phase)
 

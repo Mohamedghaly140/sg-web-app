@@ -1,0 +1,23 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 3
+
+[mcp_servers.context7]
+command = "bunx"
+args = ["--bun", "@upstash/context7-mcp@latest"]
+startup_timeout_sec = 30
+required = false
+
+[mcp_servers.shadcn]
+command = "bunx"
+args = ["--bun", "shadcn@latest", "mcp"]
+startup_timeout_sec = 30
+required = false
+
+[mcp_servers.next-devtools]
+command = "bunx"
+args = ["--bun", "next-devtools-mcp@latest"]
+startup_timeout_sec = 30
+required = false

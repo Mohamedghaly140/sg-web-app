@@ -23,7 +23,7 @@
 | 4 | [phase-4-account.md](./phase-4-account.md) | **done** | Authenticated wishlist, own-review CRUD, and saved addresses | 03 (write), 04, 08 |
 | 5 | [phase-5-checkout.md](./phase-5-checkout.md) | **in progress** | Shipping estimate, coupon preview, registered and guest CASH checkout | 06, 07, 09 |
 | 6 | [phase-6-orders.md](./phase-6-orders.md) | **in progress** | Account order history/detail, guest tracking/claim, self-cancel | 10 |
-| 7 | [phase-7-classical-foundation.md](./phase-7-classical-foundation.md) | **in progress** | Classical tokens, ramps, type scale, fonts, shadows, radius, `.plate`, tabular figures, money format | — |
+| 7 | [phase-7-classical-foundation.md](./phase-7-classical-foundation.md) | **done** | Classical tokens, ramps, type scale, fonts, shadows, radius, `.plate`, tabular figures, money format | — |
 | 8 | [phase-8-primitives-and-shell.md](./phase-8-primitives-and-shell.md) | not started | All `components/ui` primitives, shared kit, header/footer/sidenav, account sub-nav, density flip | — |
 | 9 | [phase-9-catalogue-surfaces.md](./phase-9-catalogue-surfaces.md) | not started | S1 Home, S2 Listing, S3 Product detail, S8 Categories | 01, 02, 03 (read) |
 | 10 | [phase-10-bag-and-checkout.md](./phase-10-bag-and-checkout.md) | not started | S4 Cart, S5 registered, S6 guest, S7 confirmation, shared step rail | 05, 06, 07, 09 |
