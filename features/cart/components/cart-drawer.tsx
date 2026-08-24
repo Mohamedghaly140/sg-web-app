@@ -81,27 +81,18 @@ export function CartDrawer() {
 
   return (
     <Sheet>
-      <span className="relative inline-flex">
-        <SheetTrigger
-          render={
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={`Cart, ${itemCount} ${itemLabel}`}
-            />
-          }
-        >
-          <LucideShoppingBag />
-        </SheetTrigger>
-        {itemCount > 0 ? (
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[0.625rem] font-semibold text-primary-foreground"
-          >
-            {itemCount}
-          </span>
-        ) : null}
-      </span>
+      <SheetTrigger
+        render={
+          <Button
+            variant="default"
+            size="sm"
+            aria-label={`Cart, ${itemCount} ${itemLabel}`}
+          />
+        }
+      >
+        <LucideShoppingBag data-icon="inline-start" />
+        Bag <span className="tabular-nums">· {itemCount}</span>
+      </SheetTrigger>
 
       <SheetContent side="right">
         <SheetHeader>
