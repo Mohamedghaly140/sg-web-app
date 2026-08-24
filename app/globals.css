@@ -65,6 +65,7 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-overlay: var(--overlay);
   --radius-xs: 3px;
   --radius-sm: 2px;
   --radius-md: 4px;
@@ -139,6 +140,10 @@
   --info-foreground: #f3f2f2; /* light-on-dark pairing unchanged; reformatted from oklch(0.985 0 0), same rationale as --success-foreground above */
   --border: color-mix(in srgb, #201f1d 16%, transparent);
   --input: color-mix(in srgb, #201f1d 16%, transparent);
+  /* Near-black at 50% for sheet/dialog backdrops (Phase 8.6). Matches the
+     design handoff's .dialog-backdrop (neutral-900 @ 50%). Tokenized so
+     Phase 14 can invert it for dark mode without touching call sites. */
+  --overlay: color-mix(in srgb, #2d2b2b 50%, transparent);
   --ring: #b68235;
   /* Classical tonal ramps (Phase 7.1), ported verbatim from
      tokens/classical-styles.css as flat hex literals so :root stays
