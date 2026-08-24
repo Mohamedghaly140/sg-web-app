@@ -97,7 +97,7 @@ function FieldLabel({ className, ...props }: React.ComponentProps<typeof Label>)
     <Label
       data-slot="field-label"
       className={cn(
-        "group/field-label peer/field-label flex w-fit leading-snug group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:border [&>*]:data-[slot=field]:p-2.5",
+        "group/field-label peer/field-label flex w-fit leading-snug group-data-[disabled=true]/field:opacity-45 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:border [&>*]:data-[slot=field]:p-2.5",
         className
       )}
       {...props}
@@ -186,7 +186,7 @@ function FieldError({
     <div
       role="alert"
       data-slot="field-error"
-      className={cn("text-xs font-normal text-destructive", className)}
+      className={cn("text-2xs font-normal text-destructive", className)}
       {...props}
     >
       {content}
