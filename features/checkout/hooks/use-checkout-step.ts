@@ -2,8 +2,15 @@
 
 import { useQueryStates } from "nuqs";
 
-import { checkoutParamsParsers } from "@/features/checkout/hooks/checkout-search-params";
+import {
+  guestCheckoutParamsParsers,
+  registeredCheckoutParamsParsers,
+} from "@/features/checkout/hooks/checkout-search-params";
 
-export function useCheckoutStep() {
-  return useQueryStates(checkoutParamsParsers, { shallow: false });
+export function useGuestCheckoutStep() {
+  return useQueryStates(guestCheckoutParamsParsers, { shallow: false });
+}
+
+export function useRegisteredCheckoutStep() {
+  return useQueryStates(registeredCheckoutParamsParsers, { shallow: false });
 }

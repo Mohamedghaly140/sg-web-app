@@ -16,7 +16,7 @@ import { GuestReviewStep } from "@/features/checkout-guest/components/guest-revi
 import { GuestShippingStep } from "@/features/checkout-guest/components/guest-shipping-step";
 import { placeGuestOrderAction } from "@/features/checkout/actions/place-guest-order";
 import { OrderConfirmation } from "@/features/checkout/components/order-confirmation";
-import { useCheckoutStep } from "@/features/checkout/hooks/use-checkout-step";
+import { useGuestCheckoutStep } from "@/features/checkout/hooks/use-checkout-step";
 import { parseCheckoutStructuredErrors } from "@/features/checkout/lib/checkout-error-resolver";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
 import type { ShippingFee } from "@/features/checkout/types/shipping";
@@ -27,7 +27,7 @@ import { EMPTY_CART, type Cart } from "@/features/cart/types/cart";
 export function GuestCheckoutWizard() {
   const cartQuery = useCart();
   const queryClient = useQueryClient();
-  const [step, setStep] = useCheckoutStep();
+  const [step, setStep] = useGuestCheckoutStep();
   const [applied, setApplied] = useState<CouponPreview | null>(null);
   const [shippingFee, setShippingFee] = useState<ShippingFee | null>(null);
   const [placedOrder, setPlacedOrder] = useState<{
