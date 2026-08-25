@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { Money } from "@/components/shared/money";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useValidateCoupon } from "@/features/checkout/hooks/use-validate-coupon";
 import { validateCouponSchema } from "@/features/checkout/schema/coupon-schema";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
+import { useCart } from "@/features/cart/hooks/use-cart";
 
 const COUPON_ERROR_COPY: Record<string, string> = {
   RESOURCE_NOT_FOUND: "We couldn't find that coupon code.",
@@ -31,12 +32,29 @@ export function CartCouponForm() {
   const result = mutation.data;
   const preview: CouponPreview | undefined =
     result && !("error" in result) ? result : undefined;
+  // Stale once the input no longer matches the code that produced it.
+  const previewMatchesCode =
+    preview !== undefined &&
+    preview.code.toLowerCase() === code.trim().toLowerCase();
   const actionError =
     result && "error" in result
       ? (COUPON_ERROR_COPY[result.error.code] ?? result.error.message)
       : undefined;
   const errorMessage = validationError ?? actionError ?? mutation.error?.message;
   const feedbackId = "cart-coupon-feedback";
+
+  const cartQuery = useCart();
+  const cartTotal = cartQuery.data?.totalPriceAfterDiscount;
+  const previousCartTotal = useRef(cartTotal);
+
+  useEffect(() => {
+    if (previousCartTotal.current !== cartTotal) {
+      previousCartTotal.current = cartTotal;
+      if (mutation.data) {
+        mutation.reset();
+      }
+    }
+  }, [cartTotal, mutation]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -69,7 +87,9 @@ export function CartCouponForm() {
             maxLength={30}
             disabled={mutation.isPending}
             aria-invalid={Boolean(errorMessage)}
-            aria-describedby={errorMessage || preview ? feedbackId : undefined}
+            aria-describedby={
+              errorMessage || previewMatchesCode ? feedbackId : undefined
+            }
             className="tracking-wider"
           />
         </Field>
@@ -81,7 +101,7 @@ export function CartCouponForm() {
           {mutation.isPending ? "Checking…" : "Apply"}
         </Button>
       </div>
-      {preview && !errorMessage ? (
+      {preview && previewMatchesCode && !errorMessage ? (
         <p
           id={feedbackId}
           className="text-2xs text-accent-strong"

@@ -160,15 +160,6 @@ export function CartContent() {
             Shop new in
           </Button>
         }
-        secondaryAction={
-          <Button
-            render={<Link href="/orders/track" />}
-            nativeButton={false}
-            variant="secondary"
-          >
-            Track an order
-          </Button>
-        }
       />
     );
   }

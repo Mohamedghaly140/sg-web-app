@@ -71,7 +71,10 @@ export function CartLineItem({
   const productUnavailable = item.product.status !== "ACTIVE";
   const stockChanged =
     !productUnavailable && item.quantity > item.product.quantity;
-  const lowStock = item.product.quantity > 0 && item.product.quantity <= 3;
+  const lowStock =
+    !productUnavailable &&
+    item.product.quantity > 0 &&
+    item.product.quantity <= 3;
   const structuredAvailable = availableForProduct(error, item.product.id);
   const pending =
     isInFlight || updateQuantity.isPending || removeItem.isPending;
