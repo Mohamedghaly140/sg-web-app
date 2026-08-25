@@ -38,7 +38,7 @@ export default async function CategoryFeature({ slug }: CategoryFeatureProps) {
               alt={category.name}
               fill
               priority
-              sizes="(min-width: 640px) 192px, 100vw"
+              sizes="(min-width: 640px) 221px, 100vw"
               className="object-cover"
             />
           ) : (
