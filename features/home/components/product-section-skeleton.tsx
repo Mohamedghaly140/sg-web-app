@@ -1,23 +1,27 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { BandHeader } from "@/features/home/components/band-header";
 
 type ProductSectionSkeletonProps = {
   title: string;
+  /* Mirrors the resolved section's link. The fallback is interactive while the
+     band streams, so a hardcoded href would send an early click to the wrong
+     listing. */
+  viewAllHref: string;
 };
 
 const SKELETON_CARD_COUNT = 4;
 
-export function ProductSectionSkeleton({ title }: ProductSectionSkeletonProps) {
+export function ProductSectionSkeleton({
+  title,
+  viewAllHref,
+}: ProductSectionSkeletonProps) {
   return (
-    <section className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
-          {title}
-        </h2>
-      </div>
-      <div className="flex gap-4 overflow-x-hidden">
+    <section>
+      <BandHeader title={title} linkHref={viewAllHref} linkLabel="See all" />
+      <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {Array.from({ length: SKELETON_CARD_COUNT }).map((_, index) => (
-          <div key={index} className="flex w-[75vw] shrink-0 flex-col gap-2 sm:w-56">
-            <Skeleton className="aspect-square w-full rounded-md" />
+          <div key={index} className="flex flex-col gap-2">
+            <Skeleton className="aspect-[3/4] w-full rounded-md" />
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-4 w-1/2" />
             <Skeleton className="h-4 w-1/3" />

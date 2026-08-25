@@ -8,12 +8,26 @@ import type { ProductSummary } from "@/features/products/types/product";
 import { WishlistHeart } from "@/features/wishlist/components/wishlist-heart";
 import { cn } from "@/lib/utils";
 
+/* The card is shared by two different layouts, so its `sizes` hint cannot be a
+   single constant: a grid cell and a fixed-width rail card resolve to very
+   different widths at the same viewport. Under-requesting makes Next pick an
+   undersized source and stretch it, so each consumer declares its own. */
+export const PRODUCT_CARD_GRID_SIZES =
+  "(min-width: 1280px) 288px, (min-width: 1024px) calc(25vw - 32px), (min-width: 768px) calc(33.333vw - 31px), (min-width: 640px) calc(50vw - 37px), calc(50vw - 28px)";
+
 type ProductCardProps = {
   product: ProductSummary;
   className?: string;
+  /** Next.js `sizes`. Defaults to the 4-column grid ladder used by the home
+      bands and the listing; rail consumers must pass their own card widths. */
+  imageSizes?: string;
 };
 
-export function ProductCard({ product, className }: ProductCardProps) {
+export function ProductCard({
+  product,
+  className,
+  imageSizes = PRODUCT_CARD_GRID_SIZES,
+}: ProductCardProps) {
   const isDiscounted = Number(product.discount) > 0;
   const isSoldOut = product.quantity === 0;
   const colorSubtitle =
@@ -40,7 +54,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
               src={product.imageUrl}
               alt={product.name}
               fill
-              sizes="(min-width: 640px) 224px, 75vw"
+              sizes={imageSizes}
               className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </div>

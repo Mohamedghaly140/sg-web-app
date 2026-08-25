@@ -39,6 +39,7 @@ export function RelatedProducts({
             key={product.id}
             product={product}
             className="w-48 shrink-0 sm:w-56"
+            imageSizes="(min-width: 640px) 248px, 212px"
           />
         ))}
       </div>

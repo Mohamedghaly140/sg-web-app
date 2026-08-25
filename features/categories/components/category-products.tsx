@@ -49,6 +49,7 @@ export async function CategoryProducts({ categorySlug }: CategoryProductsProps) 
             key={product.id}
             product={product}
             className="w-[75vw] shrink-0 snap-start sm:w-56"
+            imageSizes="(min-width: 640px) 248px, 75vw"
           />
         ))}
       </div>

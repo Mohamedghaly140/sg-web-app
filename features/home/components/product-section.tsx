@@ -1,7 +1,7 @@
 import { LucideShoppingBag } from "lucide-react";
-import Link from "next/link";
 
 import { EmptyState } from "@/components/shared/empty-state";
+import { BandHeader } from "@/features/home/components/band-header";
 import { ProductCard } from "@/features/products/components/product-card";
 import {
   getProducts,
@@ -14,7 +14,11 @@ type ProductSectionProps = {
   queryParams: GetProductsParams;
 };
 
-export async function ProductSection({ title, viewAllHref, queryParams }: ProductSectionProps) {
+export async function ProductSection({
+  title,
+  viewAllHref,
+  queryParams,
+}: ProductSectionProps) {
   const { data: products } = await getProducts(queryParams);
 
   if (products.length === 0) {
@@ -28,25 +32,15 @@ export async function ProductSection({ title, viewAllHref, queryParams }: Produc
   }
 
   return (
-    <section className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
-          {title}
-        </h2>
-        <Link href={viewAllHref} className="text-sm font-medium text-primary hover:underline">
-          View all →
-        </Link>
-      </div>
-      <div
-        tabIndex={0}
-        className="flex snap-x gap-4 overflow-x-auto pb-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
+    <section>
+      <BandHeader
+        title={title}
+        linkHref={viewAllHref}
+        linkLabel="See all"
+      />
+      <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            className="w-[75vw] shrink-0 snap-start sm:w-56"
-          />
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </section>
