@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { LucideLoaderCircle, LucideTrash2 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Money } from "@/components/shared/money";
 import type { CartItem } from "@/features/cart/types/cart";
@@ -23,48 +22,53 @@ export function CartDrawerLine({
 
   return (
     <article
-      className="flex gap-3 border-b border-border py-4 last:border-b-0"
+      className="flex gap-3 border-b border-border py-4"
       aria-busy={isRemoving}
     >
-      <Image
-        src={cldUrl(item.product.imageUrl, {
-          width: 128,
-          height: 160,
-          crop: "fill",
-          gravity: "auto",
-          quality: "auto",
-          format: "auto",
-        })}
-        alt=""
-        width={64}
-        height={80}
-        className="h-20 w-16 shrink-0 object-cover"
-      />
+      <div className="relative aspect-[4/5] w-14 shrink-0">
+        <div className="plate plate-sm absolute inset-0 overflow-hidden">
+          <Image
+            src={cldUrl(item.product.imageUrl, {
+              width: 128,
+              height: 160,
+              crop: "fill",
+              gravity: "auto",
+              quality: "auto",
+              format: "auto",
+            })}
+            alt=""
+            fill
+            sizes="64px"
+            className="object-cover"
+          />
+        </div>
+      </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <Link
-          href={productHref}
-          className="line-clamp-2 font-heading text-sm font-medium text-foreground"
-        >
-          {item.product.name}
-        </Link>
+        <div className="flex items-baseline justify-between gap-2">
+          <Link
+            href={productHref}
+            className="line-clamp-2 min-w-0 font-heading text-base leading-tight font-normal text-foreground hover:underline"
+          >
+            {item.product.name}
+          </Link>
+          <span className="shrink-0 text-xs figures">
+            <Money value={item.lineTotal} />
+          </span>
+        </div>
 
         {item.color !== null || item.size !== null ? (
-          <div className="flex flex-wrap gap-1">
-            {item.color !== null ? (
-              <Badge variant="outline">Color: {item.color}</Badge>
+          <p className="text-2xs text-muted-foreground">
+            {item.color}
+            {item.color !== null && item.size !== null ? (
+              <span aria-hidden="true"> · </span>
             ) : null}
-            {item.size !== null ? (
-              <Badge variant="outline">Size: {item.size}</Badge>
-            ) : null}
-          </div>
+            {item.size}
+          </p>
         ) : null}
 
-        <p className="text-xs text-muted-foreground">
+        <p className="text-2xs text-muted-foreground figures">
           {item.quantity} &times; <Money value={item.price} />
-        </p>
-        <p className="text-sm font-medium text-foreground">
-          <Money value={item.lineTotal} />
         </p>
       </div>
 

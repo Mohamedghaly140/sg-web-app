@@ -10,8 +10,12 @@ import { EmptyState } from "@/components/shared/empty-state";
 import Spinner from "@/components/shared/spinner";
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { CartLineItem } from "@/features/cart/components/cart-line-item";
-import { CartSummary } from "@/features/cart/components/cart-summary";
+import {
+  CartClearButton,
+  CartSummary,
+} from "@/features/cart/components/cart-summary";
 import { cartKeys } from "@/features/cart/hooks/cart-keys";
 import { useCartErrorState } from "@/features/cart/hooks/use-cart-error-state";
 import { fetchCurrentCart, useCart } from "@/features/cart/hooks/use-cart";
@@ -152,11 +156,17 @@ export function CartContent() {
         title="Your cart is empty"
         description="Explore the collection and add something you love."
         action={
+          <Button render={<Link href="/products" />} nativeButton={false}>
+            Shop new in
+          </Button>
+        }
+        secondaryAction={
           <Button
-            render={<Link href="/products" />}
+            render={<Link href="/orders/track" />}
             nativeButton={false}
+            variant="secondary"
           >
-            Continue shopping
+            Track an order
           </Button>
         }
       />
@@ -164,31 +174,45 @@ export function CartContent() {
   }
 
   return (
-    <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+    <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_350px]">
       <section aria-labelledby="cart-items-heading">
-        <h2 id="cart-items-heading" className="sr-only">
-          Cart items
-        </h2>
-        <ul className="border border-border bg-card shadow-sm">
+        <div className="flex items-baseline justify-between gap-4">
+          <h3
+            id="cart-items-heading"
+            className="font-heading text-2xl font-normal"
+          >
+            Your bag
+          </h3>
+          <CartClearButton
+            disabled={inFlightItemIds.size > 0}
+            onSuccess={clearErrors}
+          />
+        </div>
+        <Separator className="my-4" />
+        <ul>
           {cart.items.map((item, index) => (
             <CartLineItem
               key={item.id}
               item={item}
               error={getError(item.id)}
               isInFlight={inFlightItemIds.has(item.id)}
-              showSeparator={index < cart.items.length - 1}
+              isFirst={index === 0}
               onBeginMutation={beginItemMutation}
               onMutationResult={handleLineMutationResult}
               onUnexpectedError={handleUnexpectedLineError}
             />
           ))}
         </ul>
+        <Link
+          href="/products"
+          className="mt-4 inline-block text-xs text-accent-strong underline-offset-3 hover:underline"
+        >
+          ← Continue shopping
+        </Link>
       </section>
       <CartSummary
         totalCartPrice={cart.totalCartPrice}
         totalPriceAfterDiscount={cart.totalPriceAfterDiscount}
-        disableClear={inFlightItemIds.size > 0}
-        onClearSuccess={clearErrors}
       />
     </div>
   );

@@ -94,9 +94,9 @@ export function CartDrawer() {
         Bag <span className="tabular-nums">· {itemCount}</span>
       </SheetTrigger>
 
-      <SheetContent side="right">
-        <SheetHeader>
-          <SheetTitle>Your cart</SheetTitle>
+      <SheetContent side="right" className="gap-0 bg-background">
+        <SheetHeader className="border-b border-border">
+          <SheetTitle className="text-lg font-normal">Your bag</SheetTitle>
           <SheetDescription>
             {itemCount === 0
               ? "Your cart is empty."
@@ -153,12 +153,12 @@ export function CartDrawer() {
         </div>
 
         {cart !== undefined && items.length > 0 ? (
-          <SheetFooter>
-            <div className="flex items-center justify-between gap-4 text-muted-foreground">
+          <SheetFooter className="border-t border-border">
+            <div className="flex items-center justify-between gap-4 text-muted-foreground figures">
               <span>Cart total</span>
               <span><Money value={cart.totalCartPrice} /></span>
             </div>
-            <div className="flex items-center justify-between gap-4 text-sm font-medium text-foreground">
+            <div className="flex items-center justify-between gap-4 font-heading text-base font-normal text-foreground figures">
               <span>Total after discount</span>
               <span><Money value={cart.totalPriceAfterDiscount} /></span>
             </div>

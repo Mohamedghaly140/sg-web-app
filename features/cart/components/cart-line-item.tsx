@@ -15,7 +15,6 @@ import Spinner from "@/components/shared/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   availableForProduct,
   type CartErrorView,
@@ -24,12 +23,13 @@ import { useRemoveCartItem } from "@/features/cart/hooks/use-remove-cart-item";
 import { useUpdateCartItemQuantity } from "@/features/cart/hooks/use-update-cart-item-quantity";
 import type { CartActionResult, CartItem } from "@/features/cart/types/cart";
 import { cldUrl, isSameDecimal } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 type CartLineItemProps = {
   item: CartItem;
   error: CartErrorView | undefined;
   isInFlight: boolean;
-  showSeparator: boolean;
+  isFirst: boolean;
   onBeginMutation: (itemId: string) => boolean;
   onMutationResult: (
     item: CartItem,
@@ -42,7 +42,7 @@ export function CartLineItem({
   item,
   error,
   isInFlight,
-  showSeparator,
+  isFirst,
   onBeginMutation,
   onMutationResult,
   onUnexpectedError,
@@ -71,6 +71,7 @@ export function CartLineItem({
   const productUnavailable = item.product.status !== "ACTIVE";
   const stockChanged =
     !productUnavailable && item.quantity > item.product.quantity;
+  const lowStock = item.product.quantity > 0 && item.product.quantity <= 3;
   const structuredAvailable = availableForProduct(error, item.product.id);
   const pending =
     isInFlight || updateQuantity.isPending || removeItem.isPending;
@@ -92,120 +93,131 @@ export function CartLineItem({
   };
 
   return (
-    <li>
-      <article className="grid grid-cols-[6rem_minmax(0,1fr)] gap-4 p-4 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:p-5">
-        <Link
-          href={`/products/${item.product.slug}`}
-          className="relative size-24 overflow-hidden bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:size-32"
-        >
-          <Image
-            src={cldUrl(item.product.imageUrl, {
-              width: 256,
-              height: 256,
-              crop: "fill",
-              gravity: "auto",
-              quality: "auto",
-              format: "auto",
-            })}
-            alt={item.product.name}
-            fill
-            sizes="(min-width: 640px) 128px, 96px"
-            className="object-cover"
-          />
-        </Link>
+    <li className="border-b border-border">
+      <article
+        className={cn("flex flex-col gap-3 pb-4", !isFirst && "pt-4")}
+      >
+        <div className="flex gap-4">
+          <Link
+            href={`/products/${item.product.slug}`}
+            className="relative aspect-[3/4] w-[100px] shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            <span className="plate absolute inset-0 overflow-hidden">
+              <Image
+                src={cldUrl(item.product.imageUrl, {
+                  width: 200,
+                  height: 267,
+                  crop: "fill",
+                  gravity: "auto",
+                  quality: "auto",
+                  format: "auto",
+                })}
+                alt={item.product.name}
+                fill
+                sizes="100px"
+                className="object-cover"
+              />
+            </span>
+          </Link>
 
-        <div className="flex min-w-0 flex-col gap-3">
-          <div className="flex flex-col gap-1">
-            <Link
-              href={`/products/${item.product.slug}`}
-              className="w-fit font-heading text-base font-medium text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              {item.product.name}
-            </Link>
-            <div className="flex flex-wrap gap-2">
-              {item.color ? <Badge variant="outline">{item.color}</Badge> : null}
-              {item.size ? <Badge variant="outline">Size {item.size}</Badge> : null}
-            </div>
-          </div>
-
-          {priceChanged ? (
-            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <Badge variant="info">Price updated</Badge>
-              <span>Current price <Money value={item.product.priceAfterDiscount} /></span>
-            </div>
-          ) : null}
-        </div>
-
-        <div className="col-span-2 flex flex-col gap-4 sm:col-span-1 sm:min-w-44 sm:items-end">
-          <dl className="flex flex-col gap-1 text-sm sm:items-end">
-            <div className="flex items-baseline justify-between gap-4 sm:justify-end">
-              <dt className="text-xs text-muted-foreground">Unit price</dt>
-              <dd><Money value={item.price} /></dd>
-            </div>
-            <div className="flex items-baseline justify-between gap-4 sm:justify-end">
-              <dt className="text-xs text-muted-foreground">Line total</dt>
-              <dd className="font-semibold text-foreground">
+          <div className="flex min-w-0 flex-1 flex-col">
+            <div className="flex items-baseline justify-between gap-4">
+              <Link
+                href={`/products/${item.product.slug}`}
+                className="min-w-0 font-heading text-[19px] leading-tight font-normal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                {item.product.name}
+              </Link>
+              <span className="shrink-0 text-[14.5px] figures">
                 <Money value={item.lineTotal} />
-              </dd>
+              </span>
             </div>
-          </dl>
 
-          <div className="flex flex-wrap items-center gap-2 sm:justify-end">
-            <QuantityStepper
-              value={item.quantity}
-              min={1}
-              max={item.product.quantity}
-              disabled={pending}
-              itemLabel={item.product.name}
-              onValueChange={replaceQuantity}
-            />
-            <ConfirmDialog
-              trigger={
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="icon-sm"
-                  aria-label={`Remove ${item.product.name} from cart`}
-                  disabled={pending}
-                >
-                  <LucideTrash2 data-icon="inline-start" />
-                </Button>
-              }
-              title="Remove this item?"
-              description={`${item.product.name} will be removed from your cart.`}
-              confirmLabel="Remove item"
-              variant="destructive"
-              onConfirm={remove}
-            />
+            <p className="mt-1 text-xs text-muted-foreground">
+              {item.color ? (
+                <>
+                  {item.color}
+                  <span aria-hidden="true"> · </span>
+                </>
+              ) : null}
+              {item.size ? (
+                <>
+                  {item.size}
+                  <span aria-hidden="true"> · </span>
+                </>
+              ) : null}
+              <Money value={item.price} /> each
+            </p>
+
+            {priceChanged ? (
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                <Badge variant="info">Price updated</Badge>
+                <span>
+                  Current price <Money value={item.product.priceAfterDiscount} />
+                </span>
+              </div>
+            ) : null}
+
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <QuantityStepper
+                value={item.quantity}
+                min={1}
+                max={item.product.quantity}
+                disabled={pending}
+                itemLabel={item.product.name}
+                onValueChange={replaceQuantity}
+              />
+              {lowStock ? (
+                <Badge variant="accent">{item.product.quantity} left</Badge>
+              ) : null}
+              <ConfirmDialog
+                trigger={
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    disabled={pending}
+                    className="ml-auto"
+                    aria-label={`Remove ${item.product.name} from cart`}
+                  >
+                    Remove
+                  </Button>
+                }
+                title="Remove this item?"
+                description={`${item.product.name} will be removed from your cart.`}
+                confirmLabel="Remove item"
+                variant="destructive"
+                onConfirm={remove}
+              />
+            </div>
+
+            {pending ? (
+              <div
+                className="mt-2 flex items-center gap-2 text-xs text-muted-foreground"
+                role="status"
+              >
+                <Spinner className="size-3.5" />
+                Updating cart…
+              </div>
+            ) : null}
+
+            {error?.code === "INSUFFICIENT_STOCK" ? (
+              <p className="mt-2 text-xs text-destructive" role="alert">
+                {structuredAvailable === undefined
+                  ? "Available stock changed. Choose another quantity."
+                  : `Only ${structuredAvailable} available.`}
+              </p>
+            ) : null}
+
+            {error?.code === "VALIDATION_ERROR" ? (
+              <p className="mt-2 text-xs text-destructive" role="alert">
+                {error.message} This cart control needs to be refreshed.
+              </p>
+            ) : null}
           </div>
-
-          {pending ? (
-            <div
-              className="flex items-center gap-2 text-xs text-muted-foreground"
-              role="status"
-            >
-              <Spinner className="size-3.5" />
-              Updating cart…
-            </div>
-          ) : null}
-
-          {error?.code === "INSUFFICIENT_STOCK" ? (
-            <p className="text-xs text-destructive" role="alert">
-              {structuredAvailable === undefined
-                ? "Available stock changed. Choose another quantity."
-                : `Only ${structuredAvailable} available.`}
-            </p>
-          ) : null}
-
-          {error?.code === "VALIDATION_ERROR" ? (
-            <p className="text-xs text-destructive" role="alert">
-              {error.message} This cart control needs to be refreshed.
-            </p>
-          ) : null}
         </div>
 
         {productUnavailable ? (
-          <Alert className="col-span-full">
+          <Alert>
             <LucideTriangleAlert />
             <AlertTitle>
               <Badge variant="warning">No longer available</Badge>
@@ -235,7 +247,7 @@ export function CartLineItem({
         ) : null}
 
         {stockChanged ? (
-          <Alert className="col-span-full">
+          <Alert>
             <LucideTriangleAlert />
             <AlertTitle>
               <Badge variant="warning">Stock changed</Badge>
@@ -279,7 +291,6 @@ export function CartLineItem({
           </Alert>
         ) : null}
       </article>
-      {showSeparator ? <Separator /> : null}
     </li>
   );
 }
