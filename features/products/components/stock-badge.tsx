@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 
-const LOW_STOCK_THRESHOLD = 5;
+const LOW_STOCK_THRESHOLD = 3;
 
 type StockBadgeProps = {
   quantity: number;
