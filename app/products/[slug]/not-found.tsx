@@ -11,7 +11,11 @@ export default function ProductNotFound() {
         icon={<LucideSearchX className="size-6 text-muted-foreground" aria-hidden />}
         title="Product not found"
         description="This product may have been removed or is no longer available."
-        action={<Button render={<Link href="/products" />}>Browse products</Button>}
+        action={
+          <Button render={<Link href="/categories" />} nativeButton={false}>
+            Browse categories
+          </Button>
+        }
       />
     </div>
   );

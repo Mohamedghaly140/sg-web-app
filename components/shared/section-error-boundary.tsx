@@ -13,8 +13,8 @@ function SectionErrorFallback(
   { retry }: ErrorInfo,
 ) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-md border border-border py-10 text-center">
-      <p className="text-sm text-muted-foreground">
+    <div className="flex flex-col items-center gap-2 rounded-md border border-border px-4 py-16 text-center">
+      <p className="text-sm font-medium">
         {title} is unavailable right now.
       </p>
       <Button variant="outline" size="sm" onClick={() => retry()}>

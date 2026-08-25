@@ -108,9 +108,9 @@
 
 ### 9.6 Loading and error states
 
-- [ ] Rebuild the four catalogue skeletons — `products-grid-skeleton.tsx`, `category-products-skeleton.tsx`, and the two home section skeletons — so they **match the final geometry**: surface blocks at the plate's aspect ratio and 12px text bars at 55–75% width. **No spinners in content areas.**
-- [ ] Keep `RESOURCE_NOT_FOUND` on a product slug behaving as documented: treat the product as gone, drop it from caches, and offer the category. Do not convert it into a generic error.
-- [ ] Restyle `section-error-boundary.tsx`'s bordered "unavailable right now" state and verify it still wraps the home and catalogue sections.
+- [x] Rebuild the four catalogue skeletons — `products-grid-skeleton.tsx`, `category-products-skeleton.tsx`, and the two home section skeletons — so they **match the final geometry**: surface blocks at the plate's aspect ratio and 12px text bars at 55–75% width. **No spinners in content areas.**
+- [x] Keep `RESOURCE_NOT_FOUND` on a product slug behaving as documented: treat the product as gone, drop it from caches, and offer the category. Do not convert it into a generic error.
+- [x] Restyle `section-error-boundary.tsx`'s bordered "unavailable right now" state and verify it still wraps the home and catalogue sections.
 
 ## Definition of Done
 

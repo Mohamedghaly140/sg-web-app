@@ -11,10 +11,10 @@ export function CategoryProductsSkeleton() {
       <div className="flex gap-4 overflow-x-hidden">
         {Array.from({ length: SKELETON_CARD_COUNT }).map((_, index) => (
           <div key={index} className="flex w-[75vw] shrink-0 flex-col gap-2 sm:w-56">
-            <Skeleton className="aspect-square w-full rounded-md" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
-            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="aspect-[3/4] w-full rounded-md" />
+            <Skeleton className="h-[12px] w-3/4" />
+            <Skeleton className="h-[12px] w-3/5" />
+            <Skeleton className="h-[12px] w-2/3" />
           </div>
         ))}
       </div>

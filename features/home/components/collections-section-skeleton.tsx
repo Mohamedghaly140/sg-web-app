@@ -15,7 +15,7 @@ export function CollectionsSectionSkeleton() {
         {Array.from({ length: SKELETON_COLLECTION_COUNT }).map((_, index) => (
           <div key={index}>
             <Skeleton className="aspect-[4/3] w-full" />
-            <Skeleton className="mt-2 h-5 w-2/3" />
+            <Skeleton className="mt-2 h-[12px] w-2/3" />
           </div>
         ))}
       </div>
