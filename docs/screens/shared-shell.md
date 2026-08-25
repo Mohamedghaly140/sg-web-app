@@ -1,5 +1,11 @@
 # Shared Shell — Navbar & Footer
 
+> **Superseded by the approved Classical design.** See the "Shared shell" section of
+> [`docs/design_handoff_sg_storefront/README.md`](../design_handoff_sg_storefront/README.md) for
+> the authoritative header/footer/account sub-nav design (Phase 8 already implements it). This
+> file's Home/Products/Categories nav and four-column footer describe the pre-Classical shell and
+> no longer match the shipped shell; kept only for any non-visual notes not repeated in the handoff.
+
 Rendered on every route via the root layout (Phase 0 §0.5, `docs/phase-0-foundation.md`). Wireframed once here; screen files reference this instead of repeating it.
 
 ## Navbar

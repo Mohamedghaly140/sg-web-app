@@ -1,5 +1,10 @@
 # Home — `/`
 
+> **Superseded by the approved Classical design.** See
+> [`docs/design_handoff_sg_storefront/README.md`](../design_handoff_sg_storefront/README.md) (S1)
+> for authoritative layout and visual design. This file is kept only for the non-visual behavioural
+> notes below (section-level data bindings, loading/error boundaries) that the handoff doesn't repeat.
+
 Server Component (`HomeFeature`, `docs/phase-1-catalog.md` §1.5). All four sections fetch in parallel; each has its own loading/error boundary so one failing rail doesn't take down the rest of the page.
 
 ## Section order

@@ -1,5 +1,10 @@
 # Product Detail — `/products/[slug]`
 
+> **Superseded by the approved Classical design.** See
+> [`docs/design_handoff_sg_storefront/README.md`](../design_handoff_sg_storefront/README.md) (S3)
+> for authoritative layout and visual design. This file is kept only for the non-visual behavioural
+> notes below (section-level data bindings, null-safe rating handling) that the handoff doesn't repeat.
+
 Server Component (`ProductDetailFeature`, `docs/phase-1-catalog.md` §1.3–1.4). Product, gallery, and info panel come from one `GET /products/:slug` fetch; reviews are fetched separately (keyed by the product's `id`, paginated via nuqs) so paging reviews doesn't refetch the product. Cart and wishlist controls render now but are inert until Phase 2 and Phase 4 wire them up.
 
 ## Section order
