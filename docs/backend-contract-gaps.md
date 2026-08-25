@@ -180,6 +180,20 @@ But product detail is **`GET /products/:slug`** — there is no `GET /products/:
 
 ---
 
+## GAP-13 · No category description for the listing title band
+
+**Blocks:** Phase 9 (catalogue surfaces, S2). **Severity: low** — cosmetic, but the designed band is visibly thinner without it.
+
+**Contract today:** `GET /categories` returns `id`, `name`, `slug`, `imageUrl`, `productCount` and `subCategories`. There is no description, tagline, or editorial field on either a category or a sub-category.
+
+**Consequence:** S2's title band pairs the category name with a justified 56ch introduction ("Twelve pieces, cut and finished in the Cairo atelier. Evening, day and bridal — filter by the size and colour you actually wear."). Nothing in the contract can produce that sentence. Hardcoding a slug-to-copy map in the frontend would go stale without a deploy and would silently render nothing for any category merchandising adds later, and the design's own copy makes a **count claim** ("Twelve pieces") that would contradict `productCount` the moment stock moved.
+
+**What we need:** an optional `description` (or `intro`) string on the category resource, returned by `GET /categories` and `GET /categories/:slug`. Plain text, no count claims — the storefront already has `productCount` for that.
+
+**Our fallback:** render the heading alone over the hairline and omit the paragraph. Task 9.3 shipped this way; no copy was invented.
+
+---
+
 ## Resolution log
 
 | Gap | Status | Resolved by / notes |
@@ -193,6 +207,7 @@ But product detail is **`GET /products/:slug`** — there is no `GET /products/:
 | GAP-7 | open | Raised 2026-08-24 from the design review (S13) |
 | GAP-8 | open | Raised 2026-08-24 from the design review (S12, S13) |
 | GAP-9 | open | Raised 2026-08-24 from the design review (S2) |
+| GAP-13 | open | Raised 2026-08-25 from task 9.3 (S2 title band) |
 
 ---
 

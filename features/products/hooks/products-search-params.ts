@@ -59,6 +59,13 @@ const parseAsPrice = createParser<number>({
   },
 });
 
+// Defaults are named so the parsers and `buildProductsHref` cannot drift: the
+// href builder omits any value still sitting on its default, which is what
+// keeps a freshly cleared listing at a bare `/products`.
+export const DEFAULT_SORT: ProductsSortOption = "newest";
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_LIMIT = 20;
+
 const parseAsPage = createParser<number>({
   parse(value) {
     const parsed = Number.parseInt(value, 10);
@@ -67,7 +74,7 @@ const parseAsPage = createParser<number>({
   serialize(value) {
     return String(value);
   },
-}).withDefault(1);
+}).withDefault(DEFAULT_PAGE);
 
 const parseAsLimit = createParser<number>({
   parse(value) {
@@ -77,7 +84,7 @@ const parseAsLimit = createParser<number>({
   serialize(value) {
     return String(value);
   },
-}).withDefault(20);
+}).withDefault(DEFAULT_LIMIT);
 
 export const productsParsers = {
   search: parseAsTrimmedSearch,
@@ -88,7 +95,7 @@ export const productsParsers = {
   sizes: parseAsCsv,
   colors: parseAsCsv,
   featured: parseAsBoolean,
-  sort: parseAsStringEnum<ProductsSortOption>(SORT_OPTIONS).withDefault("newest"),
+  sort: parseAsStringEnum<ProductsSortOption>(SORT_OPTIONS).withDefault(DEFAULT_SORT),
   page: parseAsPage,
   limit: parseAsLimit,
 };
@@ -98,6 +105,42 @@ export const productsSearchParamsCache = createSearchParamsCache(productsParsers
 export type ProductsSearchParams = Awaited<
   ReturnType<typeof productsSearchParamsCache.parse>
 >;
+
+/**
+ * Build a `/products` href from the current params plus a partial override.
+ *
+ * An override of `null` removes that filter, which is what every applied-filter
+ * `✕` and the "Clear all" link are: a plain URL, so the whole applied-filter row
+ * and the pagination stay Server Components with no client JavaScript.
+ *
+ * `page` resets to 1 on any change, because a filtered result set has no
+ * meaningful page 3 from the previous one — unless `page` is itself the thing
+ * being overridden, which is how pagination moves.
+ */
+export function buildProductsHref(
+  params: ProductsSearchParams,
+  overrides: Partial<ProductsSearchParams> = {},
+): string {
+  const next = { ...params, ...overrides };
+  const page = "page" in overrides ? next.page : DEFAULT_PAGE;
+  const query = new URLSearchParams();
+
+  if (next.search !== null) query.set("search", next.search);
+  if (next.category !== null) query.set("category", next.category);
+  if (next.subCategory !== null) query.set("subCategory", next.subCategory);
+  if (next.minPrice !== null) query.set("minPrice", String(next.minPrice));
+  if (next.maxPrice !== null) query.set("maxPrice", String(next.maxPrice));
+  // sizes/colors are verbatim CSV passthrough -- never deduped or reordered.
+  if (next.sizes !== null) query.set("sizes", next.sizes);
+  if (next.colors !== null) query.set("colors", next.colors);
+  if (next.featured !== null) query.set("featured", String(next.featured));
+  if (next.sort !== DEFAULT_SORT) query.set("sort", next.sort);
+  if (next.limit !== DEFAULT_LIMIT) query.set("limit", String(next.limit));
+  if (page !== DEFAULT_PAGE) query.set("page", String(page));
+
+  const search = query.toString();
+  return search.length > 0 ? `/products?${search}` : "/products";
+}
 
 export function toGetProductsParams(
   params: ProductsSearchParams,

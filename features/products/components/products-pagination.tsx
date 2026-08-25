@@ -1,12 +1,10 @@
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import type { ProductsSearchParams } from "@/features/products/hooks/products-search-params";
+  buildProductsHref,
+  type ProductsSearchParams,
+} from "@/features/products/hooks/products-search-params";
 import type { PageMeta } from "@/lib/api/http";
 
 type ProductsPaginationProps = {
@@ -14,76 +12,55 @@ type ProductsPaginationProps = {
   meta: PageMeta;
 };
 
-export function buildProductsHref(
-  searchParams: ProductsSearchParams,
-  page: number,
-): string {
-  const query = new URLSearchParams();
+type PaginationStepProps = {
+  label: string;
+  href: string;
+  enabled: boolean;
+};
 
-  if (searchParams.search !== null) query.set("search", searchParams.search);
-  if (searchParams.category !== null) query.set("category", searchParams.category);
-  if (searchParams.subCategory !== null) {
-    query.set("subCategory", searchParams.subCategory);
+/* A disabled step is a real `<button disabled>`, not an anchor neutralised with
+   `pointer-events-none`: a disabled anchor still takes focus and still reads as
+   a link to assistive tech. Button's `disabled:opacity-45` already matches the
+   design's 45%. */
+function PaginationStep({ label, href, enabled }: PaginationStepProps) {
+  if (!enabled) {
+    return (
+      <Button variant="secondary" disabled>
+        {label}
+      </Button>
+    );
   }
-  if (searchParams.minPrice !== null) {
-    query.set("minPrice", String(searchParams.minPrice));
-  }
-  if (searchParams.maxPrice !== null) {
-    query.set("maxPrice", String(searchParams.maxPrice));
-  }
-  if (searchParams.sizes !== null) query.set("sizes", searchParams.sizes);
-  if (searchParams.colors !== null) query.set("colors", searchParams.colors);
-  if (searchParams.featured !== null) {
-    query.set("featured", String(searchParams.featured));
-  }
-  query.set("sort", searchParams.sort);
-  query.set("limit", String(searchParams.limit));
-  query.set("page", String(page));
-
-  return `/products?${query.toString()}`;
-}
-
-function getPageWindow(current: number, totalPages: number): number[] {
-  const start = Math.max(1, current - 2);
-  const end = Math.min(totalPages, current + 2);
-  return Array.from({ length: end - start + 1 }, (_, index) => start + index);
-}
-
-export function ProductsPagination({ searchParams, meta }: ProductsPaginationProps) {
-  if (meta.totalPages <= 1) {
-    return null;
-  }
-
-  const pages = getPageWindow(meta.page, meta.totalPages);
 
   return (
-    <Pagination>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious
-            href={buildProductsHref(searchParams, meta.page - 1)}
-            aria-disabled={!meta.hasPrev}
-            className={!meta.hasPrev ? "pointer-events-none opacity-50" : undefined}
-          />
-        </PaginationItem>
-        {pages.map((page) => (
-          <PaginationItem key={page}>
-            <PaginationLink
-              href={buildProductsHref(searchParams, page)}
-              isActive={page === meta.page}
-            >
-              {page}
-            </PaginationLink>
-          </PaginationItem>
-        ))}
-        <PaginationItem>
-          <PaginationNext
-            href={buildProductsHref(searchParams, meta.page + 1)}
-            aria-disabled={!meta.hasNext}
-            className={!meta.hasNext ? "pointer-events-none opacity-50" : undefined}
-          />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+    <Button variant="secondary" render={<Link href={href} />} nativeButton={false}>
+      {label}
+    </Button>
+  );
+}
+
+export function ProductsPagination({
+  searchParams,
+  meta,
+}: ProductsPaginationProps) {
+  // Always rendered -- the design shows "Page 1 of 1" with both steps disabled,
+  // so a single-page result keeps its footer rather than losing it.
+  const totalPages = Math.max(1, meta.totalPages);
+
+  return (
+    <div className="figures mt-6 flex items-center justify-center gap-2 text-[13px]">
+      <PaginationStep
+        label="Previous"
+        href={buildProductsHref(searchParams, { page: meta.page - 1 })}
+        enabled={meta.hasPrev}
+      />
+      <span className="text-muted-foreground">
+        Page {meta.page} of {totalPages}
+      </span>
+      <PaginationStep
+        label="Next"
+        href={buildProductsHref(searchParams, { page: meta.page + 1 })}
+        enabled={meta.hasNext}
+      />
+    </div>
   );
 }

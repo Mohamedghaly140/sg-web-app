@@ -58,6 +58,39 @@ export function formatEGP(amount: string | number): string {
   return `${egpFormatter.format(value)} EGP`;
 }
 
+/* Filter bounds are round numbers a shopper typed, not prices the server
+   quoted, so they drop the mandatory ".00" that `egpFormatter` gives money.
+   The design's tag reads "500 – 2,500 EGP", not "500.00 – 2,500.00 EGP". */
+const priceBoundFormatter = new Intl.NumberFormat(DEFAULT_LOCALE, {
+  style: "decimal",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});
+
+/**
+ * Format a price *filter range* for the listing's applied-filter tags, where
+ * the design carries a single trailing unit ("500 – 2,500 EGP") rather than
+ * repeating it on both bounds the way `formatEGP` twice would.
+ *
+ * These are user-entered filter bounds, not server-priced money, so this is not
+ * client-side money math and deliberately does not use `formatEGP`.
+ */
+export function formatEGPRange(
+  min: number | null,
+  max: number | null,
+): string {
+  if (min !== null && max !== null) {
+    return `${priceBoundFormatter.format(min)} – ${priceBoundFormatter.format(max)} EGP`;
+  }
+  if (min !== null) {
+    return `From ${priceBoundFormatter.format(min)} EGP`;
+  }
+  if (max !== null) {
+    return `Up to ${priceBoundFormatter.format(max)} EGP`;
+  }
+  return "";
+}
+
 /**
  * Collapse a decimal money string to a canonical textual form so `"2400"`,
  * `"2400.00"`, and `"2400.0"` compare equal. Purely textual on purpose: the API
