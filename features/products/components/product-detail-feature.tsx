@@ -43,7 +43,7 @@ async function RelatedProductsSection({
     limit: RELATED_PRODUCTS_LIMIT,
   });
   const relatedProducts: ProductSummary[] = related.data.filter(
-    (candidate) => candidate.id !== excludeProductId,
+    candidate => candidate.id !== excludeProductId,
   );
 
   return (
@@ -85,7 +85,7 @@ export default async function ProductDetailFeature({
       colors={product.colors}
       quantity={product.quantity}
     >
-      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-4 pt-8 pb-24 sm:px-6 sm:pb-8 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pt-8 pb-24 sm:px-6 sm:pb-8 lg:px-8">
         <Breadcrumb
           category={product.category}
           subCategory={product.subCategories[0]}
