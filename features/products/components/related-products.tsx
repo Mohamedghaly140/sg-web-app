@@ -19,16 +19,16 @@ export function RelatedProducts({
   // The caller may pass up to 7 items after filtering the current product out of an 8-item page; that is expected.
   return (
     <section aria-labelledby="related-products-heading">
-      <div className="mb-4 flex items-center justify-between gap-4">
+      <div className="mb-4 flex items-baseline justify-between border-b border-border pb-2">
         <h2
           id="related-products-heading"
-          className="text-xl font-semibold tracking-tight text-foreground"
+          className="font-heading text-2xl font-normal text-foreground"
         >
           You may also like
         </h2>
         <Link
           href={`/categories/${categorySlug}`}
-          className="shrink-0 text-sm font-medium text-foreground underline-offset-4 hover:underline"
+          className="shrink-0 text-xs text-accent-strong underline-offset-3 hover:underline"
         >
           View all →
         </Link>

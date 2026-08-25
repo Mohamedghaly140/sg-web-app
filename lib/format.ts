@@ -92,6 +92,25 @@ export function formatEGPRange(
 }
 
 /**
+ * Format a money amount *without* the EGP unit, for the one place a price is
+ * shown beside another that already carries it: S3's buy box renders the struck
+ * original as "2,400" next to "2,040.00 EGP", not "2,400.00 EGP" twice.
+ *
+ * Display formatting only — it reuses `priceBoundFormatter`'s optional decimals
+ * and does no arithmetic. `formatEGP` remains the formatter for any price that
+ * stands alone.
+ */
+export function formatAmount(amount: string | number): string {
+  const value = typeof amount === "number" ? amount : Number(amount);
+
+  if (!Number.isFinite(value)) {
+    throw new TypeError(`Invalid amount: ${amount}`);
+  }
+
+  return priceBoundFormatter.format(value);
+}
+
+/**
  * Collapse a decimal money string to a canonical textual form so `"2400"`,
  * `"2400.00"`, and `"2400.0"` compare equal. Purely textual on purpose: the API
  * sends variable-scale decimal strings and the storefront does no money math,

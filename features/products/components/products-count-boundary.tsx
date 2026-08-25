@@ -1,6 +1,4 @@
-"use client";
-
-import { catchError } from "next/error";
+import { HideOnError } from "@/components/shared/hide-on-error";
 
 /* The count shares its promise with the results grid. When that fetch fails the
    grid already shows SectionErrorBoundary's "unavailable right now" card, so
@@ -10,4 +8,4 @@ import { catchError } from "next/error";
    The Filter trigger and the applied-filter tags sit outside every boundary on
    purpose: they derive from the URL alone, so filtering stays usable even when
    the catalogue request is failing. */
-export const ProductsCountBoundary = catchError(() => null);
+export const ProductsCountBoundary = HideOnError;

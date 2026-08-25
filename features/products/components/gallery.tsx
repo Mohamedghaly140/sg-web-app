@@ -3,11 +3,7 @@
 import { useRef, useState, type UIEvent } from "react";
 import Image from "next/image";
 
-import type {
-  ProductImage,
-  ProductSummary,
-} from "@/features/products/types/product";
-import { WishlistHeart } from "@/features/wishlist/components/wishlist-heart";
+import type { ProductImage } from "@/features/products/types/product";
 import { cldUrl } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +11,6 @@ type GalleryProps = {
   images: ProductImage[];
   fallbackImageUrl: string;
   productName: string;
-  product: ProductSummary;
 };
 
 type GallerySlide = {
@@ -27,7 +22,6 @@ export function Gallery({
   images,
   fallbackImageUrl,
   productName,
-  product,
 }: GalleryProps) {
   const mobileRailRef = useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -97,8 +91,6 @@ export function Gallery({
             </div>
           ))}
         </div>
-
-        <WishlistHeart product={product} className="absolute right-3 top-3" />
       </div>
 
       {slides.length > 1 && (
@@ -111,10 +103,10 @@ export function Gallery({
               key={slide.id}
               type="button"
               className={cn(
-                "size-2 rounded-full transition-colors",
+                "h-6 w-8 border-t transition-colors",
                 activeIndex === index
-                  ? "bg-primary"
-                  : "bg-muted-foreground/30",
+                  ? "border-accent-strong"
+                  : "border-muted-foreground/30",
               )}
               aria-label={`Show image ${index + 1} of ${slides.length}`}
               aria-current={activeIndex === index ? "true" : undefined}
@@ -124,62 +116,61 @@ export function Gallery({
         </div>
       )}
 
-      <div className="hidden grid-cols-[5rem_minmax(0,1fr)] gap-4 sm:grid">
-        {slides.length > 1 && (
-          <div className="flex max-h-[45rem] flex-col gap-3 overflow-y-auto">
-            {slides.map((slide, index) => (
-              <button
-                key={slide.id}
-                type="button"
+      <div className="hidden grid-cols-[108px_minmax(0,1fr)] items-start gap-3 sm:grid">
+        {/* Capped to the hero's height and scrolled past it: `images[]` has no
+            documented limit, and an unbounded column would outgrow the 660px
+            hero and drive the grid row taller than the gallery itself. */}
+        <div className="flex max-h-[660px] flex-col gap-2 overflow-y-auto">
+          {slides.map((slide, index) => (
+            <button
+              key={slide.id}
+              type="button"
+              className="relative aspect-[3/4] w-full shrink-0 bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              aria-label={`Show image ${index + 1} of ${slides.length}`}
+              aria-current={activeIndex === index ? "true" : undefined}
+              onClick={() => setSelectedIndex(index)}
+            >
+              <div
                 className={cn(
-                  "relative aspect-[4/5] w-full shrink-0 overflow-hidden border bg-muted outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-ring",
-                  activeIndex === index
-                    ? "border-foreground ring-1 ring-foreground"
-                    : "border-border",
+                  "plate relative h-full w-full overflow-hidden",
+                  activeIndex === index && "plate-selected",
                 )}
-                aria-label={`Show image ${index + 1} of ${slides.length}`}
-                aria-current={activeIndex === index ? "true" : undefined}
-                onClick={() => setSelectedIndex(index)}
               >
                 <Image
                   src={cldUrl(slide.imageUrl, {
-                    width: 120,
-                    height: 150,
+                    width: 96,
+                    height: 132,
                     crop: "fill",
                     quality: "auto",
                     format: "auto",
                   })}
                   alt=""
                   fill
-                  sizes="80px"
+                  sizes="96px"
                   className="object-cover"
                 />
-              </button>
-            ))}
-          </div>
-        )}
+              </div>
+            </button>
+          ))}
+        </div>
 
-        <div
-          className={cn(
-            "relative aspect-[4/5] overflow-hidden bg-muted",
-            slides.length === 1 && "col-span-2",
-          )}
-        >
-          <Image
-            src={cldUrl(activeSlide.imageUrl, {
-              width: 800,
-              height: 1000,
-              crop: "fill",
-              quality: "auto",
-              format: "auto",
-            })}
-            alt={`${productName} — image ${activeIndex + 1}`}
-            fill
-            priority
-            sizes="(min-width: 1024px) 45vw, 70vw"
-            className="object-cover"
-          />
-          <WishlistHeart product={product} className="absolute right-3 top-3" />
+        <div className="relative h-[660px] bg-muted">
+          <div className="plate relative h-full w-full overflow-hidden">
+            <Image
+              src={cldUrl(activeSlide.imageUrl, {
+                width: 600,
+                height: 648,
+                crop: "fill",
+                quality: "auto",
+                format: "auto",
+              })}
+              alt={`${productName} — image ${activeIndex + 1}`}
+              fill
+              priority
+              sizes="(min-width: 1280px) 600px, (min-width: 1024px) calc(100vw - 624px), calc(100vw - 189px)"
+              className="object-cover"
+            />
+          </div>
         </div>
       </div>
     </div>

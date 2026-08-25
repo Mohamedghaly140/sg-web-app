@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LucideLoader2, LucideShoppingBag, LucideZap } from "lucide-react";
+import { LucideLoader2, LucideShoppingBag } from "lucide-react";
 
 import { Money } from "@/components/shared/money";
 import { Button } from "@/components/ui/button";
@@ -60,12 +60,12 @@ export function StickyAddToCartBar({
     ? "Sold out"
     : isAdding
       ? "Adding…"
-      : "Add to Cart";
+      : "Add to bag";
 
   return (
     <div
       className={cn(
-        "fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 shadow-lg backdrop-blur transition-transform motion-reduce:transition-none sm:hidden",
+        "fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 backdrop-blur transition-transform motion-reduce:transition-none sm:hidden",
         isVisible ? "translate-y-0" : "pointer-events-none translate-y-full",
       )}
       aria-hidden={!isVisible}
@@ -86,10 +86,6 @@ export function StickyAddToCartBar({
             <LucideShoppingBag data-icon="inline-start" />
           )}
           {addToCartLabel}
-        </Button>
-        <Button type="button" variant="outline" size="sm" disabled>
-          <LucideZap data-icon="inline-start" />
-          Buy Now
         </Button>
       </div>
     </div>

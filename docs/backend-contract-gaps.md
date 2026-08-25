@@ -194,6 +194,20 @@ But product detail is **`GET /products/:slug`** — there is no `GET /products/:
 
 ---
 
+## GAP-14 · A product page cannot resolve a shipping fee it can honestly attribute
+
+**Blocks:** Phase 9 (catalogue surfaces, S3). **Severity: low** — one designed row degrades; nothing is blocked.
+
+**Contract today:** `GET /shipping/fee` **requires** `country` and `governorate` and resolves them to a single zone. It has no default, no "cheapest zone", and no nationwide rate.
+
+**Consequence:** S3's buy box closes with a Delivery row reading "Cairo, 2–4 days · 65 EGP". A product page has **no destination** — the visitor may be a guest with no address, and the storefront reads no geo signal — so there is no honest input for the required parameters. The day range is separately unsourced (see **GAP-6**).
+
+**What we need (either):** a destination-free summary rate — e.g. `GET /shipping/fee` with no parameters returning the lowest active zone fee, or a `from` field on the shipping resource — so the storefront can state a starting price without inventing a city. Pairing it with **GAP-6**'s duration field would let the row render as designed.
+
+**Our fallback:** call the endpoint with a hardcoded `Egypt / Cairo` display default and render the fee alone, omitting the day promise. Task 9.4 shipped this way. The value is real, but the destination it is quoted for is a frontend assumption, and it will silently misquote a shopper outside Cairo. Note the footer already ships a comparable hardcoded "Delivery from 65 EGP" claim, so this is not a new class of problem — but it is a second instance of it.
+
+---
+
 ## Resolution log
 
 | Gap | Status | Resolved by / notes |
@@ -208,6 +222,7 @@ But product detail is **`GET /products/:slug`** — there is no `GET /products/:
 | GAP-8 | open | Raised 2026-08-24 from the design review (S12, S13) |
 | GAP-9 | open | Raised 2026-08-24 from the design review (S2) |
 | GAP-13 | open | Raised 2026-08-25 from task 9.3 (S2 title band) |
+| GAP-14 | open | Raised 2026-08-25 from task 9.4 (S3 delivery row) |
 
 ---
 

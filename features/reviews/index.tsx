@@ -27,16 +27,22 @@ export default async function ReviewsFeature({
   const { reviews, meta } = await getProductReviews(productId, page, limit);
 
   return (
-    <section className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="font-heading text-2xl font-semibold text-foreground">
-          Reviews
-        </h2>
+    <section id="reviews" className="flex flex-col gap-4">
+      {/* One reviews surface, not two. The design's below-fold band listed the
+          same reviews this section already shows, so it was deleted and its
+          rating meta kept here beside the heading. Hairline band-header idiom
+          from Phase 9.3, matching the listing's title band and the related
+          rail. */}
+      <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-border pb-3">
+        <h2 className="font-heading text-2xl text-foreground">Reviews</h2>
         <RatingSummary
+          variant="compact"
           ratingsAverage={ratingsAverage}
           ratingsQuantity={ratingsQuantity}
         />
       </div>
+      {/* Below the hairline, not in the header row: this expands into the
+          full-width write/edit form. */}
       <YourReviewSection
         reviews={reviews}
         currentUserId={userId}

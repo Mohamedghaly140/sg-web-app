@@ -11,6 +11,7 @@ import {
 import FormControl from "@/components/shared/form-control";
 import { RatingInput } from "@/components/shared/rating-input/rating-input";
 import SubmitButton from "@/components/shared/submit-button";
+import { Button } from "@/components/ui/button";
 import { createReviewAction } from "@/features/reviews/actions/create-review";
 import { updateReviewAction } from "@/features/reviews/actions/update-review";
 import { DeleteReviewButton } from "@/features/reviews/components/delete-review-button";
@@ -20,6 +21,7 @@ type ReviewFormCreateProps = {
   productId: string;
   slug: string;
   onDone?: () => void;
+  onCancel?: () => void;
 };
 
 type ReviewFormEditProps = {
@@ -30,6 +32,7 @@ type ReviewFormEditProps = {
   initialTitle?: string;
   initialRatings?: string;
   onDone?: () => void;
+  onCancel?: () => void;
 };
 
 export type ReviewFormProps = ReviewFormCreateProps | ReviewFormEditProps;
@@ -46,7 +49,7 @@ type RecoveredEdit = {
  * review payload — then the update action + recovered fields take over.
  */
 export function ReviewForm(props: ReviewFormProps) {
-  const { productId, slug, onDone } = props;
+  const { productId, slug, onDone, onCancel } = props;
 
   const [createState, createAction] = useActionState(
     createReviewAction,
@@ -61,6 +64,9 @@ export function ReviewForm(props: ReviewFormProps) {
     null,
   );
   const [resumePage, setResumePage] = useState("1");
+  // Mirrors RatingInput's selection so submit can be gated. Null means
+  // "untouched since the last remount", in which case the default stands.
+  const [pickedRating, setPickedRating] = useState<string | null>(null);
   const [awaitingResume, setAwaitingResume] = useState(false);
 
   const isCreate = props.mode === "create" && recoveredEdit === null;
@@ -118,13 +124,27 @@ export function ReviewForm(props: ReviewFormProps) {
     initialRatings ??
     "";
 
+  const ratingFieldKey = `ratings-${isCreate ? "create" : editReviewId}-${ratingsDefault}`;
+
+  // RatingInput is remounted by key whenever the defaults change (a failed
+  // submit, or create self-switching into edit), which resets its internal
+  // state -- so drop the mirrored value at the same time.
+  useEffect(() => {
+    setPickedRating(null);
+  }, [ratingFieldKey]);
+
+  const effectiveRating = pickedRating ?? ratingsDefault;
+
   return (
     <Form
       action={formAction}
       actionState={actionState}
       onSuccess={() => onDone?.()}
-      className="rounded-md border border-border p-4"
+      className="flex flex-col gap-4 border border-border p-4"
     >
+      <p className="text-eyebrow">
+        {isCreate ? "Write a review" : "Edit your review"}
+      </p>
       <FormControl
         key={`title-${isCreate ? "create" : editReviewId}-${titleDefault}`}
         name="title"
@@ -135,10 +155,11 @@ export function ReviewForm(props: ReviewFormProps) {
         actionState={actionState}
       />
       <RatingInput
-        key={`ratings-${isCreate ? "create" : editReviewId}-${ratingsDefault}`}
+        key={ratingFieldKey}
         name="ratings"
         label="Rating"
         defaultValue={ratingsDefault}
+        onValueChange={setPickedRating}
         actionState={actionState}
       />
       <input type="hidden" name="productId" value={productId} />
@@ -157,7 +178,17 @@ export function ReviewForm(props: ReviewFormProps) {
         </>
       ) : null}
       <div className="flex flex-wrap items-center gap-2">
-        <SubmitButton label={isCreate ? "Post review" : "Update review"} />
+        {/* The contract rejects a missing rating, so block the round trip
+            rather than bouncing the shopper off a server error. */}
+        <SubmitButton
+          label={isCreate ? "Post review" : "Update review"}
+          disabled={effectiveRating === ""}
+        />
+        {onCancel ? (
+          <Button type="button" variant="secondary" onClick={onCancel}>
+            Cancel
+          </Button>
+        ) : null}
         {recoveredEdit !== null ? (
           <DeleteReviewButton
             reviewId={recoveredEdit.reviewId}

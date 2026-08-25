@@ -24,9 +24,9 @@ import {
   useProductsParams,
   type ProductsSearchParams,
 } from "@/features/products/hooks/use-products-params";
+import { SIZE_LADDER } from "@/lib/constants/size-ladder";
 import { cn } from "@/lib/utils";
 
-const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL"];
 const COLOR_OPTIONS = ["Black", "White", "Emerald", "Navy", "Blush"];
 
 type ProductsFiltersProps = {
@@ -319,7 +319,7 @@ export function ProductsFilters({
           <fieldset>
             <legend className="text-eyebrow mb-2">Size</legend>
             <div className="flex flex-wrap gap-[6px]">
-              {SIZE_OPTIONS.map((size) => {
+              {SIZE_LADDER.map((size) => {
                 const selected = selectedSizes.includes(size);
 
                 return (

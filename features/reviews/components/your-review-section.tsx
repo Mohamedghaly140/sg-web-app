@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 
+import { RatingStars } from "@/components/shared/rating-stars";
 import { RequireAuth } from "@/components/shared/require-auth/require-auth";
 import { Button } from "@/components/ui/button";
 import { DeleteReviewButton } from "@/features/reviews/components/delete-review-button";
 import { ReviewForm } from "@/features/reviews/components/review-form";
 import type { Review } from "@/features/reviews/types/review";
 import { formatDate } from "@/lib/format";
-import { LucideStar } from "lucide-react";
 
 export type YourReviewSectionProps = {
   reviews: Review[];
@@ -33,38 +33,22 @@ export function YourReviewSection({
 
   if (ownReview) {
     return (
-      <div className="flex flex-col gap-4 border border-border p-4">
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium text-foreground">Your review</p>
-          <p className="flex items-center gap-1 text-sm font-medium text-foreground">
-            <LucideStar
-              className="size-3.5 fill-primary text-primary"
-              aria-hidden
-            />
-            {ownReview.ratings}
-          </p>
-          {ownReview.title ? (
-            <h3 className="font-medium text-foreground">{ownReview.title}</h3>
-          ) : null}
-          <p className="text-sm text-muted-foreground">
-            {formatDate(ownReview.createdAt)}
-          </p>
+      <div className="flex flex-col gap-3 border border-border p-4">
+        <p className="text-eyebrow">Your review</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <RatingStars value={ownReview.ratings} size={15} />
+          <span className="figures text-xs text-foreground">
+            {ownReview.ratings} of 5
+          </span>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setShowEditForm((open) => !open)}
-          >
-            {showEditForm ? "Cancel" : "Edit"}
-          </Button>
-          <DeleteReviewButton
-            reviewId={ownReview.id}
-            productId={productId}
-            slug={slug}
-            onDeleted={() => setShowEditForm(false)}
-          />
-        </div>
+        {ownReview.title ? (
+          <p className="font-heading text-lg text-foreground">
+            {ownReview.title}
+          </p>
+        ) : null}
+        <p className="figures text-[11.5px] text-muted-foreground">
+          {formatDate(ownReview.createdAt)}
+        </p>
         {showEditForm ? (
           <ReviewForm
             mode="edit"
@@ -74,35 +58,57 @@ export function YourReviewSection({
             initialTitle={ownReview.title}
             initialRatings={ownReview.ratings}
             onDone={() => setShowEditForm(false)}
+            onCancel={() => setShowEditForm(false)}
           />
-        ) : null}
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => setShowEditForm(true)}
+            >
+              Edit
+            </Button>
+            <DeleteReviewButton
+              reviewId={ownReview.id}
+              productId={productId}
+              slug={slug}
+              onDeleted={() => setShowEditForm(false)}
+            />
+          </div>
+        )}
       </div>
     );
   }
 
-  return (
-    <div className="flex flex-col gap-4">
-      <RequireAuth
-        title="Sign in to write a review"
-        description="Share your experience with this product after signing in."
-        trigger={
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setShowCreateForm((open) => !open)}
-          >
-            {showCreateForm ? "Cancel" : "Write a review"}
-          </Button>
-        }
+  if (showCreateForm) {
+    return (
+      <ReviewForm
+        mode="create"
+        productId={productId}
+        slug={slug}
+        onDone={() => setShowCreateForm(false)}
+        onCancel={() => setShowCreateForm(false)}
       />
-      {showCreateForm ? (
-        <ReviewForm
-          mode="create"
-          productId={productId}
-          slug={slug}
-          onDone={() => setShowCreateForm(false)}
-        />
-      ) : null}
-    </div>
+    );
+  }
+
+  return (
+    <RequireAuth
+      title="Sign in to write a review"
+      description="Share your experience with this product after signing in."
+      trigger={
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          className="self-start"
+          onClick={() => setShowCreateForm(true)}
+        >
+          Write a review
+        </Button>
+      }
+    />
   );
 }

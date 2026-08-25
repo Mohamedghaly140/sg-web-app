@@ -11,5 +11,7 @@ export function DiscountBadge({ discount }: DiscountBadgeProps) {
     return null;
   }
 
-  return <Badge variant="accent">-{percent}%</Badge>;
+  // U+2212 MINUS SIGN, not a hyphen — it is what the design sets and it aligns
+  // with the tabular figures the price rows use.
+  return <Badge variant="accent">&minus;{percent}%</Badge>;
 }

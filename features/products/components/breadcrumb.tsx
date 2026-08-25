@@ -15,7 +15,10 @@ export function Breadcrumb({
   productName,
 }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
+    <nav
+      aria-label="Breadcrumb"
+      className="border-b border-border py-3 text-xs text-muted-foreground"
+    >
       {/* Narrow width collapses to a single back link (docs/screens/product-detail.md). */}
       <Link
         href={`/categories/${category.slug}`}
@@ -28,6 +31,15 @@ export function Breadcrumb({
       <ol className="hidden flex-wrap items-center gap-2 sm:flex">
         <li>
           <Link
+            href="/"
+            className="transition-colors hover:text-foreground"
+          >
+            Home
+          </Link>
+        </li>
+        <li aria-hidden="true">·</li>
+        <li>
+          <Link
             href={`/categories/${category.slug}`}
             className="transition-colors hover:text-foreground"
           >
@@ -36,7 +48,7 @@ export function Breadcrumb({
         </li>
         {subCategory && (
           <>
-            <li aria-hidden="true">/</li>
+            <li aria-hidden="true">·</li>
             <li>
               {/* The /categories/[slug] page ignores search params, so the
                   subcategory crumb points at the filtered catalog listing. */}
@@ -49,7 +61,7 @@ export function Breadcrumb({
             </li>
           </>
         )}
-        <li aria-hidden="true">/</li>
+        <li aria-hidden="true">·</li>
         <li className="text-foreground" aria-current="page">
           {productName}
         </li>

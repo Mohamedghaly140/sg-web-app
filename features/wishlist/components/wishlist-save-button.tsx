@@ -8,12 +8,20 @@ import type { ProductSummary } from "@/features/products/types/product";
 import { useWishlistToggleState } from "@/features/wishlist/hooks/use-wishlist-toggle-state";
 import { cn } from "@/lib/utils";
 
-type WishlistHeartProps = {
+type WishlistSaveButtonProps = {
   product: ProductSummary;
   className?: string;
 };
 
-export function WishlistHeart({ product, className }: WishlistHeartProps) {
+/**
+ * The product page's labelled wishlist control. Same behaviour as the card's
+ * icon `WishlistHeart` — they share `useWishlistToggleState` — but rendered as
+ * the design's block secondary button beneath Add to bag.
+ */
+export function WishlistSaveButton({
+  product,
+  className,
+}: WishlistSaveButtonProps) {
   const { isWishlisted, disabled, toggle } = useWishlistToggleState(product);
 
   return (
@@ -24,21 +32,17 @@ export function WishlistHeart({ product, className }: WishlistHeartProps) {
         <Button
           type="button"
           variant="secondary"
-          size="icon"
+          size="lg"
           aria-pressed={isWishlisted}
-          aria-label={
-            isWishlisted
-              ? `Remove ${product.name} from wishlist`
-              : `Add ${product.name} to wishlist`
-          }
           disabled={disabled}
           onClick={toggle}
-          className={className}
+          className={cn("w-full", className)}
         >
           <LucideHeart
             data-icon="inline-start"
             className={cn(isWishlisted && "fill-destructive text-destructive")}
           />
+          {isWishlisted ? "Saved to wishlist" : "Save to wishlist"}
         </Button>
       }
     />

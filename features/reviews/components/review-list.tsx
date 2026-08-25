@@ -1,6 +1,4 @@
-import { LucideMessageSquare, LucideStar } from "lucide-react";
-
-import { EmptyState } from "@/components/shared/empty-state";
+import { RatingStars } from "@/components/shared/rating-stars";
 import { Badge } from "@/components/ui/badge";
 import type { Review } from "@/features/reviews/types/review";
 import { formatDate } from "@/lib/format";
@@ -12,42 +10,36 @@ type ReviewListProps = {
 
 export function ReviewList({ reviews, currentUserId }: ReviewListProps) {
   if (reviews.length === 0) {
+    /* The Classical system has no filled illustration slots in a text band, so
+       an empty review list is a quiet line over the section hairline rather
+       than an EmptyState card with an icon tile. */
     return (
-      <EmptyState
-        icon={
-          <LucideMessageSquare
-            className="size-5 text-muted-foreground"
-            aria-hidden
-          />
-        }
-        title="No reviews yet"
-        description="Be the first to review this product."
-      />
+      <p className="text-xs text-muted-foreground">
+        No reviews yet — be the first to write one.
+      </p>
     );
   }
 
   return (
-    <ul className="divide-y divide-border">
+    <ul className="divide-y divide-border border-t border-border">
       {reviews.map((review) => {
-        const isOwn =
-          currentUserId != null && review.user.id === currentUserId;
+        const isOwn = currentUserId != null && review.user.id === currentUserId;
 
         return (
-          <li key={review.id} className="flex flex-col gap-2 py-5 first:pt-0">
+          <li key={review.id} className="flex flex-col gap-1 py-4">
             <div className="flex flex-wrap items-center gap-2">
-              <p className="flex items-center gap-1 text-sm font-medium text-foreground">
-                <LucideStar
-                  className="size-3.5 fill-primary text-primary"
-                  aria-hidden
-                />
+              <RatingStars value={review.ratings} size={13} />
+              <span className="figures text-xs text-foreground">
                 {review.ratings}
-              </p>
-              {isOwn ? <Badge variant="info">Your review</Badge> : null}
+              </span>
+              {isOwn ? <Badge variant="outline">Your review</Badge> : null}
             </div>
             {review.title && (
-              <h3 className="font-medium text-foreground">{review.title}</h3>
+              <p className="font-heading text-lg text-foreground">
+                {review.title}
+              </p>
             )}
-            <p className="text-sm text-muted-foreground">
+            <p className="figures text-[11.5px] text-muted-foreground">
               {review.user.name} · {formatDate(review.createdAt)}
             </p>
           </li>

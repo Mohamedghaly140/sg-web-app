@@ -1,6 +1,6 @@
 "use client";
 
-import { LucideLoader2, LucideShoppingBag, LucideZap } from "lucide-react";
+import { LucideLoader2, LucideShoppingBag } from "lucide-react";
 
 import { QuantityStepper } from "@/components/shared/quantity-stepper";
 import { Button } from "@/components/ui/button";
@@ -15,14 +15,19 @@ import {
 import { getColorSwatch } from "@/features/products/components/color-swatch-map";
 import { useProductPurchase } from "@/features/products/components/product-purchase-provider";
 import { StockBadge } from "@/features/products/components/stock-badge";
+import type { ProductSummary } from "@/features/products/types/product";
+import { WishlistSaveButton } from "@/features/wishlist/components/wishlist-save-button";
+import { SIZE_LADDER } from "@/lib/constants/size-ladder";
 
 type VariantSelectorsProps = {
+  product: ProductSummary;
   sizes: string[];
   colors: string[];
   quantity: number;
 };
 
 export function VariantSelectors({
+  product,
   sizes,
   colors,
   quantity,
@@ -45,39 +50,61 @@ export function VariantSelectors({
   const variantError = variantErrorForProduct(error, productId);
   const variantRejected =
     variantError !== undefined || error?.code === "INVALID_VARIANT";
+  const missingRequiredVariant =
+    (colors.length > 0 && !selectedColor) ||
+    (sizes.length > 0 && !selectedSize);
+
+  // The ladder is a display convention (GAP-9), not an enum -- the contract
+  // defines no closed set of sizes. Rendering only the ladder would hide any
+  // size outside it while the provider still defaults `selectedSize` to it,
+  // leaving every visible button disabled and Add to bag posting an invisible
+  // selection. So union: the ladder for its designed disabled states, plus
+  // anything the product actually returns.
+  const displayedSizes = [
+    ...SIZE_LADDER,
+    ...sizes.filter((size) => !(SIZE_LADDER as readonly string[]).includes(size)),
+  ];
+
+  function handleColorChange(next: string[]) {
+    const nextColor = next.at(-1);
+
+    if (nextColor) {
+      setSelectedColor(nextColor);
+    }
+  }
+
+  function handleSizeChange(next: string[]) {
+    const nextSize = next.at(-1);
+
+    if (nextSize && sizes.includes(nextSize)) {
+      setSelectedSize(nextSize);
+    }
+  }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-3">
       {colors.length > 0 && (
-        <fieldset className="flex flex-col gap-3">
-          <legend className="text-sm font-medium text-foreground">
-            Color
-            {selectedColor && (
-              <span className="ml-1 font-normal text-muted-foreground">
-                — {selectedColor}
-              </span>
-            )}
+        <fieldset>
+          <legend className="mb-2 text-eyebrow">
+            Colour — {selectedColor}
           </legend>
           <ToggleGroup
-            className="flex-wrap gap-2"
-            aria-label="Color"
+            className="flex-wrap gap-2 overflow-visible rounded-none border-0"
+            aria-label="Colour"
             value={selectedColor ? [selectedColor] : []}
-            onValueChange={(next) => {
-              const nextColor = next[next.length - 1];
-              if (nextColor) {
-                setSelectedColor(nextColor);
-              }
-            }}
+            onValueChange={handleColorChange}
           >
             {colors.map((color) => (
               <ToggleGroupItem
                 key={color}
                 value={color}
                 type="button"
-                variant="outline"
                 aria-label={color}
                 title={color}
-                className="size-9 shrink-0 rounded-full border border-input p-0 shadow-none data-pressed:ring-2 data-pressed:ring-accent data-pressed:ring-offset-2 data-pressed:ring-offset-background"
+                // `outline-1` sets only the width; without an explicit
+                // `outline-solid` the style stays `none` and the selected
+                // swatch renders no ring at all.
+                className="size-[26px] flex-none rounded-full border border-border p-0 shadow-none data-pressed:outline-solid data-pressed:outline-1 data-pressed:outline-accent data-pressed:outline-offset-2"
                 style={{
                   backgroundColor: getColorSwatch(color) ?? "var(--muted)",
                 }}
@@ -88,30 +115,34 @@ export function VariantSelectors({
       )}
 
       {sizes.length > 0 && (
-        <fieldset className="flex flex-col gap-3">
-          <legend className="text-sm font-medium text-foreground">Size</legend>
+        <fieldset>
+          {/* The design pairs this label with a "Size guide" link. There is no
+              size-guide content or route, and a dead link is worse than none,
+              so the label stands alone. */}
+          <legend className="mb-2 text-eyebrow">Size</legend>
+          {/* The design's `.seg` is an inline-flex that hugs its options; a
+              full-width group stretches five sizes across the whole rail. */}
           <ToggleGroup
-            className="flex-wrap gap-2"
+            className="w-fit"
             aria-label="Size"
             value={selectedSize ? [selectedSize] : []}
-            onValueChange={(next) => {
-              const nextSize = next[next.length - 1];
-              if (nextSize) {
-                setSelectedSize(nextSize);
-              }
-            }}
+            onValueChange={handleSizeChange}
           >
-            {sizes.map((size) => (
-              <ToggleGroupItem
-                key={size}
-                value={size}
-                type="button"
-                variant="outline"
-                className="flex size-9 shrink-0 items-center justify-center rounded-full border border-input text-sm font-medium shadow-none data-pressed:border-transparent data-pressed:bg-foreground data-pressed:text-background data-pressed:ring-2 data-pressed:ring-accent data-pressed:ring-offset-2 data-pressed:ring-offset-background"
-              >
-                {size}
-              </ToggleGroupItem>
-            ))}
+            {displayedSizes.map((size) => {
+              const isOffered = sizes.includes(size);
+
+              return (
+                <ToggleGroupItem
+                  key={size}
+                  value={size}
+                  type="button"
+                  disabled={!isOffered}
+                  className="opacity-100 disabled:opacity-40"
+                >
+                  {size}
+                </ToggleGroupItem>
+              );
+            })}
           </ToggleGroup>
         </fieldset>
       )}
@@ -122,8 +153,8 @@ export function VariantSelectors({
         </p>
       )}
 
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="text-sm font-medium text-foreground">Quantity</span>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-eyebrow">Quantity</span>
         <QuantityStepper
           value={selectedQuantity}
           min={1}
@@ -139,32 +170,23 @@ export function VariantSelectors({
         <StockBadge quantity={quantity} />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div
-          className="grid grid-cols-2 gap-2"
-          data-product-purchase-actions
+      <div data-product-purchase-actions>
+        <Button
+          type="button"
+          size="lg"
+          className="w-full"
+          onClick={addToCart}
+          disabled={soldOut || isAdding || missingRequiredVariant}
         >
-          <Button
-            type="button"
-            onClick={addToCart}
-            disabled={soldOut || isAdding}
-          >
-            {isAdding ? (
-              <LucideLoader2 data-icon="inline-start" className="animate-spin" />
-            ) : (
-              <LucideShoppingBag data-icon="inline-start" />
-            )}
-            {soldOut ? "Sold out" : isAdding ? "Adding…" : "Add to Cart"}
-          </Button>
-          <Button type="button" variant="outline" disabled>
-            <LucideZap data-icon="inline-start" />
-            Buy Now
-          </Button>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Checkout is coming soon.
-        </p>
+          {isAdding ? (
+            <LucideLoader2 data-icon="inline-start" className="animate-spin" />
+          ) : (
+            <LucideShoppingBag data-icon="inline-start" />
+          )}
+          {soldOut ? "Sold out" : isAdding ? "Adding…" : "Add to bag"}
+        </Button>
       </div>
+      <WishlistSaveButton product={product} />
     </div>
   );
 }
