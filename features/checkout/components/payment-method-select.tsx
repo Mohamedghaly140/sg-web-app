@@ -1,3 +1,4 @@
+import { RadioDot } from "@/components/shared/radio-dot";
 import { PAYMENT_METHODS } from "@/lib/constants/payment-methods";
 
 export type PaymentMethodSelectProps = {
@@ -20,8 +21,9 @@ export function PaymentMethodSelect({ name, defaultValue = "CASH" }: PaymentMeth
             value={method.value}
             defaultChecked={method.value === defaultValue}
             disabled={!method.enabled}
-            className="size-4 accent-primary disabled:opacity-50"
+            className="peer sr-only"
           />
+          <RadioDot selected={method.value === defaultValue} />
           <span className={method.enabled ? "text-foreground" : "text-muted-foreground"}>
             {method.label}
             {method.disabledReason ? ` (${method.disabledReason})` : ""}

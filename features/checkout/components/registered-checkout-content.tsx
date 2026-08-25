@@ -4,38 +4,36 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LucideShoppingBag, LucideTriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useActionState, useCallback, useState } from "react";
+import { useActionState, useState } from "react";
 
 import { EmptyState } from "@/components/shared/empty-state";
 import Form from "@/components/shared/form/form";
 import { EMPTY_ACTION_STATE } from "@/components/shared/form/utils/to-action-state";
 import Spinner from "@/components/shared/spinner";
-import SubmitButton from "@/components/shared/submit-button";
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { AddressForm } from "@/features/addresses/components/address-form";
 import type { Address } from "@/features/addresses/types/address";
 import { placeOrderAction } from "@/features/checkout/actions/place-order";
-import { CheckoutCartSummary } from "@/features/checkout/components/checkout-cart-summary";
-import { CouponForm } from "@/features/checkout/components/coupon-form";
+import { CheckoutStepRail } from "@/features/checkout/components/checkout-step-rail";
+import { CompletedStepSummary } from "@/features/checkout/components/completed-step-summary";
 import { OrderConfirmation } from "@/features/checkout/components/order-confirmation";
-import { PaymentMethodSelect } from "@/features/checkout/components/payment-method-select";
-import { ShippingEstimate } from "@/features/checkout/components/shipping-estimate";
+import { RegisteredAddressStep } from "@/features/checkout/components/registered-address-step";
+import { RegisteredPaymentStep } from "@/features/checkout/components/registered-payment-step";
+import { RegisteredReviewStep } from "@/features/checkout/components/registered-review-step";
+import type { RegisteredCheckoutStep } from "@/features/checkout/hooks/checkout-search-params";
+import { useRegisteredCheckoutStep } from "@/features/checkout/hooks/use-checkout-step";
 import { parseCheckoutStructuredErrors } from "@/features/checkout/lib/checkout-error-resolver";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
 import type { ShippingFee } from "@/features/checkout/types/shipping";
 import { cartKeys } from "@/features/cart/hooks/cart-keys";
 import { fetchCurrentCart, useCart } from "@/features/cart/hooks/use-cart";
 import { EMPTY_CART } from "@/features/cart/types/cart";
-import { DEFAULT_COUNTRY } from "@/lib/constants/egypt-locations";
+
+const STEP_ITEMS = [
+  { key: "address", label: "Address" },
+  { key: "payment", label: "Payment" },
+  { key: "review", label: "Review" },
+] as const satisfies readonly { key: RegisteredCheckoutStep; label: string }[];
 
 export type RegisteredCheckoutContentProps = {
   addresses: Address[];
@@ -45,12 +43,12 @@ export function RegisteredCheckoutContent({ addresses }: RegisteredCheckoutConte
   const cartQuery = useCart();
   const queryClient = useQueryClient();
   const router = useRouter();
+  const [step, setStep] = useRegisteredCheckoutStep();
   const [selectedId, setSelectedId] = useState(
     addresses.find((address) => address.isDefault)?.id ?? addresses[0]?.id ?? "",
   );
   const [shippingFee, setShippingFee] = useState<ShippingFee | null>(null);
   const [applied, setApplied] = useState<CouponPreview | null>(null);
-  const [showCreateAddress, setShowCreateAddress] = useState(addresses.length === 0);
   const [placedOrder, setPlacedOrder] = useState<{
     humanOrderId: string;
     orderId?: string;
@@ -63,10 +61,6 @@ export function RegisteredCheckoutContent({ addresses }: RegisteredCheckoutConte
   const [actionState, formAction] = useActionState(placeOrderAction, EMPTY_ACTION_STATE);
   const { variantErrors, stockErrors } = parseCheckoutStructuredErrors(actionState.response);
   const selectedAddress = addresses.find((address) => address.id === selectedId) ?? null;
-
-  const handleResolved = useCallback((fee: ShippingFee | null) => {
-    setShippingFee(fee);
-  }, []);
 
   // `queryClient.setQueryData` is a side effect and must not run during
   // render — `Form`'s `onSuccess` (via `useActionFeedback`) fires it exactly
@@ -159,7 +153,24 @@ export function RegisteredCheckoutContent({ addresses }: RegisteredCheckoutConte
   }
 
   return (
-    <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+    <div className="flex flex-col gap-6">
+      <CheckoutStepRail steps={STEP_ITEMS} currentStep={step.step} />
+
+      {step.step !== "address" && selectedAddress ? (
+        <CompletedStepSummary
+          label="01 · Address"
+          value={`${selectedAddress.alias} — ${selectedAddress.addressLine1}, ${selectedAddress.area}, ${selectedAddress.city}, ${selectedAddress.governorate}`}
+          onChange={() => void setStep({ step: "address" })}
+        />
+      ) : null}
+      {step.step === "review" ? (
+        <CompletedStepSummary
+          label="02 · Payment"
+          value="Cash on delivery"
+          onChange={() => void setStep({ step: "payment" })}
+        />
+      ) : null}
+
       <Form
         action={formAction}
         actionState={actionState}
@@ -181,100 +192,42 @@ export function RegisteredCheckoutContent({ addresses }: RegisteredCheckoutConte
             router.refresh();
             setApplied(null);
           }
+
+          const responseStep = actionState.response?.step;
+          if (responseStep === "address") {
+            void setStep({ step: "address" });
+          } else if (responseStep === "payment") {
+            void setStep({ step: "payment" });
+          } else if (responseStep) {
+            void setStep({ step: "review" });
+          }
         }}
       >
-        <section className="flex flex-col gap-4">
-          <h2 className="font-heading text-lg font-semibold text-foreground">
-            Shipping address
-          </h2>
-          {addresses.length > 0 ? (
-            <fieldset className="flex flex-col gap-2">
-              {addresses.map((address) => (
-                <label
-                  key={address.id}
-                  className="flex items-start gap-3 border border-border p-3 text-sm has-checked:border-primary"
-                >
-                  <input
-                    type="radio"
-                    name="shippingAddressId"
-                    value={address.id}
-                    checked={selectedId === address.id}
-                    onChange={() => setSelectedId(address.id)}
-                    className="mt-1 size-4 accent-primary"
-                  />
-                  <span className="flex flex-col">
-                    <span className="font-medium text-foreground">{address.alias}</span>
-                    <span className="text-muted-foreground">
-                      {address.addressLine1}, {address.area}, {address.city},{" "}
-                      {address.governorate}
-                    </span>
-                  </span>
-                </label>
-              ))}
-            </fieldset>
-          ) : null}
-
-          <Sheet open={showCreateAddress} onOpenChange={setShowCreateAddress}>
-            <SheetTrigger
-              render={
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="self-start"
-                />
-              }
-            >
-              Add a new address
-            </SheetTrigger>
-            <SheetContent className="data-[side=right]:sm:max-w-md">
-              <SheetHeader>
-                <SheetTitle>Add a new address</SheetTitle>
-              </SheetHeader>
-              <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
-                <AddressForm
-                  variant="create"
-                  hasExistingAddresses={addresses.length > 0}
-                  onDone={() => {
-                    setShowCreateAddress(false);
-                    router.refresh();
-                  }}
-                />
-              </div>
-            </SheetContent>
-          </Sheet>
-
-          {selectedAddress ? (
-            <ShippingEstimate
-              country={DEFAULT_COUNTRY}
-              governorate={selectedAddress.governorate}
-              city={selectedAddress.city}
-              onResolved={handleResolved}
-            />
-          ) : null}
-        </section>
-
-        <section className="mt-6 flex flex-col gap-4">
-          <CouponForm applied={applied} onApplied={setApplied} />
-          <input type="hidden" name="couponCode" value={applied?.code ?? ""} />
-          <PaymentMethodSelect name="paymentMethod" />
-          <SubmitButton
-            label="Place order"
-            disabled={!selectedAddress || !shippingFee}
-            className="self-end"
-          />
-        </section>
+        <RegisteredAddressStep
+          active={step.step === "address"}
+          addresses={addresses}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+          onFeeChange={setShippingFee}
+          onNext={() => void setStep({ step: "payment" })}
+        />
+        <RegisteredPaymentStep
+          active={step.step === "payment"}
+          onBack={() => void setStep({ step: "address" })}
+          onNext={() => void setStep({ step: "review" })}
+        />
+        <RegisteredReviewStep
+          active={step.step === "review"}
+          cart={cart}
+          selectedAddress={selectedAddress}
+          shippingFee={shippingFee}
+          applied={applied}
+          onApplied={setApplied}
+          onBack={() => void setStep({ step: "payment" })}
+          variantErrors={variantErrors}
+          stockErrors={stockErrors}
+        />
       </Form>
-
-      <Card>
-        <CardContent className="pt-6">
-          <CheckoutCartSummary
-            cart={cart}
-            variantErrors={variantErrors}
-            stockErrors={stockErrors}
-          />
-        </CardContent>
-      </Card>
     </div>
   );
 }
