@@ -46,6 +46,13 @@ export async function placeGuestOrderAction(
 
     return toActionState("SUCCESS", "Order placed", formData, {
       humanOrderId: order.humanOrderId,
+      status: order.status,
+      paymentMethod: order.paymentMethod,
+      isPaid: order.isPaid ? "true" : "false",
+      createdAt: order.createdAt,
+      items: JSON.stringify(order.items),
+      claimToken: order.claimToken,
+      customerName: input.contact.name,
       itemsSubtotal: order.itemsSubtotal,
       discountApplied: order.discountApplied,
       shippingFees: order.shippingFees,

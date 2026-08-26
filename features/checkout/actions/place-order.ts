@@ -38,6 +38,11 @@ export async function placeOrderAction(
     return toActionState("SUCCESS", "Order placed", formData, {
       humanOrderId: order.humanOrderId,
       orderId: order.id,
+      status: order.status,
+      paymentMethod: order.paymentMethod,
+      isPaid: order.isPaid ? "true" : "false",
+      createdAt: order.createdAt,
+      items: JSON.stringify(order.items),
       itemsSubtotal: order.itemsSubtotal,
       discountApplied: order.discountApplied,
       shippingFees: order.shippingFees,

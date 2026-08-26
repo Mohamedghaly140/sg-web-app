@@ -23,7 +23,12 @@ import { RegisteredReviewStep } from "@/features/checkout/components/registered-
 import type { RegisteredCheckoutStep } from "@/features/checkout/hooks/checkout-search-params";
 import { useRegisteredCheckoutStep } from "@/features/checkout/hooks/use-checkout-step";
 import { parseCheckoutStructuredErrors } from "@/features/checkout/lib/checkout-error-resolver";
+import {
+  parseOrderItems,
+  type OrderItemParsed,
+} from "@/features/checkout/schema/order-item-schema";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
+import type { OrderStatus } from "@/features/checkout/types/order";
 import type { ShippingFee } from "@/features/checkout/types/shipping";
 import { cartKeys } from "@/features/cart/hooks/cart-keys";
 import { fetchCurrentCart, useCart } from "@/features/cart/hooks/use-cart";
@@ -37,9 +42,13 @@ const STEP_ITEMS = [
 
 export type RegisteredCheckoutContentProps = {
   addresses: Address[];
+  customerName: string;
 };
 
-export function RegisteredCheckoutContent({ addresses }: RegisteredCheckoutContentProps) {
+export function RegisteredCheckoutContent({
+  addresses,
+  customerName,
+}: RegisteredCheckoutContentProps) {
   const cartQuery = useCart();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -52,6 +61,11 @@ export function RegisteredCheckoutContent({ addresses }: RegisteredCheckoutConte
   const [placedOrder, setPlacedOrder] = useState<{
     humanOrderId: string;
     orderId?: string;
+    status: OrderStatus;
+    paymentMethod: string;
+    createdAt: string;
+    items: OrderItemParsed[];
+    isPaid: boolean;
     itemsSubtotal: string;
     discountApplied: string;
     shippingFees: string;
@@ -74,7 +88,18 @@ export function RegisteredCheckoutContent({ addresses }: RegisteredCheckoutConte
       typeof actionState.response.itemsSubtotal === "string" &&
       typeof actionState.response.discountApplied === "string" &&
       typeof actionState.response.shippingFees === "string" &&
-      typeof actionState.response.totalOrderPrice === "string"
+      typeof actionState.response.totalOrderPrice === "string" &&
+      (actionState.response.status === "PENDING" ||
+        actionState.response.status === "PROCESSING" ||
+        actionState.response.status === "SHIPPED" ||
+        actionState.response.status === "DELIVERED" ||
+        actionState.response.status === "CANCELLED" ||
+        actionState.response.status === "REFUNDED") &&
+      typeof actionState.response.paymentMethod === "string" &&
+      typeof actionState.response.createdAt === "string" &&
+      typeof actionState.response.items === "string" &&
+      (actionState.response.isPaid === "true" ||
+        actionState.response.isPaid === "false")
     ) {
       setPlacedOrder({
         humanOrderId: actionState.response.humanOrderId,
@@ -82,6 +107,11 @@ export function RegisteredCheckoutContent({ addresses }: RegisteredCheckoutConte
           typeof actionState.response.orderId === "string"
             ? actionState.response.orderId
             : undefined,
+        status: actionState.response.status,
+        paymentMethod: actionState.response.paymentMethod,
+        createdAt: actionState.response.createdAt,
+        items: parseOrderItems(actionState.response.items),
+        isPaid: actionState.response.isPaid === "true",
         itemsSubtotal: actionState.response.itemsSubtotal,
         discountApplied: actionState.response.discountApplied,
         shippingFees: actionState.response.shippingFees,
@@ -93,11 +123,22 @@ export function RegisteredCheckoutContent({ addresses }: RegisteredCheckoutConte
   if (placedOrder) {
     return (
       <OrderConfirmation
+        customerName={customerName}
         humanOrderId={placedOrder.humanOrderId}
         orderId={placedOrder.orderId}
+        createdAt={placedOrder.createdAt}
+        status={placedOrder.status}
+        paymentMethod={placedOrder.paymentMethod}
+        items={placedOrder.items}
         itemsSubtotal={placedOrder.itemsSubtotal}
         discountApplied={placedOrder.discountApplied}
+        couponCode={applied?.code}
         shippingFees={placedOrder.shippingFees}
+        deliveryDestination={
+          selectedAddress
+            ? `${selectedAddress.city}, ${selectedAddress.governorate}`
+            : ""
+        }
         totalOrderPrice={placedOrder.totalOrderPrice}
         isGuest={false}
       />
