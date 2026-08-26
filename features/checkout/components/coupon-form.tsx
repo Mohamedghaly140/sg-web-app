@@ -8,15 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useValidateCoupon } from "@/features/checkout/hooks/use-validate-coupon";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
-
-const COUPON_ERROR_COPY: Record<string, string> = {
-  RESOURCE_NOT_FOUND: "We couldn't find that coupon code.",
-  COUPON_EXPIRED: "This coupon has expired.",
-  COUPON_INACTIVE: "This coupon is no longer active.",
-  COUPON_EXHAUSTED: "This coupon has reached its usage limit.",
-  COUPON_USER_LIMIT: "You've already used this coupon.",
-  RATE_LIMITED: "Too many attempts — try again in a moment.",
-};
+import { COUPON_ERROR_COPY } from "@/lib/constants/coupon-error-copy";
 
 export type CouponFormProps = {
   applied: CouponPreview | null;
@@ -61,10 +53,15 @@ export function CouponForm({ applied, onApplied }: CouponFormProps) {
         </Button>
       </div>
       {applied ? (
-        <div className="flex items-center justify-between text-sm">
-          <Badge variant="success">{applied.code} applied</Badge>
-          <span className="text-muted-foreground">-<Money value={applied.discountApplied} /></span>
-        </div>
+        <>
+          <div className="flex items-center justify-between text-sm">
+            <Badge variant="success">{applied.code} applied</Badge>
+            <span className="text-muted-foreground">-<Money value={applied.discountApplied} /></span>
+          </div>
+          <p className="text-2xs text-accent-strong">
+            Revalidated when your order is placed.
+          </p>
+        </>
       ) : null}
       {errorMessage ? (
         <p className="text-sm text-destructive" role="alert">
