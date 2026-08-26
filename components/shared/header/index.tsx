@@ -12,7 +12,7 @@ export async function Header() {
 
   return (
     <header className="border-b border-border">
-      <div className="mx-auto flex w-full max-w-[1280px] items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/">
           <span className="font-heading text-[22px] tracking-[0.04em]">
             SG<span className="text-accent-strong">·</span>COUTURE

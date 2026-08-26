@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+  type ReactNode,
+} from "react";
 
 import { Money } from "@/components/shared/money";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +18,13 @@ export type ShippingEstimateProps = {
   governorate: string;
   city: string;
   onResolved: (fee: ShippingFee | null) => void;
+  children?: (state: ShippingEstimateState) => ReactNode;
+};
+
+export type ShippingEstimateState = {
+  isPending: boolean;
+  fee: ShippingFee | null;
+  error: string | null;
 };
 
 export function ShippingEstimate({
@@ -19,6 +32,7 @@ export function ShippingEstimate({
   governorate,
   city,
   onResolved,
+  children,
 }: ShippingEstimateProps) {
   const [isPending, startTransition] = useTransition();
   const [fee, setFee] = useState<ShippingFee | null>(null);
@@ -59,6 +73,10 @@ export function ShippingEstimate({
       })();
     });
   }, [country, governorate, city, onResolved]);
+
+  if (children) {
+    return children({ isPending, fee, error });
+  }
 
   if (isPending) {
     return <p className="text-sm text-muted-foreground">Estimating shipping…</p>;

@@ -15,7 +15,10 @@ import { GuestContactStep } from "@/features/checkout-guest/components/guest-con
 import { GuestReviewStep } from "@/features/checkout-guest/components/guest-review-step";
 import { GuestShippingStep } from "@/features/checkout-guest/components/guest-shipping-step";
 import { placeGuestOrderAction } from "@/features/checkout/actions/place-guest-order";
+import { CheckoutStepRail } from "@/features/checkout/components/checkout-step-rail";
+import { CompletedStepSummary } from "@/features/checkout/components/completed-step-summary";
 import { OrderConfirmation } from "@/features/checkout/components/order-confirmation";
+import type { GuestCheckoutStep } from "@/features/checkout/hooks/checkout-search-params";
 import { useGuestCheckoutStep } from "@/features/checkout/hooks/use-checkout-step";
 import { parseCheckoutStructuredErrors } from "@/features/checkout/lib/checkout-error-resolver";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
@@ -24,12 +27,21 @@ import { cartKeys } from "@/features/cart/hooks/cart-keys";
 import { fetchCurrentCart, useCart } from "@/features/cart/hooks/use-cart";
 import { EMPTY_CART, type Cart } from "@/features/cart/types/cart";
 
+const STEP_ITEMS = [
+  { key: "contact", label: "Contact" },
+  { key: "shipping", label: "Shipping" },
+  { key: "payment", label: "Payment" },
+  { key: "review", label: "Review" },
+] as const satisfies readonly { key: GuestCheckoutStep; label: string }[];
+
 export function GuestCheckoutWizard() {
   const cartQuery = useCart();
   const queryClient = useQueryClient();
   const [step, setStep] = useGuestCheckoutStep();
   const [applied, setApplied] = useState<CouponPreview | null>(null);
   const [shippingFee, setShippingFee] = useState<ShippingFee | null>(null);
+  const [contactSummary, setContactSummary] = useState("");
+  const [shippingSummary, setShippingSummary] = useState("");
   const [placedOrder, setPlacedOrder] = useState<{
     humanOrderId: string;
     itemsSubtotal: string;
@@ -126,56 +138,104 @@ export function GuestCheckoutWizard() {
   }
 
   return (
-    <Form
-      action={formAction}
-      actionState={actionState}
-      onSuccess={handleSuccess}
-      onError={() => {
-        const checkoutCode = actionState.response?.checkoutCode;
-        if (
-          checkoutCode === "INSUFFICIENT_STOCK" ||
-          checkoutCode === "INVALID_VARIANT" ||
-          checkoutCode === "CART_EMPTY"
-        ) {
-          void fetchCurrentCart()
-            .then((freshCart) => {
-              queryClient.setQueryData(cartKeys.current, freshCart);
-            })
-            .catch(() => {});
-        }
-        if (actionState.response?.step === "address") {
-          void setStep({ step: "shipping" });
-        }
-        const fieldErrorKeys = Object.keys(actionState.fieldErrors ?? {});
-        if (fieldErrorKeys.some((key) => key.startsWith("contact."))) {
-          void setStep({ step: "contact" });
-        } else if (fieldErrorKeys.some((key) => key.startsWith("shipping.") || key === "notes")) {
-          void setStep({ step: "shipping" });
-        }
-      }}
-    >
-      <GuestContactStep
-        active={step.step === "contact"}
+    <div className="flex flex-col gap-6">
+      <CheckoutStepRail steps={STEP_ITEMS} currentStep={step.step} />
+
+      {step.step !== "contact" && contactSummary ? (
+        <CompletedStepSummary
+          label="01 · Contact"
+          value={contactSummary}
+          onChange={() => void setStep({ step: "contact" })}
+        />
+      ) : null}
+      {step.step !== "contact" &&
+      step.step !== "shipping" &&
+      shippingSummary ? (
+        <CompletedStepSummary
+          label="02 · Shipping"
+          value={shippingSummary}
+          onChange={() => void setStep({ step: "shipping" })}
+        />
+      ) : null}
+      {step.step === "review" ? (
+        <CompletedStepSummary
+          label="03 · Payment"
+          value="Cash on delivery"
+          onChange={() => void setStep({ step: "payment" })}
+        />
+      ) : null}
+
+      <Form
+        action={formAction}
         actionState={actionState}
-        onNext={() => void setStep({ step: "shipping" })}
-      />
-      <GuestShippingStep
-        active={step.step === "shipping"}
-        actionState={actionState}
-        onNext={() => void setStep({ step: "review" })}
-        onBack={() => void setStep({ step: "contact" })}
-        onFeeChange={setShippingFee}
-      />
-      <GuestReviewStep
-        active={step.step === "review"}
-        cart={cart}
-        shippingFee={shippingFee}
-        applied={applied}
-        onApplied={setApplied}
-        onBack={() => void setStep({ step: "shipping" })}
-        variantErrors={variantErrors}
-        stockErrors={stockErrors}
-      />
-    </Form>
+        onSuccess={handleSuccess}
+        onError={() => {
+          const checkoutCode = actionState.response?.checkoutCode;
+          if (
+            checkoutCode === "INSUFFICIENT_STOCK" ||
+            checkoutCode === "INVALID_VARIANT" ||
+            checkoutCode === "CART_EMPTY"
+          ) {
+            void fetchCurrentCart()
+              .then((freshCart) => {
+                queryClient.setQueryData(cartKeys.current, freshCart);
+              })
+              .catch(() => {});
+          }
+
+          const responseStep = actionState.response?.step;
+          if (responseStep === "address") {
+            void setStep({ step: "shipping" });
+          } else if (
+            responseStep === "payment" ||
+            checkoutCode === "PAYMENT_METHOD_UNAVAILABLE"
+          ) {
+            void setStep({ step: "payment" });
+          } else if (responseStep) {
+            void setStep({ step: "review" });
+          }
+
+          const fieldErrorKeys = Object.keys(actionState.fieldErrors ?? {});
+          if (fieldErrorKeys.some((key) => key.startsWith("contact."))) {
+            void setStep({ step: "contact" });
+          } else if (
+            fieldErrorKeys.some(
+              (key) => key.startsWith("shipping.") || key === "notes",
+            )
+          ) {
+            void setStep({ step: "shipping" });
+          } else if (fieldErrorKeys.includes("paymentMethod")) {
+            void setStep({ step: "payment" });
+          }
+        }}
+      >
+        <GuestContactStep
+          active={step.step === "contact"}
+          actionState={actionState}
+          onNext={() => void setStep({ step: "shipping" })}
+          onSummaryChange={setContactSummary}
+        />
+        <GuestShippingStep
+          active={step.step === "shipping"}
+          actionState={actionState}
+          onNext={() => void setStep({ step: "payment" })}
+          onBack={() => void setStep({ step: "contact" })}
+          onFeeChange={setShippingFee}
+          onSummaryChange={setShippingSummary}
+        />
+        <GuestReviewStep
+          step={step.step}
+          cart={cart}
+          shippingFee={shippingFee}
+          applied={applied}
+          onApplied={setApplied}
+          onPaymentBack={() => void setStep({ step: "shipping" })}
+          onPaymentNext={() => void setStep({ step: "review" })}
+          onReviewBack={() => void setStep({ step: "payment" })}
+          variantErrors={variantErrors}
+          stockErrors={stockErrors}
+        />
+      </Form>
+    </div>
   );
 }
