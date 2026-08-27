@@ -43,9 +43,9 @@ Until it is answered, this phase follows the repo's established precedent — th
 
 ### 11.4 Follow-through
 
-- [ ] Once `/contact` exists, wire the `SHIPPING_NOT_AVAILABLE` fallback link left out of Phase 10 task 10.4.
-- [ ] Note for Phase 12 that screen S13's "Message the atelier" button now has a real destination — this is why Phase 11 precedes Phase 12 rather than following it.
-- [ ] Update GAP-5's fallback paragraph in `docs/backend-contract-gaps.md` to record what actually shipped.
+- [x] Once `/contact` exists, wire the `SHIPPING_NOT_AVAILABLE` fallback link left out of Phase 10 task 10.4.
+- [x] Note for Phase 12 that screen S13's "Message the atelier" button now has a real destination — this is why Phase 11 precedes Phase 12 rather than following it.
+- [x] Update GAP-5's fallback paragraph in `docs/backend-contract-gaps.md` to record what actually shipped.
 
 ## Definition of Done
 

@@ -2,7 +2,7 @@
 
 **Objective:** compose the four signed-in screens to their designed layouts, and build the account overview dashboard and profile screen that do not exist yet.
 
-**Prerequisites:** Phase 11 DoD — screen S13's "Message the atelier" button needs `/contact` to exist. **Phase 6 (orders) must read `done`.**
+**Prerequisites:** Phase 11 DoD — satisfied: `/contact` shipped in Phase 11. **Phase 6 (orders) must read `done`.**
 
 **API surface:** `GET /users/me`, `GET /orders`, `GET /orders/:id`, `POST /orders/:id/cancel`, `POST /orders/claim`, `GET /addresses`, `POST /addresses`, `GET /addresses/:id`, `PATCH /addresses/:id`, `DELETE /addresses/:id`, `PATCH /addresses/:id/default`, `GET /shipping/fee`, `GET /wishlist`.
 

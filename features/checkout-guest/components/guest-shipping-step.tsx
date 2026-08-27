@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useState, type MouseEvent } from "react";
 
 import { Money } from "@/components/shared/money";
@@ -86,9 +87,17 @@ export function GuestShippingStep({
               actionState={actionState}
               destinationFeedback={
                 error ? (
-                  <p className="text-xs text-destructive" role="alert">
-                    {error}
-                  </p>
+                  <div className="flex flex-col items-start gap-1">
+                    <p className="text-xs text-destructive" role="alert">
+                      {error}
+                    </p>
+                    <Link
+                      href="/contact"
+                      className="text-xs text-accent-strong underline-offset-3 hover:underline"
+                    >
+                      Message the atelier
+                    </Link>
+                  </div>
                 ) : null
               }
               onDestinationChange={handleDestinationChange}

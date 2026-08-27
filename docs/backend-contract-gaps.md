@@ -90,7 +90,7 @@
 - Confirmation of the topic enum's canonical values, so the storefront sends wire-format strings rather than inventing labels.
 - If a `VALIDATION_ERROR` shape differs from the standard envelope for this route, document it.
 
-**Our fallback:** render the designed form, validate it client-side with Zod, then hand the composed message to the customer's own mail client via a `mailto:` link (topic in the subject, message in the body) with a WhatsApp deep link beside it — the design already promises "WhatsApp on the same number". The primary control is a link, not a submit, and a visible note says the message opens in your mail app. **No server action and no success state we cannot prove.** This works, but it loses delivery confirmation, loses the message in our own systems, and drops the attach-signed-in-identity behaviour entirely.
+**What shipped:** the designed S9 form renders and validates client-side with Zod, then hands the composed message to the customer's own mail client via a `mailto:` link (topic in the subject, message in the body) with a WhatsApp deep link beside it — "WhatsApp on the same number" as promised. The primary control is a link, not a submit; a visible note says the message opens in the customer's mail app. **No server action and no success state we cannot prove.** The `SHIPPING_NOT_AVAILABLE` recovery path (surface 3) now also links to `/contact` from both the guest and registered checkout flows. Surface 2 — S13's "Message the atelier" button — is still pending Phase 12, which will link it to `/contact` the same way. This works, but it loses delivery confirmation, loses the message in our own systems, and drops the attach-signed-in-identity behaviour entirely.
 
 ---
 
@@ -109,7 +109,7 @@ There is no set of options, no service tiers, and **no duration, ETA, or working
 **Two distinct problems:**
 
 1. **Selectable delivery options.** Screen S5 (registered checkout) devotes its entire step `02 Delivery` to *two selectable cards*, each with a name, a sub-line and its own fee right-aligned. Nothing in the contract can populate a second row. We are not going to invent courier tiers.
-2. **Delivery-time copy.** The design states delivery duration as fact in at least four places — S3's PDP row ("Cairo, 2–4 days · 65 EGP"), S6's guest shipping step, S7's confirmation meta band ("Nasr City, Cairo · 2–4 working days"), and S13's timeline estimate ("2–4 working days"). That figure has no source field. Hardcoding a shipping promise in the frontend is exactly the kind of claim that should be server-owned and per-zone.
+2. **Delivery-time copy.** The design states delivery duration as fact in at least four places — S3's PDP row ("Cairo, 2–4 days · 65 EGP"), S6's guest shipping step, S7's confirmation meta band ("Nasr City, Cairo · 2–4 working days"), and S13's timeline estimate ("2–4 working days"). That figure has no source field. Hardcoding a shipping promise in the frontend is exactly the kind of claim that should be server-owned and per-zone. S9's Contact page delivery blurb deliberately omits any day-range estimate for the same reason.
 
 **What we need (either, ideally both):**
 

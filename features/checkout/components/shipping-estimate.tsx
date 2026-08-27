@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   useEffect,
   useRef,
@@ -98,9 +99,17 @@ export function ShippingEstimate({
 
   if (error) {
     return (
-      <p className="text-sm text-destructive" role="alert">
-        {error}
-      </p>
+      <div className="flex flex-col items-start gap-1">
+        <p className="text-sm text-destructive" role="alert">
+          {error}
+        </p>
+        <Link
+          href="/contact"
+          className="text-sm text-accent-strong underline-offset-3 hover:underline"
+        >
+          Message the atelier
+        </Link>
+      </div>
     );
   }
 

@@ -118,11 +118,15 @@ export function ContactForm() {
   // record in our systems, and cannot attach a signed-in customer's identity.
   return (
     <div>
-      <form noValidate onSubmit={handleFormSubmit}>
+      <form
+        noValidate
+        aria-labelledby="contact-form-heading"
+        onSubmit={handleFormSubmit}
+      >
         <Card className="gap-3">
           <CardHeader>
-            <CardTitle className="text-xl">
-              <h2>Write to us</h2>
+            <CardTitle className="text-xl" id="contact-form-heading">
+              Write to us
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
@@ -172,6 +176,8 @@ export function ContactForm() {
               </FieldLegend>
               <ToggleGroup
                 className="flex-wrap gap-2 overflow-visible rounded-none border-0"
+                variant="tag"
+                size="xs"
                 spacing={2}
                 aria-labelledby="contact-topic-label"
                 aria-invalid={Boolean(errors.topic) || undefined}
@@ -186,7 +192,7 @@ export function ContactForm() {
                     key={contactTopic}
                     value={contactTopic}
                     type="button"
-                    className="h-5 min-w-0 flex-none rounded-sm border border-transparent bg-neutral-100 px-2.5 py-0.5 text-2xs text-neutral-800 shadow-none hover:bg-neutral-100 hover:text-neutral-800 data-pressed:border-primary data-pressed:bg-transparent data-pressed:text-accent-strong data-pressed:shadow-none data-pressed:hover:bg-transparent data-pressed:hover:text-accent-strong"
+                    className="flex-none"
                   >
                     {contactTopic}
                   </ToggleGroupItem>

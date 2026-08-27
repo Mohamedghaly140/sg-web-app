@@ -79,7 +79,7 @@ export function AtelierInfo() {
       ) : null}
       <Separator className="my-4" />
       <OrderHelpForm />
-      <div className="mt-6 flex h-[220px] items-center justify-center bg-muted">
+      <div className="plate mt-6 flex h-[220px] items-center justify-center bg-muted">
         <span className="text-eyebrow">Atelier map or photograph</span>
       </div>
     </div>
