@@ -15,6 +15,13 @@ export function Footer() {
           Track an order
         </Link>
         <span aria-hidden="true">·</span>
+        <Link
+          href="/contact"
+          className="text-muted-foreground hover:text-foreground"
+        >
+          Contact
+        </Link>
+        <span aria-hidden="true">·</span>
         <span>© {new Date().getFullYear()} SG Couture</span>
       </div>
     </footer>
