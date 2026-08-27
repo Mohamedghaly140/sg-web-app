@@ -155,16 +155,23 @@ app/                         # thin pages/layouts only; no feature logic
   products/[slug]/
   categories/[slug]/
   checkout/guest/
-  orders/track/[token]/
+  orders/track/                # lookup widget stub + [token]/ result page
   account/{addresses,orders,wishlist}/
   account/orders/[id]/
+  account-disabled/            # landing for ACCOUNT_DISABLED redirects
 features/<name>/             # components/ hooks/ actions/ queries/ schema/ types/ index.tsx
                              # index.tsx exports default <Name>Feature (Server Component)
-lib/                         # utils.ts, env.ts, format.ts, cart-session.ts, api/
+lib/                         # utils.ts, env.ts, format.ts, pagination.ts, nuqs-parsers.ts
+  cart-session.ts            # sg_cart_session cookie read/write/delete
+  cart-response.ts           # captureRefreshAndSanitizeCart + sanitizeCartResponse
+  api/                       # http.ts (apiFetch), api-error.ts,
+                             # redirect-on-auth-error.ts (ACCOUNT_DISABLED/unauth
+                             # code mapping), to-interactive-action-error.ts
 components/ui/               # shadcn primitives only (base-lyra on @base-ui/react)
-components/shared/           # form system, form-control, submit-button, empty-state,
-                             # spinner, redirect-toast, active-badge,
-                             # payment-status-badge; prefer these
+components/shared/           # shared kit: form system, form-control, submit-button,
+                             # empty-state, spinner, redirect-toast, confirm-dialog,
+                             # require-auth, money, rating*, status badges, shell
+                             # (header/footer/sidenav); check here before building new
 actions/                     # cross-cutting Server Actions, e.g. cookies.actions.ts
 proxy.ts                     # Clerk UX gate for /account(.*) only
 ```
@@ -174,9 +181,9 @@ with no business logic; the backend owns business rules.
 
 Routes are `/`, `/products`, `/products/[slug]`, `/categories`,
 `/categories/[slug]`, `/cart`, `/checkout`, `/checkout/guest`,
-`/orders/track/[token]`, gated `/account`, `/account/addresses`,
-`/account/orders`, `/account/orders/[id]`, `/account/wishlist`, and auth
-catch-alls for sign-in/sign-up.
+`/orders/track`, `/orders/track/[token]`, `/account-disabled`, gated
+`/account`, `/account/addresses`, `/account/orders`, `/account/orders/[id]`,
+`/account/wishlist`, and auth catch-alls for sign-in/sign-up.
 
 ## Server Action Patterns
 
@@ -258,6 +265,10 @@ the flash toast.
   cache, or expose the token in feature code.
 - `proxy.ts` gates `/account(.*)` for UX; inline `<RequireAuth>` prompts protect
   authenticated actions elsewhere. Backend responses are authoritative.
+- Map auth `ApiError`s through `redirectOnAuthError` (`lib/api/`): an
+  `ACCOUNT_DISABLED` code redirects to `/account-disabled` from every auth mode;
+  unauthenticated codes redirect only for `"required"` calls. Branch on `code`,
+  never HTTP status.
 
 ## API Conventions
 
