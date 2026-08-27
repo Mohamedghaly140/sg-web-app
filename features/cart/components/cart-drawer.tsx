@@ -99,7 +99,7 @@ export function CartDrawer() {
           <SheetTitle className="text-lg font-normal">Your bag</SheetTitle>
           <SheetDescription>
             {itemCount === 0
-              ? "Your cart is empty."
+              ? "Your bag is empty."
               : `${itemCount} ${itemLabel} in your cart.`}
           </SheetDescription>
         </SheetHeader>
@@ -123,8 +123,8 @@ export function CartDrawer() {
           ) : items.length === 0 ? (
             <EmptyState
               icon={<LucideShoppingBag />}
-              title="Your cart is empty"
-              description="Explore the collection and add something you love."
+              title="Your bag is empty"
+              description="Nothing here yet. The new-in pieces are a good place to start — twelve dresses, eight abayas, six sets."
               action={
                 <SheetClose
                   nativeButton={false}

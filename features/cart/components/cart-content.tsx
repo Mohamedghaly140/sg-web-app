@@ -151,16 +151,28 @@ export function CartContent() {
 
   if (!cart || cart.items.length === 0) {
     return (
-      <EmptyState
-        icon={<LucideShoppingBag className="size-6" />}
-        title="Your cart is empty"
-        description="Explore the collection and add something you love."
-        action={
-          <Button render={<Link href="/products" />} nativeButton={false}>
-            Shop new in
-          </Button>
-        }
-      />
+      <div className="mx-auto max-w-[520px]">
+        <EmptyState
+          icon={<LucideShoppingBag className="size-6" />}
+          title="Your bag is empty"
+          titleAs="h3"
+          description="Nothing here yet. The new-in pieces are a good place to start — twelve dresses, eight abayas, six sets."
+          action={
+            <Button render={<Link href="/products" />} nativeButton={false}>
+              Shop new in
+            </Button>
+          }
+          secondaryAction={
+            <Button
+              variant="outline"
+              render={<Link href="/orders/track" />}
+              nativeButton={false}
+            >
+              Track an order
+            </Button>
+          }
+        />
+      </div>
     );
   }
 
