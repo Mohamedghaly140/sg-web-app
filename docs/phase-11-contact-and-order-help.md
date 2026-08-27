@@ -34,12 +34,12 @@ Until it is answered, this phase follows the repo's established precedent — th
 
 ### 11.3 Right column — the message form
 
-- [ ] Compose the "Write to us" card per the design: Name, optional Phone, and Email fields, a topic row of tag toggles (A piece I want · Sizing & fit · Alterations · Delivery · Returns · Something else) on the Phase 8 segmented/tag control, a 150px message textarea, the privacy line, and a block `Send message` primary. Below it sit two 12.5px policy columns for Delivery and Returns.
-- [ ] Write `schema/contact-message-schema.ts` as a Zod whitelist over the six fields, using v4 idioms — `z.email()` rather than `z.string().email()`, and `z.enum()` for the topic. Validate client-side so the customer gets real field errors.
-- [ ] **Implement the fallback as a `mailto:` composer.** On valid input, URL-encode the composed message into `mailto:<atelier email>?subject=<topic>&body=<message>` and make the primary control a **link, not a submit**. Place a WhatsApp deep link (`https://wa.me/<number>?text=…`) beside it — the design already promises "WhatsApp on the same number". Render a visible 11px line stating that the message opens in the customer's mail app, so the behaviour is never a surprise.
-- [ ] **Write no Server Action and no success state.** There is nothing to submit to, so there is nothing to confirm. Do not render a "Thanks, we'll be in touch" state, do not store the draft server-side, and do not add an optimistic anything.
-- [ ] Record in the component what this fallback costs, so the trade is visible when GAP-5 is answered: no delivery confirmation, no record of the message in our own systems, and no server-side attachment of a signed-in customer's identity.
-- [ ] Structure the form so that swapping the `mailto:` link for a real `POST /contact` Server Action is a contained change — the schema, the fields and the layout all survive; only the submit path changes.
+- [x] Compose the "Write to us" card per the design: Name, optional Phone, and Email fields, a topic row of tag toggles (A piece I want · Sizing & fit · Alterations · Delivery · Returns · Something else) on the Phase 8 segmented/tag control, a 150px message textarea, the privacy line, and a block `Send message` primary. Below it sit two 12.5px policy columns for Delivery and Returns.
+- [x] Write `schema/contact-message-schema.ts` as a Zod whitelist over the six fields, using v4 idioms — `z.email()` rather than `z.string().email()`, and `z.enum()` for the topic. Validate client-side so the customer gets real field errors.
+- [x] **Implement the fallback as a `mailto:` composer.** On valid input, URL-encode the composed message into `mailto:<atelier email>?subject=<topic>&body=<message>` and make the primary control a **link, not a submit**. Place a WhatsApp deep link (`https://wa.me/<number>?text=…`) beside it — the design already promises "WhatsApp on the same number". Render a visible 11px line stating that the message opens in the customer's mail app, so the behaviour is never a surprise.
+- [x] **Write no Server Action and no success state.** There is nothing to submit to, so there is nothing to confirm. Do not render a "Thanks, we'll be in touch" state, do not store the draft server-side, and do not add an optimistic anything.
+- [x] Record in the component what this fallback costs, so the trade is visible when GAP-5 is answered: no delivery confirmation, no record of the message in our own systems, and no server-side attachment of a signed-in customer's identity.
+- [x] Structure the form so that swapping the `mailto:` link for a real `POST /contact` Server Action is a contained change — the schema, the fields and the layout all survive; only the submit path changes.
 
 ### 11.4 Follow-through
 
