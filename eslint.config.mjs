@@ -12,6 +12,15 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Agent/skill tooling config, not storefront app source. `.agents/skills/**/templates/**`
+    // vendors full standalone example projects (e.g. clerk-nextjs-patterns' nextjs-basic-auth
+    // template) whose own app/layout.tsx crashes eslint-plugin-react's react version
+    // detection when linted under this repo's Next.js config.
+    ".agents/**",
+    ".claude/**",
+    ".codex/**",
+    // Generated design-handoff runtime bundle, not hand-written app source.
+    "docs/design_handoff_sg_storefront/**",
   ]),
 ]);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useActionState } from "react";
 
 import Form from "@/components/shared/form/form";
@@ -60,14 +60,33 @@ export function ReviewForm(props: ReviewFormProps) {
     EMPTY_ACTION_STATE,
   );
 
-  const [recoveredEdit, setRecoveredEdit] = useState<RecoveredEdit | null>(
-    null,
-  );
   const [resumePage, setResumePage] = useState("1");
   // Mirrors RatingInput's selection so submit can be gated. Null means
   // "untouched since the last remount", in which case the default stands.
   const [pickedRating, setPickedRating] = useState<string | null>(null);
   const [awaitingResume, setAwaitingResume] = useState(false);
+
+  // Derived straight from `createState` rather than mirrored into its own
+  // state + effect: once `createAction` returns `REVIEW_EXISTS` we never call
+  // it again (create-mode fully hands off to `updateAction`), so `createState`
+  // stays pinned at that response and recomputing this every render is
+  // equivalent to the old effect-driven copy.
+  const recoveredEdit: RecoveredEdit | null =
+    createState.response?.code === "REVIEW_EXISTS" &&
+    typeof createState.response.reviewId === "string" &&
+    createState.response.reviewId.length > 0
+      ? {
+          reviewId: createState.response.reviewId,
+          title:
+            typeof createState.response.title === "string"
+              ? createState.response.title
+              : "",
+          ratings:
+            typeof createState.response.ratings === "string"
+              ? createState.response.ratings
+              : "",
+        }
+      : null;
 
   const isCreate = props.mode === "create" && recoveredEdit === null;
   const actionState: ActionState = isCreate ? createState : updateState;
@@ -83,33 +102,22 @@ export function ReviewForm(props: ReviewFormProps) {
     recoveredEdit?.ratings ??
     (props.mode === "edit" ? props.initialRatings : undefined);
 
-  useEffect(() => {
-    if (createState.response?.code !== "REVIEW_EXISTS") return;
-    const reviewId = createState.response.reviewId;
-    if (typeof reviewId !== "string" || reviewId.length === 0) return;
-
-    setAwaitingResume(false);
-    setRecoveredEdit({
-      reviewId,
-      title:
-        typeof createState.response.title === "string"
-          ? createState.response.title
-          : "",
-      ratings:
-        typeof createState.response.ratings === "string"
-          ? createState.response.ratings
-          : "",
-    });
-  }, [createState]);
-
-  useEffect(() => {
-    if (createState.response?.code !== "RETRY") return;
-    const next = createState.response.resumePage;
-    if (typeof next === "number" && next >= 1) {
-      setResumePage(String(next));
+  // React's "adjusting state during render" pattern (not an effect): fires
+  // exactly once per new `createState`, same as the effect it replaces, but
+  // avoids a set-state-only effect (react-hooks/set-state-in-effect). The
+  // `REVIEW_EXISTS` case needs no branch here — `recoveredEdit` above is
+  // derived straight from `createState`, so there's nothing left to persist.
+  const [processedCreateState, setProcessedCreateState] = useState(createState);
+  if (processedCreateState !== createState) {
+    setProcessedCreateState(createState);
+    if (createState.response?.code === "RETRY") {
+      const next = createState.response.resumePage;
+      if (typeof next === "number" && next >= 1) {
+        setResumePage(String(next));
+      }
+      setAwaitingResume(true);
     }
-    setAwaitingResume(true);
-  }, [createState]);
+  }
 
   const titleDefault =
     (typeof actionState.payload?.title === "string"
@@ -128,10 +136,13 @@ export function ReviewForm(props: ReviewFormProps) {
 
   // RatingInput is remounted by key whenever the defaults change (a failed
   // submit, or create self-switching into edit), which resets its internal
-  // state -- so drop the mirrored value at the same time.
-  useEffect(() => {
+  // state -- so drop the mirrored value at the same time, during render
+  // rather than via a set-state-only effect.
+  const [processedRatingFieldKey, setProcessedRatingFieldKey] = useState(ratingFieldKey);
+  if (processedRatingFieldKey !== ratingFieldKey) {
+    setProcessedRatingFieldKey(ratingFieldKey);
     setPickedRating(null);
-  }, [ratingFieldKey]);
+  }
 
   const effectiveRating = pickedRating ?? ratingsDefault;
 

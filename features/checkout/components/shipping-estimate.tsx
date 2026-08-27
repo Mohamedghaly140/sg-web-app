@@ -39,17 +39,31 @@ export function ShippingEstimate({
   const [error, setError] = useState<string | null>(null);
   const requestIdRef = useRef(0);
 
+  // Clears the stale result the instant the destination changes, via React's
+  // "adjusting state during render" pattern rather than a set-state-only
+  // effect (react-hooks/set-state-in-effect) — `onResolved` still has to run
+  // from the effect below since it updates the parent, not this component.
+  const [renderedFor, setRenderedFor] = useState({ country, governorate, city });
+  if (
+    renderedFor.country !== country ||
+    renderedFor.governorate !== governorate ||
+    renderedFor.city !== city
+  ) {
+    setRenderedFor({ country, governorate, city });
+    setFee(null);
+    setError(null);
+  }
+
   useEffect(() => {
+    // Invalidate any in-flight request unconditionally so a stale fetch from
+    // a previous destination can never resolve into a cleared field.
+    const requestId = ++requestIdRef.current;
+
     if (!governorate) {
-      setFee(null);
-      setError(null);
       onResolved(null);
       return;
     }
 
-    const requestId = ++requestIdRef.current;
-    setFee(null);
-    setError(null);
     onResolved(null);
 
     startTransition(() => {

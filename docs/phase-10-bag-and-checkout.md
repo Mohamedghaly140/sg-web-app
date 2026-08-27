@@ -39,24 +39,24 @@
 
 ### 10.4 S6 Guest checkout
 
-- [ ] Keep the existing four-file wizard shape and bring it onto the shared rail from 10.2 with its own enum: `01 Contact / 02 Shipping / 03 Payment / 04 Review`. Unlike the registered flow, **the guest rail is unaffected by GAP-6** — its step `02` is the address form, which is real.
-- [ ] Compose step 01 as a two-column field grid — Full name, Phone, then a full-width Email carrying the design's label, "Email — receives the receipt and your tracking link".
-- [ ] Compose step 02 as a three-column field grid — Country, Governorate, City, Area, Phone at this address, optional Postal code — plus a full-width Street address and courier details, then the 12.5px fee preview row from `GET /shipping/fee`.
-- [ ] Render `SHIPPING_NOT_AVAILABLE` inline under the city and governorate fields. The design pairs it with a "message the atelier" fallback, which links to `/contact` once Phase 11 lands — until then, omit the link rather than pointing at a route that does not exist.
-- [ ] Close the summary card with the design's guest copy about the 30-day tracking link and claiming the order later with the same email.
-- [ ] Preserve the guest identity plumbing exactly: `POST /orders/guest` carries nested `contact` and `shipping` objects and is sent with the anonymous cart identity, and a successful guest checkout **deletes** `sg_cart_session` — one of the three deletion events, which take precedence over refresh.
+- [x] Keep the existing four-file wizard shape and bring it onto the shared rail from 10.2 with its own enum: `01 Contact / 02 Shipping / 03 Payment / 04 Review`. Unlike the registered flow, **the guest rail is unaffected by GAP-6** — its step `02` is the address form, which is real.
+- [x] Compose step 01 as a two-column field grid — Full name, Phone, then a full-width Email carrying the design's label, "Email — receives the receipt and your tracking link".
+- [x] Compose step 02 as a three-column field grid — Country, Governorate, City, Area, Phone at this address, optional Postal code — plus a full-width Street address and courier details, then the 12.5px fee preview row from `GET /shipping/fee`.
+- [x] Render `SHIPPING_NOT_AVAILABLE` inline under the city and governorate fields. The design pairs it with a "message the atelier" fallback, which links to `/contact` once Phase 11 lands — until then, omit the link rather than pointing at a route that does not exist.
+- [x] Close the summary card with the design's guest copy about the 30-day tracking link and claiming the order later with the same email.
+- [x] Preserve the guest identity plumbing exactly: `POST /orders/guest` carries nested `contact` and `shipping` objects and is sent with the anonymous cart identity, and a successful guest checkout **deletes** `sg_cart_session` — one of the three deletion events, which take precedence over refresh.
 
 ### 10.5 S7 Order confirmation
 
-- [ ] Compose `features/checkout/components/order-confirmation.tsx` as the designed 760px centred column: a kicker, a 36px `h2` thanking the customer by name, a justified 56ch paragraph naming `humanOrderId` in body colour with tabular figures, a hairline, a three-column meta band (Status tag, Payment, Delivery), a hairline, the lines table with numerics right-aligned, a right-aligned 300px money block, a hairline, the claim card with a Create-account primary, then `Track this order` and `Continue shopping`.
-- [ ] **Do not introduce a `/checkout/success` route.** This component is rendered inline as a success state by *both* flows — `registered-checkout-content.tsx` and `guest-checkout-wizard.tsx` — rather than being a page. The designed screen fits the existing component, and both flows pick it up from one edit.
-- [ ] Read every value from the 201 response body. `totalOrderPrice = itemsSubtotal − discountApplied + shippingFees` is the server's arithmetic, not ours.
-- [ ] Keep the guest claim rule from Phase 6: the response carries `claimToken: "sent-by-email"` and the real token exists only in the email. **Never fabricate or display a claim token.**
-- [ ] Omit the "2–4 working days" line from the Delivery meta cell. That figure has no source field (**GAP-6**); render the destination and fee only.
+- [x] Compose `features/checkout/components/order-confirmation.tsx` as the designed 760px centred column: a kicker, a 36px `h2` thanking the customer by name, a justified 56ch paragraph naming `humanOrderId` in body colour with tabular figures, a hairline, a three-column meta band (Status tag, Payment, Delivery), a hairline, the lines table with numerics right-aligned, a right-aligned 300px money block, a hairline, the claim card with a Create-account primary, then `Track this order` and `Continue shopping`.
+- [x] **Do not introduce a `/checkout/success` route.** This component is rendered inline as a success state by *both* flows — `registered-checkout-content.tsx` and `guest-checkout-wizard.tsx` — rather than being a page. The designed screen fits the existing component, and both flows pick it up from one edit.
+- [x] Read every value from the 201 response body. `totalOrderPrice = itemsSubtotal − discountApplied + shippingFees` is the server's arithmetic, not ours.
+- [x] Keep the guest claim rule from Phase 6: the response carries `claimToken: "sent-by-email"` and the real token exists only in the email. **Never fabricate or display a claim token.**
+- [x] Omit the "2–4 working days" line from the Delivery meta cell. That figure has no source field (**GAP-6**); render the destination and fee only.
 
 ### 10.6 Correction states
 
-- [ ] Keep the reusable cart error mapping keyed by `code` and verify each surface still renders after the re-layout. Branch on `code`, never on `message`.
+- [x] Keep the reusable cart error mapping keyed by `code` and verify each surface still renders after the re-layout. Branch on `code`, never on `message`.
 
 | Case | Where | Treatment |
 |---|---|---|
@@ -67,7 +67,7 @@
 | `SHIPPING_NOT_AVAILABLE` (422) | shipping step | inline under city/governorate, previewed early |
 | `PAYMENT_METHOD_UNAVAILABLE` (422) | payment step | CARD stays disabled and unsubmittable |
 
-- [ ] Keep coupon preview on `POST /coupons/validate` (10/60s per IP) rendering its discount as an accent line under the field, labelled as an estimate revalidated at checkout.
+- [x] Keep coupon preview on `POST /coupons/validate` (10/60s per IP) rendering its discount as an accent line under the field, labelled as an estimate revalidated at checkout.
 
 ## Definition of Done
 
