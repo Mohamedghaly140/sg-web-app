@@ -18,19 +18,19 @@ Until it is answered, this phase follows the repo's established precedent — th
 
 ### 11.1 Route and feature scaffold
 
-- [ ] Create `app/contact/page.tsx` as a thin page rendering `ContactFeature`, with `generateMetadata`. Keep it a Server Component; the two interactive forms are the only client boundaries.
-- [ ] Create `features/contact/` following the house shape: `index.tsx` exporting a default `ContactFeature` Server Component, `components/contact-form.tsx`, `components/order-help-form.tsx`, and `schema/contact-message-schema.ts`.
-- [ ] Add `lib/constants/atelier.ts` as the single source for the atelier's address, opening hours, phone, email and WhatsApp number. **Mark every value as a placeholder awaiting client sign-off, and do not invent a phone number** — a fabricated contact detail is materially worse than a visibly missing one. If a value has not been supplied, omit that row rather than filling it.
-- [ ] Add `/contact` to the Phase 8 footer row, and note the route for `app/sitemap.ts` in Phase 15.
+- [x] Create `app/contact/page.tsx` as a thin page rendering `ContactFeature`, with `generateMetadata`. Keep it a Server Component; the two interactive forms are the only client boundaries.
+- [x] Create `features/contact/` following the house shape: `index.tsx` exporting a default `ContactFeature` Server Component, `components/contact-form.tsx`, `components/order-help-form.tsx`, and `schema/contact-message-schema.ts`.
+- [x] Add `lib/constants/atelier.ts` as the single source for the atelier's address, opening hours, phone, email and WhatsApp number. **Mark every value as a placeholder awaiting client sign-off, and do not invent a phone number** — a fabricated contact detail is materially worse than a visibly missing one. If a value has not been supplied, omit that row rather than filling it.
+- [x] Add `/contact` to the Phase 8 footer row, and note the route for `app/sitemap.ts` in Phase 15.
 
 ### 11.2 Left column — atelier facts and order help
 
-- [ ] Compose the left column per the design: a kicker, a 38px/1.06 `h2`, 46ch of justified copy through `.measure`, a hairline, then a two-column facts block (The atelier: address and hours; Direct: phone in tabular figures, email link, and the WhatsApp note), a hairline, the Order help card, and a 220px `.plate` for the map or atelier photograph.
-- [ ] Flag the map/photograph as a **content gap**. Ship the plate placeholder rather than embedding a third-party map — a `<script>` from an external map provider would also be the app's first such dependency and needs its own decision.
-- [ ] Build the **Order help** card: the design's copy, a tracking-code input, and a `Find order` primary. This half of the screen is fully backed by the contract and must actually work.
-- [ ] Reuse the existing pieces rather than writing new ones: `features/orders/schema/claim-token-schema.ts` for the exact 64-character validation, and `features/orders/queries/get-guest-order.ts` as the already-implemented lookup.
-- [ ] **Navigate to `/orders/track/[token]`; do not fetch the order into the contact page.** Phase 6 established that the tracking token may appear only in that one browser path and its server-side call. A client-side `router.push` to the tracking route puts the token exactly where it is already permitted; a contact-page Server Action that returns order data would create a **second** surface holding order data with its own leak paths, its own caching questions, and its own error envelope. Validate the token's shape client-side, then navigate.
-- [ ] Honour the tracking route's existing rules: `CLAIM_TOKEN_INVALID` produces **one** message — "This tracking link is invalid or has expired" — with no distinction between invalid and expired; the lookup is limited to 10/60s; and nothing auto-retries or polls.
+- [x] Compose the left column per the design: a kicker, a 38px/1.06 `h2`, 46ch of justified copy through `.measure`, a hairline, then a two-column facts block (The atelier: address and hours; Direct: phone in tabular figures, email link, and the WhatsApp note), a hairline, the Order help card, and a 220px `.plate` for the map or atelier photograph.
+- [x] Flag the map/photograph as a **content gap**. Ship the plate placeholder rather than embedding a third-party map — a `<script>` from an external map provider would also be the app's first such dependency and needs its own decision.
+- [x] Build the **Order help** card: the design's copy, a tracking-code input, and a `Find order` primary. This half of the screen is fully backed by the contract and must actually work.
+- [x] Reuse the existing pieces rather than writing new ones: `features/orders/schema/claim-token-schema.ts` for the exact 64-character validation, and `features/orders/queries/get-guest-order.ts` as the already-implemented lookup.
+- [x] **Navigate to `/orders/track/[token]`; do not fetch the order into the contact page.** Phase 6 established that the tracking token may appear only in that one browser path and its server-side call. A client-side `router.push` to the tracking route puts the token exactly where it is already permitted; a contact-page Server Action that returns order data would create a **second** surface holding order data with its own leak paths, its own caching questions, and its own error envelope. Validate the token's shape client-side, then navigate.
+- [x] Honour the tracking route's existing rules: `CLAIM_TOKEN_INVALID` produces **one** message — "This tracking link is invalid or has expired" — with no distinction between invalid and expired; the lookup is limited to 10/60s; and nothing auto-retries or polls.
 
 ### 11.3 Right column — the message form
 
