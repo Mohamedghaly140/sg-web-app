@@ -59,6 +59,8 @@
 
 ## Definition of Done
 
+> **Status:** all 6.1–6.6 tasks were implemented (see `features/orders/`) but `docs/README.md` still read "in progress"; corrected after confirming the code against this task list and re-running `bunx tsc --noEmit`, `bun lint`, and `bun run build`, all green. The DoD bullets below describing live/manual verification (a real second-browser status change, a forced timeout/claim retry) have not been re-confirmed against a running backend as part of this correction.
+
 - Registered order history filters and paginates through URL state; hard refresh preserves the selected status/page and no interval-based polling exists.
 - Order detail renders permanent line snapshots and totals without client arithmetic or shipping-address UI, matching GAP-4.
 - Private-session guest flow passes: emailed tracking URL → public detail → inline sign-in → claim → owned detail/history; a consumed or invalid URL shows the same generic message.

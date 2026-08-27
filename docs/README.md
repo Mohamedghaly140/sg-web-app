@@ -21,8 +21,8 @@
 | 2 | [phase-2-guest-cart.md](./phase-2-guest-cart.md) | **in progress** | Guest cart page plus interactive drawer/badge and complete `sg_cart_session` lifecycle | 05 |
 | 3 | [phase-3-auth-cart-merge.md](./phase-3-auth-cart-merge.md) | **done** | Clerk auth, account gate, optional/auth BFF modes, implicit guest-cart merge | 00 (auth) |
 | 4 | [phase-4-account.md](./phase-4-account.md) | **done** | Authenticated wishlist, own-review CRUD, and saved addresses | 03 (write), 04, 08 |
-| 5 | [phase-5-checkout.md](./phase-5-checkout.md) | **in progress** | Shipping estimate, coupon preview, registered and guest CASH checkout | 06, 07, 09 |
-| 6 | [phase-6-orders.md](./phase-6-orders.md) | **in progress** | Account order history/detail, guest tracking/claim, self-cancel | 10 |
+| 5 | [phase-5-checkout.md](./phase-5-checkout.md) | **done** | Shipping estimate, coupon preview, registered and guest CASH checkout | 06, 07, 09 |
+| 6 | [phase-6-orders.md](./phase-6-orders.md) | **done** | Account order history/detail, guest tracking/claim, self-cancel | 10 |
 | 7 | [phase-7-classical-foundation.md](./phase-7-classical-foundation.md) | **done** | Classical tokens, ramps, type scale, fonts, shadows, radius, `.plate`, tabular figures, money format | — |
 | 8 | [phase-8-primitives-and-shell.md](./phase-8-primitives-and-shell.md) | **done** | All `components/ui` primitives, shared kit, header/footer/sidenav, account sub-nav, density flip | — |
 | 9 | [phase-9-catalogue-surfaces.md](./phase-9-catalogue-surfaces.md) | **in progress** | S1 Home, S2 Listing, S3 Product detail, S8 Categories | 01, 02, 03 (read) |
@@ -40,6 +40,8 @@ Phases 7–14 apply the approved visual design in `docs/design_handoff_sg_storef
 Hardening was renumbered from 7 to 15 rather than left in place. Its own prerequisite already read *"final brand tokens and production content available"*, and the handoff **is** those tokens: measuring LCP against Inter/Playfair, or running a contrast pass on a palette we are about to replace, measures a skin the storefront is about to discard. Note that the "Phase 7" references in `docs/integration/storefront/` refer to the **backend's** phase numbering (Geidea card payments), which is a separate namespace.
 
 **Hard gate:** Phases 2, 5 and 6 must read **done** before Phase 7 starts. Re-skinning underneath in-flight cart, checkout and orders work collides in exactly the files Phases 10 and 12 rewrite hardest.
+
+**Gate status:** Phases 5 and 6 were in fact already done when Phase 7 started — their tracker rows just hadn't been updated to say so (corrected 2026-08-28). **Phase 2 is the one real violation**: it is still *in progress* (one outstanding price/stock-drift check) while Phases 7–11 have already proceeded. That drift check should be run and Phase 2 closed out before Phase 12 touches the cart-adjacent account area.
 
 **Two open product decisions** are recorded in `phase-8-primitives-and-shell.md` §8.10 and must be answered by a person, not resolved inside a commit: the brand-name conflict (the app ships "Safa Ghaly", every designed screen reads "SG·COUTURE"), and "The Makers", which appears in the designed nav and on the home page with no backend content source and no route.
 
