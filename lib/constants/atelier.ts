@@ -13,4 +13,9 @@ export type AtelierContact = {
   whatsapp?: string;
 };
 
-export const atelier: AtelierContact = {};
+export const atelier: AtelierContact = {
+  whatsapp: "+201020733663",
+  phone: "+201020733663",
+  email: "info@safaghaly.com",
+  hours: "10:00 AM - 7:00 PM",
+};

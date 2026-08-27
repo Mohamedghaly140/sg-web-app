@@ -6,10 +6,10 @@ import { type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { claimTokenSchema } from "@/features/orders/schema/claim-token-schema";
-
-const INVALID_TOKEN_MESSAGE =
-  "That doesn't look like a valid tracking link or code.";
+import {
+  parseTrackingInput,
+  TRACKING_INPUT_INVALID_MESSAGE,
+} from "@/features/orders/lib/tracking-input";
 
 export function OrderTrackLookup() {
   const router = useRouter();
@@ -20,19 +20,17 @@ export function OrderTrackLookup() {
 
     const formData = new FormData(event.currentTarget);
     const rawValue = formData.get("trackingToken");
-    const value = typeof rawValue === "string" ? rawValue.trim() : "";
-    const token = value.includes("/")
-      ? (value.split("/").filter(Boolean).at(-1) ?? "")
-      : value;
-    const parsed = claimTokenSchema.safeParse(token);
+    const token = parseTrackingInput(
+      typeof rawValue === "string" ? rawValue : "",
+    );
 
-    if (!parsed.success) {
-      setError(INVALID_TOKEN_MESSAGE);
+    if (!token) {
+      setError(TRACKING_INPUT_INVALID_MESSAGE);
       return;
     }
 
     setError(null);
-    router.push(`/orders/track/${parsed.data}`);
+    router.push(`/orders/track/${token}`);
   }
 
   function handleInputChange() {
