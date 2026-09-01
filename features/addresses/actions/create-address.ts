@@ -16,7 +16,7 @@ export async function createAddressAction(
 ): Promise<ActionState> {
   try {
     const parsed = createAddressSchema.parse(Object.fromEntries(formData));
-    const { isDefault, postalCode, latitude, longitude, ...required } = parsed;
+    const { postalCode, latitude, longitude, ...required } = parsed;
 
     await apiFetch("/addresses", {
       method: "POST",
@@ -25,7 +25,6 @@ export async function createAddressAction(
         ...(postalCode !== undefined ? { postalCode } : {}),
         ...(latitude !== undefined ? { latitude } : {}),
         ...(longitude !== undefined ? { longitude } : {}),
-        ...(isDefault === "true" ? { isDefault: true } : {}),
       },
       auth: "required",
     });

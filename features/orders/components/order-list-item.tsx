@@ -44,8 +44,8 @@ export function OrderListItem({ order }: OrderListItemProps) {
                 {formatDate(order.createdAt)}
                 {" · "}
                 {order.itemsCount === 1
-                  ? "1 item"
-                  : `${order.itemsCount} items`}
+                  ? "1 line"
+                  : `${order.itemsCount} lines`}
               </p>
             </div>
             {showStepper ? (

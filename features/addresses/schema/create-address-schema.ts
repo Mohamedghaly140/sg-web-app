@@ -27,8 +27,6 @@ export const createAddressSchema = z
     postalCode: postalCodeSchema,
     latitude: latitudeSchema,
     longitude: longitudeSchema,
-    // Checkbox: checked → "true"; unchecked → key absent from FormData.
-    isDefault: z.literal("true").optional(),
   })
   .strict();
 

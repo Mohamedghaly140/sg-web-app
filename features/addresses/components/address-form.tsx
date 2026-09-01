@@ -97,22 +97,10 @@ export function AddressForm(props: AddressFormProps) {
         actionState={actionState}
       />
 
-      {isCreate ? (
-        props.hasExistingAddresses ? (
-          <label className="flex items-center gap-2 text-sm text-foreground">
-            <input
-              type="checkbox"
-              name="isDefault"
-              value="true"
-              className="size-4 accent-primary"
-            />
-            Set as default address
-          </label>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            This will be your default address.
-          </p>
-        )
+      {isCreate && !props.hasExistingAddresses ? (
+        <p className="text-sm text-muted-foreground">
+          This will be your default address.
+        </p>
       ) : null}
 
       <SubmitButton
