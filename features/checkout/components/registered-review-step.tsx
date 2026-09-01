@@ -8,7 +8,7 @@ import type { Address } from "@/features/addresses/types/address";
 import { CheckoutCartSummary } from "@/features/checkout/components/checkout-cart-summary";
 import { CouponForm } from "@/features/checkout/components/coupon-form";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
-import type { ShippingFee } from "@/features/checkout/types/shipping";
+import type { ShippingFee } from "@/features/shipping/types/shipping";
 import type { Cart } from "@/features/cart/types/cart";
 import type { StockErrorEntry, VariantErrorEntry } from "@/lib/api/api-error";
 

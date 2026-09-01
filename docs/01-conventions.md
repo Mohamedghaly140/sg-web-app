@@ -192,6 +192,12 @@ The root `proxy.ts` uses `clerkMiddleware` to redirect signed-out visitors only 
 Filters, sorting, and pagination live in the URL. Each feature defines its parameter schema in `features/<name>/hooks/`, split across two files by client/server boundary — a plain `<name>-search-params.ts` module (no directive) exporting the parsers, `createSearchParamsCache`, and the parsed type, and a `"use client"` `use-<name>-params.ts` module that imports those parsers and wraps `useQueryStates` in a `use<Name>Params()` hook. Do not put both in one `"use client"` file: Next.js still lets a Server Component import plain values from a client-directive module at the type level, but calling a server-only export (the cache's `.parse()`, or a mapper function) from such a module throws at runtime, since the whole file compiles as a client reference once it carries the directive. Server Components (`page.tsx`, RSC result components) import the cache/mapper/type from the plain module; Client Components import the hook from the `"use client"` module (they may re-export the type from either, since type-only exports are erased and carry no runtime boundary).
 
 - Client updates use `shallow: false` so the Server Component tree receives the new URL state.
+- **Addressable panel and step state also belongs in the URL**, not only filters, sorting and
+  pagination: checkout's wizard `step` and the addresses screen's `address` param (`"new"` or an
+  address id, `features/addresses/hooks/addresses-search-params.ts`) are both nuqs params. The test is
+  whether the state is worth a shareable, refresh-surviving address. Ephemeral disclosure — menus,
+  dropdowns, drawers, a confirm dialog — stays in the nearest Client Component. Resolve an unknown or
+  foreign id to the closed state; never `notFound()` on it.
 - Parameter names and formats match the backend wire contract exactly. Do not rename API fields for the URL.
 - CSV parameters such as sizes and colors remain CSV strings and pass through verbatim; do not silently convert them into a different URL shape.
 - Apply defaults and validation in the shared parser definition so server and client cannot drift.

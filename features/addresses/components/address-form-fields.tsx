@@ -11,6 +11,7 @@ import {
   EGYPT_GOVERNORATE_NAMES,
   getCitiesForGovernorate,
 } from "@/lib/constants/egypt-locations";
+import { cn } from "@/lib/utils";
 
 export type AddressFieldValues = {
   alias?: string;
@@ -28,6 +29,7 @@ export type AddressFieldValues = {
 export type AddressFormFieldsProps = {
   mode: "registered" | "guest";
   layout?: "stack" | "grid";
+  columns?: 2 | 3;
   namePrefix?: string;
   defaultValues?: AddressFieldValues;
   actionState?: ActionState;
@@ -42,6 +44,7 @@ export type AddressFormFieldsProps = {
 export function AddressFormFields({
   mode,
   layout = "stack",
+  columns = 3,
   namePrefix,
   defaultValues,
   actionState,
@@ -89,7 +92,27 @@ export function AddressFormFields({
 
   if (layout === "grid") {
     return (
-      <div className="grid grid-cols-3 gap-3">
+      <div
+        className={cn(
+          "grid gap-3",
+          columns === 2 ? "grid-cols-2" : "grid-cols-3",
+        )}
+      >
+        {mode === "registered" ? (
+          <div className="col-span-full">
+            <FormControl
+              name={name("alias")}
+              label="Label for this address"
+              type="text"
+              maxLength={120}
+              defaultValue={
+                payloadString("alias") ?? defaultValues?.alias ?? ""
+              }
+              actionState={actionState}
+            />
+          </div>
+        ) : null}
+
         <FormControl
           name={name("country")}
           label="Country"

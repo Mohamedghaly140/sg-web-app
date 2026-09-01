@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { ShippingFee } from "@/features/checkout/types/shipping";
+import type { ShippingFee } from "@/features/shipping/types/shipping";
 import { apiFetch } from "@/lib/api/http";
 
 export type GetShippingFeeParams = {

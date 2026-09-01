@@ -229,10 +229,11 @@ Three flows deserve names because multiple phases depend on them:
 | Cart drawer, header badge, coupon preview | TanStack Query cache | Browser memory; cart starts from root-layout `initialData` |
 | Wishlist toggle state | TanStack Query cache | Browser memory; optimistic with rollback |
 | Filters, sorting, and pagination | URL through nuqs | Shareable URL; API wire names and formats |
+| Addressable panel and step state | URL through nuqs | Checkout `step`, addresses `address`; shareable and refresh-surviving; unknown values resolve to closed |
 | Guest cart identity | httpOnly `sg_cart_session` cookie | Sliding seven days after successful anonymous mutations; server-only read/write; sent upstream as `X-Cart-Session` |
 | Redirect success feedback | `toast` flash cookie | Consumed by `RedirectToast` after navigation |
 | Signed-in identity and session | Clerk | Fresh server-side JWT per backend request; JWT never enters application client state |
-| Local disclosure state | Nearest Client Component | Non-persistent; only menus, dialogs, drawers, and similar UI state |
+| Local disclosure state | Nearest Client Component | Non-persistent; only menus, dialogs, drawers, and similar ephemeral UI state that is not worth an address |
 
 ## Integration points & failure domains
 

@@ -11,8 +11,8 @@ import {
 
 import { Money } from "@/components/shared/money";
 import { Badge } from "@/components/ui/badge";
-import { getShippingFeeAction } from "@/features/checkout/actions/get-shipping-fee";
-import type { ShippingFee } from "@/features/checkout/types/shipping";
+import { getShippingFeeAction } from "@/features/shipping/actions/get-shipping-fee";
+import type { ShippingFee } from "@/features/shipping/types/shipping";
 
 export type ShippingEstimateProps = {
   country: string;

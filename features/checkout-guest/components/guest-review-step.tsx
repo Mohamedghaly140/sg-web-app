@@ -9,7 +9,7 @@ import { CouponForm } from "@/features/checkout/components/coupon-form";
 import { PaymentMethodSelect } from "@/features/checkout/components/payment-method-select";
 import type { GuestCheckoutStep } from "@/features/checkout/hooks/checkout-search-params";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
-import type { ShippingFee } from "@/features/checkout/types/shipping";
+import type { ShippingFee } from "@/features/shipping/types/shipping";
 import type { Cart } from "@/features/cart/types/cart";
 import type { StockErrorEntry, VariantErrorEntry } from "@/lib/api/api-error";
 

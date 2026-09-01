@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/sheet";
 import { AddressForm } from "@/features/addresses/components/address-form";
 import type { Address } from "@/features/addresses/types/address";
-import { ShippingEstimate } from "@/features/checkout/components/shipping-estimate";
-import type { ShippingFee } from "@/features/checkout/types/shipping";
+import { ShippingEstimate } from "@/features/shipping/components/shipping-estimate";
+import type { ShippingFee } from "@/features/shipping/types/shipping";
 import { DEFAULT_COUNTRY } from "@/lib/constants/egypt-locations";
 
 export type RegisteredAddressStepProps = {

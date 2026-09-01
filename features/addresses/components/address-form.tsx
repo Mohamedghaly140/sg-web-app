@@ -1,6 +1,11 @@
 "use client";
 
-import { useActionState, useState, useTransition } from "react";
+import {
+  useActionState,
+  useState,
+  useTransition,
+  type ReactNode,
+} from "react";
 import { toast } from "sonner";
 
 import Form from "@/components/shared/form/form";
@@ -17,16 +22,28 @@ import {
 } from "@/features/addresses/components/address-form-fields";
 import type { Address } from "@/features/addresses/types/address";
 
-type AddressFormCreateProps = {
-  variant: "create";
-  hasExistingAddresses: boolean;
+type AddressFormSharedProps = {
   onDone?: () => void;
+  layout?: "stack" | "grid";
+  columns?: 2 | 3;
+  onDestinationChange?: (destination: {
+    country: string;
+    governorate: string;
+    city: string;
+  }) => void;
+  footer?: ReactNode;
+  actions?: ReactNode;
+  className?: string;
 };
 
-type AddressFormEditProps = {
+type AddressFormCreateProps = AddressFormSharedProps & {
+  variant: "create";
+  hasExistingAddresses: boolean;
+};
+
+type AddressFormEditProps = AddressFormSharedProps & {
   variant: "edit";
   address: Address;
-  onDone?: () => void;
 };
 
 export type AddressFormProps = AddressFormCreateProps | AddressFormEditProps;
@@ -85,7 +102,9 @@ export function AddressForm(props: AddressFormProps) {
       actionState={actionState}
       onSuccess={isCreate ? () => props.onDone?.() : undefined}
       suppressBuiltInToasts={!isCreate}
-      className="rounded-md border border-border p-4"
+      className={
+        props.className ?? "rounded-md border border-border p-4"
+      }
     >
       {!isCreate ? (
         <input type="hidden" name="id" value={props.address.id} />
@@ -93,8 +112,11 @@ export function AddressForm(props: AddressFormProps) {
 
       <AddressFormFields
         mode="registered"
+        layout={props.layout}
+        columns={props.columns}
         defaultValues={defaultValues}
         actionState={actionState}
+        onDestinationChange={props.onDestinationChange}
       />
 
       {isCreate && !props.hasExistingAddresses ? (
@@ -103,9 +125,13 @@ export function AddressForm(props: AddressFormProps) {
         </p>
       ) : null}
 
-      <SubmitButton
-        label={isCreate ? "Save address" : "Update address"}
-      />
+      {props.footer}
+
+      {props.actions ?? (
+        <SubmitButton
+          label={isCreate ? "Save address" : "Update address"}
+        />
+      )}
     </Form>
   );
 }

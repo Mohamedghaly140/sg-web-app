@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { LucideMapPin } from "lucide-react";
 
 import { EmptyState } from "@/components/shared/empty-state";
+import { Button } from "@/components/ui/button";
 import { AddressListItem } from "@/features/addresses/components/address-list-item";
 import type { Address } from "@/features/addresses/types/address";
 
@@ -17,6 +19,22 @@ export function AddressList({ addresses }: AddressListProps) {
         }
         title="No saved addresses"
         description="Add an address to use at checkout."
+        action={
+          <Button
+            render={
+              <Link
+                href={{
+                  pathname: "/account/addresses",
+                  query: { address: "new" },
+                }}
+                scroll={false}
+              />
+            }
+            nativeButton={false}
+          >
+            Add your first address
+          </Button>
+        }
       />
     );
   }
@@ -25,7 +43,7 @@ export function AddressList({ addresses }: AddressListProps) {
   // client-re-sort — including after delete promotes a new default; trust
   // revalidatePath + the next server read.
   return (
-    <ul className="divide-y divide-border border border-border bg-card shadow-sm">
+    <ul className="flex flex-col gap-3">
       {addresses.map((address) => (
         <AddressListItem key={address.id} address={address} />
       ))}

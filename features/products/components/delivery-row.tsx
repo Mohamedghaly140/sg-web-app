@@ -1,4 +1,4 @@
-import { getShippingFee } from "@/features/checkout/queries/get-shipping-fee";
+import { getShippingFee } from "@/features/shipping/queries/get-shipping-fee";
 import { formatEGP } from "@/lib/format";
 
 export async function DeliveryRow() {

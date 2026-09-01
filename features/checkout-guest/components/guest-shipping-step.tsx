@@ -8,8 +8,8 @@ import type { ActionState } from "@/components/shared/form/utils/to-action-state
 import { TextareaControl } from "@/components/shared/textarea-control/textarea-control";
 import { Button } from "@/components/ui/button";
 import { AddressFormFields } from "@/features/addresses/components/address-form-fields";
-import { ShippingEstimate } from "@/features/checkout/components/shipping-estimate";
-import type { ShippingFee } from "@/features/checkout/types/shipping";
+import { ShippingEstimate } from "@/features/shipping/components/shipping-estimate";
+import type { ShippingFee } from "@/features/shipping/types/shipping";
 import { DEFAULT_COUNTRY } from "@/lib/constants/egypt-locations";
 
 export type GuestShippingStepProps = {

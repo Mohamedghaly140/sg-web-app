@@ -1,7 +1,7 @@
 "use server";
 
-import { shippingFeeInputSchema } from "@/features/checkout/schema/shipping-fee-schema";
-import type { ShippingFee } from "@/features/checkout/types/shipping";
+import { shippingFeeInputSchema } from "@/features/shipping/schema/shipping-fee-schema";
+import type { ShippingFee } from "@/features/shipping/types/shipping";
 import { apiFetch } from "@/lib/api/http";
 import {
   toInteractiveActionError,

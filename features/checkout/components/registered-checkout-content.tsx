@@ -29,7 +29,7 @@ import {
 } from "@/features/checkout/schema/order-item-schema";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
 import type { OrderStatus } from "@/features/checkout/types/order";
-import type { ShippingFee } from "@/features/checkout/types/shipping";
+import type { ShippingFee } from "@/features/shipping/types/shipping";
 import { cartKeys } from "@/features/cart/hooks/cart-keys";
 import { fetchCurrentCart, useCart } from "@/features/cart/hooks/use-cart";
 import { EMPTY_CART } from "@/features/cart/types/cart";

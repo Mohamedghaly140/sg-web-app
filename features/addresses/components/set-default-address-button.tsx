@@ -32,12 +32,12 @@ export function SetDefaultAddressButton({
   return (
     <Button
       type="button"
-      variant="outline"
+      variant="ghost"
       size="sm"
       disabled={isPending}
       onClick={handleClick}
     >
-      Set as default
+      Make default
     </Button>
   );
 }

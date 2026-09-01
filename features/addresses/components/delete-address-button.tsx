@@ -10,19 +10,29 @@ import { deleteAddressAction } from "@/features/addresses/actions/delete-address
 
 export type DeleteAddressButtonProps = {
   addressId: string;
+  className?: string;
 };
 
-export function DeleteAddressButton({ addressId }: DeleteAddressButtonProps) {
+export function DeleteAddressButton({
+  addressId,
+  className,
+}: DeleteAddressButtonProps) {
   const [isPending, startTransition] = useTransition();
 
   return (
     <ConfirmDialog
       title="Delete this address?"
-      description="This cannot be undone."
+      description="This cannot be undone. If this is your default address, the most recent remaining address becomes the default."
       confirmLabel="Delete"
       variant="destructive"
       trigger={
-        <Button type="button" variant="destructive" size="sm" disabled={isPending}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className={className}
+          disabled={isPending}
+        >
           Delete
         </Button>
       }
