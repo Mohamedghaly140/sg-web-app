@@ -27,6 +27,7 @@ export async function cancelOrderAction(
 
     revalidatePath(`/account/orders/${id}`);
     revalidatePath("/account/orders");
+    revalidatePath("/account");
     return toActionState("SUCCESS", "Order cancelled", formData);
   } catch (error) {
     return fromCancelErrorToActionState(error, idForError, formData);

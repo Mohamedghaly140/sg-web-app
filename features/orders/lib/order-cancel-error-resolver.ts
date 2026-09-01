@@ -19,6 +19,7 @@ export function fromCancelErrorToActionState(
   if (error instanceof ApiError && error.code === "INVALID_STATUS_TRANSITION") {
     revalidatePath(`/account/orders/${id}`);
     revalidatePath("/account/orders");
+    revalidatePath("/account");
     const base = fromErrorToActionState(error, "required", formData);
     return {
       ...base,

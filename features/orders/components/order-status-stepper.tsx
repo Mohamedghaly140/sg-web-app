@@ -29,7 +29,7 @@ const STAGE_INDEX: Partial<Record<OrderStatus, number>> = {
 
 type OrderStatusStepperProps = {
   status: OrderStatus;
-  variant: "row" | "detail";
+  variant: "row" | "detail" | "track";
 };
 
 export function OrderStatusStepper({
@@ -39,6 +39,42 @@ export function OrderStatusStepper({
   const currentIndex = STAGE_INDEX[status];
   if (currentIndex === undefined) {
     return null;
+  }
+
+  if (variant === "track") {
+    return (
+      <ol className="grid grid-cols-4" aria-label="Order progress">
+        {STEPPER_STAGES.map((stage, index) => {
+          const isReached = index <= currentIndex;
+
+          return (
+            <li
+              key={stage.key}
+              aria-current={index === currentIndex ? "step" : undefined}
+              className="flex min-w-0 flex-col gap-2"
+            >
+              <span
+                aria-hidden
+                className={cn(
+                  "w-full border-t",
+                  isReached ? "border-t-accent" : "border-t-border",
+                )}
+              />
+              <span
+                className={cn(
+                  "truncate text-[11px] tracking-[0.08em] uppercase",
+                  isReached
+                    ? "text-accent-strong"
+                    : "text-muted-foreground",
+                )}
+              >
+                {stage.label}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    );
   }
 
   if (variant === "row") {
