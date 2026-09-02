@@ -12,8 +12,12 @@ import {
   AlertTitle,
 } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { WishlistItem } from "@/features/wishlist/components/wishlist-item";
+import {
+  ProductCard,
+  PRODUCT_CARD_ACCOUNT_GRID_SIZES,
+} from "@/features/products/components/product-card";
 import { useWishlist } from "@/features/wishlist/hooks/use-wishlist";
+import { formatDate } from "@/lib/format";
 
 export function WishlistList() {
   const wishlistQuery = useWishlist();
@@ -71,10 +75,20 @@ export function WishlistList() {
   }
 
   return (
-    <ul className="divide-y divide-border border border-border bg-card shadow-sm">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
       {entries.map((entry) => (
-        <WishlistItem entry={entry} key={entry.product.id} />
+        <ProductCard
+          key={entry.product.id}
+          product={entry.product}
+          unavailable={!entry.available}
+          imageSizes={PRODUCT_CARD_ACCOUNT_GRID_SIZES}
+          meta={
+            <p className="text-xs text-muted-foreground">
+              Added {formatDate(entry.addedAt)}
+            </p>
+          }
+        />
       ))}
-    </ul>
+    </div>
   );
 }
