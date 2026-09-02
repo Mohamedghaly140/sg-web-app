@@ -23,8 +23,7 @@ export function fromCancelErrorToActionState(
     const base = fromErrorToActionState(error, "required", formData);
     return {
       ...base,
-      message:
-        "This order's status has changed and can no longer be cancelled.",
+      message: "This order has already moved on.",
     };
   }
 

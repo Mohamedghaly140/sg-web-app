@@ -1,7 +1,8 @@
-"use client";
+import Link from "next/link";
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useOrdersParams } from "@/features/orders/hooks/use-orders-params";
+import { Badge } from "@/components/ui/badge";
+import { buildOrdersHref } from "@/features/orders/components/orders-pagination";
+import type { OrdersSearchParams } from "@/features/orders/hooks/orders-search-params";
 import {
   ORDER_STATUSES,
   type OrderStatus,
@@ -16,45 +17,48 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
   REFUNDED: "Refunded",
 };
 
-const FILTER_OPTIONS = [
-  { value: "all", label: "All" },
+const FILTER_OPTIONS: ReadonlyArray<{
+  value: OrderStatus | null;
+  label: string;
+}> = [
+  { value: null, label: "All" },
   ...ORDER_STATUSES.map((status) => ({
     value: status,
     label: STATUS_LABELS[status],
   })),
-] as const;
+];
 
-export function OrderStatusFilter() {
-  const [params, setParams] = useOrdersParams();
-  const selected = params.status ?? "all";
+type OrderStatusFilterProps = {
+  searchParams: OrdersSearchParams;
+};
 
+export function OrderStatusFilter({ searchParams }: OrderStatusFilterProps) {
   return (
-    <ToggleGroup
-      className="flex max-w-full flex-wrap"
-      variant="outline"
-      size="sm"
-      spacing={0}
-      aria-label="Filter by order status"
-      value={[selected]}
-      onValueChange={(next) => {
-        const value = next[next.length - 1];
-        if (!value) return;
-        setParams({
-          status: value === "all" ? null : (value as OrderStatus),
-          page: 1,
-        });
-      }}
-    >
-      {FILTER_OPTIONS.map((option) => (
-        <ToggleGroupItem
-          key={option.value}
-          value={option.value}
-          type="button"
-          className="shrink-0 px-2.5"
-        >
-          {option.label}
-        </ToggleGroupItem>
-      ))}
-    </ToggleGroup>
+    <nav aria-label="Filter orders by status">
+      <ul className="flex max-w-full flex-wrap gap-2">
+        {FILTER_OPTIONS.map((option) => {
+          const isActive = searchParams.status === option.value;
+
+          return (
+            <li key={option.value ?? "all"}>
+              <Badge
+                variant={isActive ? "outline" : "secondary"}
+                render={
+                  <Link
+                    href={buildOrdersHref(searchParams, {
+                      status: option.value,
+                      page: 1,
+                    })}
+                    aria-current={isActive ? "page" : undefined}
+                  />
+                }
+              >
+                {option.label}
+              </Badge>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
   );
 }

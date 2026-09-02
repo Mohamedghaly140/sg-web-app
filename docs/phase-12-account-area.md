@@ -10,11 +10,12 @@
 
 ## Contract limits this phase must respect
 
-Three parts of the designed account area cannot be built as drawn. All are filed in `docs/backend-contract-gaps.md`, and **none resolve in the design's favour**:
+Four parts of the designed account area cannot be built as drawn. All are filed in `docs/backend-contract-gaps.md`, and **none resolve in the design's favour**:
 
 - **GAP-4 (escalated)** — `GET /orders/:id` returns no shipping address and no notes, so screen S13's `DELIVERING TO` and `NOTE FOR THE COURIER` band has no data. Omit the band.
 - **GAP-7** — no receipt document and no re-send endpoint exists, so screen S13's Receipt card has nothing behind it. Drop the card; do not ship inert buttons.
 - **GAP-8** — order lines carry `productId` but product detail is addressed by `slug`, so `View piece` cannot link. `Buy again` survives because `POST /cart/items` takes `productId`.
+- **GAP-15** — order summaries carry no line previews, so S12 cannot show plates or names on every card. Hydrate only the newest in-progress order and keep the rest summary-only.
 
 ## Tasks
 
@@ -49,15 +50,17 @@ Three parts of the designed account area cannot be built as drawn. All are filed
 - **`layout="stack"` was kept, not replaced.** Checkout's "Add a new address" Sheet (`registered-address-step.tsx`) renders the same `AddressForm`, so the panel opts into the 2-column grid through new optional props (`layout`, `columns`, `onDestinationChange`, `footer`, `actions`) rather than changing the shared default. The stack layout keeps its `latitude`/`longitude` inputs; the panel omits them, and PATCH preserves omitted fields.
 - **Not verified — the browser checklist has not been run.** `bun lint`, `bunx tsc --noEmit` and `bun run build` all pass, but nothing in this task has been exercised against a live backend: the fee row's `SHIPPING_NOT_AVAILABLE` path, the remount-on-address-switch, default promotion after deleting the default, and the checkout/guest-checkout regressions from the `features/shipping` move are all still unchecked.
 
-### 12.4 S12 Orders — **not started** (pre-Classical `order-list-item.tsx` still in place)
+### 12.4 S12 Orders — **done** (code landed 2026-09-02; browser checklist not yet run)
 
-- [ ] Compose the header row — an `h3` with a muted "N orders · newest first" in tabular figures — then the status filter as a tag row (All as an outline tag, the rest as neutral tags), over a hairline. *Current: plain `h1` "Orders" + `ToggleGroup` filter, no count line.*
-- [ ] Compose each order as a card at `gap-3` with three rows: a header row of `humanOrderId` in Cormorant 20px tabular, a status tag, and a right-aligned date and line count; a body row of up to three 46px line-thumbnail plates, a 12.5px two-line summary, and a right-aligned total in Cormorant 18px with a muted "incl. N shipping" beneath; and a status-dependent action row. *Current: `order-list-item.tsx` is a single link row with a generic package icon placeholder — no line-thumbnail plates.*
-- [ ] Vary the action row as designed: a pending unpaid order gets `View order` primary, `Cancel order` secondary, and a help ghost right; a delivered order gets `View order` secondary plus `Buy again` and `Write a review`; a cancelled order renders the whole card at 75% opacity with its summary line stating that stock was returned and the coupon released. *Current: no per-card action row at all — the whole row is just a link to the detail page.*
-- [ ] **Render `Cancel` only when `status === "PENDING" && !isPaid`**, and still handle `409 INVALID_STATUS_TRANSITION` by refetching and showing the new state — "This order has already moved on". The guard is a UX affordance; the server remains authoritative. *Not applicable yet — no cancel action exists on the list card (only on the account-overview in-progress card and the detail page).*
-- [ ] Wire `Buy again` to `POST /cart/items` using the line's `productId`, quantity, colour and size. **Omit `View piece` / product links from order lines** — GAP-8 means there is no slug to link to. *`Buy again` does not exist anywhere in the codebase yet (verified via repo-wide search).*
-- [x] Keep the copy discipline: `itemsCount` is **distinct lines**, so the UI says "lines", never "items". *Fixed: `order-list-item.tsx` now renders `"1 line"` / `"N lines"`, consistent with the account-overview and order-detail surfaces.*
-- [ ] Restyle `orders-results-boundary.tsx`'s stale-results banner, `orders-list-skeleton.tsx` to the plate geometry, and both empty states (no orders, and no matches for a filter). *Current: both still generic (skeleton is plain text-line placeholders, no plates).*
+- [x] Compose the header row — an `h3` with a muted "N orders · newest first" in tabular figures — then the status filter as a tag row (All as an outline tag, the rest as neutral tags), over a hairline. *Landed inside the suspended result so `GET /orders` remains a single identity-scoped read. The same server-rendered filter element is passed to the result and skeleton; its tags are links, not a client `ToggleGroup`, and `use-orders-params.ts` was deleted once it had no consumer.*
+- [x] Compose each order as a card at `gap-3` with three rows: a header row of `humanOrderId` in Cormorant 20px tabular, a status tag, and a right-aligned date and line count; a body row of up to three 46px line-thumbnail plates, a 12.5px two-line summary, and a right-aligned total in Cormorant 18px with a muted "incl. N shipping" beneath; and a status-dependent action row. *Landed as `order-card.tsx`. `GET /orders` has no line data (GAP-15), so only the newest `PENDING`, `PROCESSING`, or `SHIPPED` order is hydrated with one detail read; every other card is deliberately summary-only.*
+- [x] Vary the action row as designed: a pending unpaid order gets `View order` primary, `Cancel order` secondary, and a help ghost right; a delivered order gets `View order` secondary plus `Buy again` and `Write a review`; a cancelled order renders the whole card at 75% opacity with its summary line stating that stock was returned and the coupon released. *Landed with the contract reductions: `Write a review` is omitted because order lines carry no slug (GAP-8), and cancelled copy is hedged because stock/coupon release is documented only for customer self-cancel.*
+- [x] **Render `Cancel` only when `status === "PENDING" && !isPaid`**, and still handle `409 INVALID_STATUS_TRANSITION` by refetching and showing the new state — "This order has already moved on". The guard is a UX affordance; the server remains authoritative. *Landed; the shared confirmation and revalidation path remains intact.*
+- [x] Wire `Buy again` to `POST /cart/items` using the line's `productId`, quantity, colour and size. **Omit `View piece` / product links from order lines** — GAP-8 means there is no slug to link to. *Landed as a strict, authenticated Server Action that adds sequentially, skips only documented unavailable-line errors, returns the last authoritative cart after partial success, and never detail-fetches through page-control-flow helpers.*
+- [x] Keep the copy discipline: `itemsCount` is **distinct lines**, so the UI says "lines", never "items". *Kept across the card header and buy-again result accounting.*
+- [x] Restyle `orders-results-boundary.tsx`'s stale-results banner, `orders-list-skeleton.tsx` to the plate geometry, and both empty states (no orders, and no matches for a filter). *Landed with square boundary edges, card-shaped skeletons, persistent filter controls, and Classical `h3` empty-state titles.*
+
+*The summary contract has no destination or status timestamps, so S12 invents neither: cards show payment method plus paid/unpaid state and only the order creation date. The filter keeps all six real statuses, including `REFUNDED`, even though the handoff omits it.*
 
 ### 12.5 S13 Order detail — **not started** (pre-Classical `order-detail-view.tsx` still in place)
 
@@ -80,7 +83,7 @@ Three parts of the designed account area cannot be built as drawn. All are filed
 
 ## Definition of Done
 
-- All four account screens match `designs/Storefront Screens.dc.html` at 1280px, with the four documented gap reductions applied and each one visible as an omission rather than a placeholder.
+- All four account screens match `designs/Storefront Screens.dc.html` at 1280px, with the five documented gap reductions applied and each one visible as an omission rather than a placeholder.
 - The account sub-nav highlights the correct item on all five account routes, and **no sub-nav item links to a route that does not exist.**
 - The overview dashboard renders real data for a customer with at least one in-progress order, one saved address and three past orders.
 - **A PENDING unpaid order is cancelled successfully**, and forcing a `409 INVALID_STATUS_TRANSITION` refetches and re-renders the new state rather than showing a stale one.

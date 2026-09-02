@@ -24,7 +24,7 @@ function OrdersResultsFallback(
   if (refreshState && refreshState.lastGood !== null) {
     return (
       <div className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+        <div className="flex flex-wrap items-center justify-between gap-3 border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
           <span>
             Couldn&apos;t refresh {title.toLowerCase()} — showing the last
             loaded results.
@@ -39,7 +39,7 @@ function OrdersResultsFallback(
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-md border border-border py-10 text-center">
+    <div className="flex flex-col items-center gap-3 border border-border py-10 text-center">
       <p className="text-sm text-muted-foreground">
         {title} is unavailable right now.
       </p>

@@ -140,7 +140,7 @@ There is no set of options, no service tiers, and **no duration, ETA, or working
 
 ## GAP-8 · Order lines carry `productId` but the catalogue is addressed by `slug`
 
-**Blocks:** Phase 12 (account area). **Severity: medium** — two designed actions cannot be wired.
+**Blocks:** Phase 12 (account area). **Severity: medium** — two designed navigation actions cannot be wired.
 
 **Contract today:** an order item is:
 
@@ -151,7 +151,7 @@ There is no set of options, no service tiers, and **no duration, ETA, or working
 
 But product detail is **`GET /products/:slug`** — there is no `GET /products/:id`, and no lookup that turns a `productId` into a slug. The storefront's product route is `/products/[slug]` to match.
 
-**What the design needs:** S13 gives every order line a `View piece` and a `Buy again` ghost action, and S12 puts `Buy again` on delivered and cancelled order cards. All of them need to reach the product page or re-add to cart from an order line, and none of them can.
+**What the design needs:** S13 gives every order line a `View piece` and a `Buy again` ghost action, while S12 puts `Buy again` and `Write a review` on terminal order cards. `View piece` and `Write a review` need a product slug to reach `/products/[slug]`; `Buy again` needs only the existing `productId` and can re-add directly.
 
 **What we need (any one, cheapest first):**
 
@@ -159,7 +159,7 @@ But product detail is **`GET /products/:slug`** — there is no `GET /products/:
 - **Alternative:** accept an id at the detail route (`GET /products/:idOrSlug`), or add a slug-resolution lookup.
 - Note that `POST /cart/items` takes `productId`, so **"Buy again" as a pure cart re-add already works** — it is only the *link to the product page* that is blocked. If the answer is "no slug", we would keep `Buy again` and drop `View piece`.
 
-**Our fallback:** render `Buy again` (it only needs `productId`) and omit `View piece` from order lines. The order line's product name and image stay unlinked.
+**Our fallback:** render `Buy again` (it only needs `productId`) and omit `View piece` from order lines and `Write a review` from S12. The order line's product name and image stay unlinked.
 
 ---
 
@@ -208,6 +208,20 @@ But product detail is **`GET /products/:slug`** — there is no `GET /products/:
 
 ---
 
+## GAP-15 · Order summaries contain no line preview
+
+**Blocks:** Phase 12 (account area, S12). **Severity: low** — the orders list works, but most cards cannot show the designed product context.
+
+**Contract today:** `GET /orders` returns only the summary shape: `id`, `humanOrderId`, status and payment fields, totals, `createdAt`, and `itemsCount`. It carries no `items[]`, product names, or image URLs. The full line snapshot exists only on `GET /orders/:id`.
+
+**What the design needs:** S12 shows up to three 46px product plates and a product-name summary on every order card.
+
+**What we need:** add a capped preview to the order summary, such as `itemsPreview: [{ productId, name, imageUrl }]` with a maximum of three entries. Keep `itemsCount` as the authoritative distinct-line count for the full order.
+
+**Our fallback:** hydrate only the newest in-progress order with one `GET /orders/:id` request, and show plates and product names on that card. All other cards remain honest summary-only cards; the storefront never fans out detail requests across the page.
+
+---
+
 ## Resolution log
 
 | Gap | Status | Resolved by / notes |
@@ -223,6 +237,7 @@ But product detail is **`GET /products/:slug`** — there is no `GET /products/:
 | GAP-9 | open | Raised 2026-08-24 from the design review (S2) |
 | GAP-13 | open | Raised 2026-08-25 from task 9.3 (S2 title band) |
 | GAP-14 | open | Raised 2026-08-25 from task 9.4 (S3 delivery row) |
+| GAP-15 | open | Raised 2026-09-02 from task 12.4 (S12 order cards) |
 
 ---
 

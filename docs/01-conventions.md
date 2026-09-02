@@ -190,6 +190,7 @@ The root `proxy.ts` uses `clerkMiddleware` to redirect signed-out visitors only 
 ## 6. URL state with nuqs
 
 Filters, sorting, and pagination live in the URL. Each feature defines its parameter schema in `features/<name>/hooks/`, split across two files by client/server boundary — a plain `<name>-search-params.ts` module (no directive) exporting the parsers, `createSearchParamsCache`, and the parsed type, and a `"use client"` `use-<name>-params.ts` module that imports those parsers and wraps `useQueryStates` in a `use<Name>Params()` hook. Do not put both in one `"use client"` file: Next.js still lets a Server Component import plain values from a client-directive module at the type level, but calling a server-only export (the cache's `.parse()`, or a mapper function) from such a module throws at runtime, since the whole file compiles as a client reference once it carries the directive. Server Components (`page.tsx`, RSC result components) import the cache/mapper/type from the plain module; Client Components import the hook from the `"use client"` module (they may re-export the type from either, since type-only exports are erased and carry no runtime boundary).
+The `"use client"` half exists only while a Client Component reads the params; delete it when links or Server Components become the sole consumers.
 
 - Client updates use `shallow: false` so the Server Component tree receives the new URL state.
 - **Addressable panel and step state also belongs in the URL**, not only filters, sorting and

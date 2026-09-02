@@ -1,15 +1,23 @@
-import { OrderListItem } from "@/features/orders/components/order-list-item";
+import type { OrderDetail } from "@/features/checkout/types/order";
+import { OrderCard } from "@/features/orders/components/order-card";
 import type { OrderSummary } from "@/features/orders/types/order";
 
 export type OrdersListProps = {
   orders: OrderSummary[];
+  hydratedOrder: OrderDetail | null;
 };
 
-export function OrdersList({ orders }: OrdersListProps) {
+export function OrdersList({ orders, hydratedOrder }: OrdersListProps) {
   return (
-    <ul className="divide-y divide-border border border-border bg-card shadow-sm">
+    <ul className="flex flex-col gap-3">
       {orders.map((order) => (
-        <OrderListItem key={order.id} order={order} />
+        <OrderCard
+          key={order.id}
+          order={order}
+          {...(order.id === hydratedOrder?.id
+            ? { hydratedItems: hydratedOrder.items }
+            : {})}
+        />
       ))}
     </ul>
   );

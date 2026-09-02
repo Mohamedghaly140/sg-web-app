@@ -2,17 +2,24 @@
 
 import { useTransition } from "react";
 import { toast } from "sonner";
+import type { VariantProps } from "class-variance-authority";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog/confirm-dialog";
 import { EMPTY_ACTION_STATE } from "@/components/shared/form/utils/to-action-state";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cancelOrderAction } from "@/features/orders/actions/cancel-order";
 
 export type CancelOrderButtonProps = {
   orderId: string;
+  variant?: VariantProps<typeof buttonVariants>["variant"];
+  size?: VariantProps<typeof buttonVariants>["size"];
 };
 
-export function CancelOrderButton({ orderId }: CancelOrderButtonProps) {
+export function CancelOrderButton({
+  orderId,
+  variant = "destructive",
+  size = "default",
+}: CancelOrderButtonProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleConfirm = () => {
@@ -36,7 +43,12 @@ export function CancelOrderButton({ orderId }: CancelOrderButtonProps) {
       confirmLabel="Cancel order"
       variant="destructive"
       trigger={
-        <Button type="button" variant="destructive" disabled={isPending}>
+        <Button
+          type="button"
+          variant={variant}
+          size={size}
+          disabled={isPending}
+        >
           Cancel order
         </Button>
       }

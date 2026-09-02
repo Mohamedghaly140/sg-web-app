@@ -19,8 +19,8 @@ export function RefreshOrdersButton() {
   return (
     <Button
       type="button"
-      variant="outline"
-      size="sm"
+      variant="ghost"
+      size="xs"
       disabled={isPending}
       onClick={() => startTransition(() => router.refresh())}
     >
