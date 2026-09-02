@@ -38,9 +38,9 @@ export default async function AddressesFeature({
       <section className="flex min-w-0 flex-col gap-3">
         <header className="flex flex-col gap-2 border-b border-border pb-2">
           <div className="flex items-baseline justify-between gap-3">
-            <h3 className="font-heading text-2xl font-normal text-foreground">
+            <h1 className="font-heading text-2xl font-normal text-foreground">
               Addresses
-            </h3>
+            </h1>
             <Button
               render={
                 <Link

@@ -47,7 +47,24 @@ export default function Providers({
   const [queryClient] = useState(createQueryClient);
 
   return (
-    <ClerkProvider appearance={{ theme: shadcn }}>
+    <ClerkProvider
+      appearance={{
+        theme: shadcn,
+        variables: {
+          fontFamily: "var(--font-lora)",
+          fontFamilyButtons: "var(--font-lora)",
+          borderRadius: "var(--radius-md)",
+        },
+        elements: {
+          /* Clerk injects its own styles at runtime *unlayered*, and unlayered
+             CSS always wins over anything in an `@layer` — so plain utilities
+             here are applied to the element but lose the cascade. The trailing
+             `!` is what actually lands the Classical heading treatment. */
+          headerTitle:
+            "font-heading! text-2xl! font-normal! text-foreground!",
+        },
+      }}
+    >
       <QueryClientProvider client={queryClient}>
         <CartMergeBridge />
         <CartSignOutBridge />
