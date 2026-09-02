@@ -26,12 +26,12 @@ export function OrdersListSkeleton({ filter }: OrdersListSkeletonProps) {
         {Array.from({ length: SKELETON_ROW_COUNT }).map((_, index) => (
           <li key={index}>
             <Card size="sm">
-              <CardHeader className="flex flex-row items-center gap-2">
+              <CardHeader className="flex flex-row flex-wrap items-center gap-2">
                 <Skeleton className="h-5 w-28" />
                 <Skeleton className="h-5 w-20" />
-                <Skeleton className="ml-auto h-3 w-32" />
+                <Skeleton className="h-3 w-full sm:ml-auto sm:w-32" />
               </CardHeader>
-              <CardContent className="flex items-center gap-4">
+              <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Skeleton className="aspect-[3/4] w-[46px] shrink-0" />
                 <div className="flex min-w-0 flex-1 flex-col gap-2">
                   <Skeleton className="h-3 w-2/3" />
@@ -42,7 +42,7 @@ export function OrdersListSkeleton({ filter }: OrdersListSkeletonProps) {
                   <Skeleton className="h-3 w-20" />
                 </div>
               </CardContent>
-              <CardFooter className="gap-2 border-t-0 pt-0">
+              <CardFooter className="min-h-20 flex-wrap gap-2 border-t-0 pt-0">
                 <Skeleton className="h-8 w-24" />
                 <Skeleton className="h-8 w-24" />
               </CardFooter>

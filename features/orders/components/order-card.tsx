@@ -75,17 +75,17 @@ export function OrderCard({ order, hydratedItems }: OrderCardProps) {
         data-selected={isFocalCard ? true : undefined}
         className={cn(isFaded && "opacity-75")}
       >
-        <CardHeader className="flex flex-row items-baseline gap-2">
+        <CardHeader className="flex flex-row flex-wrap items-baseline gap-2">
           <p className="font-heading text-xl font-normal tabular-nums">
             {order.humanOrderId}
           </p>
           <OrderStatusBadge status={order.status} />
-          <p className="figures ml-auto text-xs text-muted-foreground">
+          <p className="figures min-w-0 w-full text-xs text-muted-foreground sm:ml-auto sm:w-auto">
             {formatDate(order.createdAt)} · {lineCount}
           </p>
         </CardHeader>
 
-        <CardContent className="flex items-center gap-4">
+        <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center">
           {hydratedItems && hydratedItems.length > 0 ? (
             <ul className="flex shrink-0 gap-2" aria-label="Order lines">
               {hydratedItems.slice(0, 3).map((item, index) => (
@@ -156,7 +156,7 @@ export function OrderCard({ order, hydratedItems }: OrderCardProps) {
               render={<Link href="/contact" />}
               nativeButton={false}
               variant="ghost"
-              className="ml-auto"
+              className="sm:ml-auto"
             >
               Need help with this order
             </Button>

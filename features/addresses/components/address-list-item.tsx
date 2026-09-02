@@ -84,7 +84,7 @@ export function AddressListItem({ address }: AddressListItemProps) {
           ) : (
             <SetDefaultAddressButton addressId={address.id} />
           )}
-          <DeleteAddressButton addressId={address.id} className="ml-auto" />
+          <DeleteAddressButton addressId={address.id} className="sm:ml-auto" />
         </CardFooter>
       </Card>
     </li>

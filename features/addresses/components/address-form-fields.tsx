@@ -95,7 +95,7 @@ export function AddressFormFields({
       <div
         className={cn(
           "grid gap-3",
-          columns === 2 ? "grid-cols-2" : "grid-cols-3",
+          columns === 2 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-3",
         )}
       >
         {mode === "registered" ? (

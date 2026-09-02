@@ -111,7 +111,7 @@ function OrderStatusColumns({
                 >
                   {stage.detailLabel}
                 </span>
-                <span className="figures text-[11.5px] text-muted-foreground">
+                <span className="figures hidden text-[11.5px] text-muted-foreground sm:block">
                   {index === 0 && placedAt ? formatDateTime(placedAt) : "—"}
                 </span>
               </>

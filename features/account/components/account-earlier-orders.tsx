@@ -12,6 +12,12 @@ type AccountEarlierOrdersProps = {
 const detailsLinkClassName =
   "text-xs text-accent-strong underline-offset-3 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
+/* Visible column labels for the stacked presentation below `md`. They are
+   aria-hidden because the sr-only <thead> already names every column — without
+   that, a screen reader on a phone reads "Order Order SG-2026-000123". */
+const stackedLabelClassName =
+  "text-[11px] tracking-[0.08em] text-muted-foreground uppercase md:hidden";
+
 export function AccountEarlierOrders({
   orders,
 }: AccountEarlierOrdersProps) {
@@ -30,11 +36,17 @@ export function AccountEarlierOrders({
       </div>
 
       {orders.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] text-sm">
+        <div className="md:overflow-x-auto">
+          {/* Below `md` the rows restyle to stacked blocks via `display`. Browsers
+              compute table semantics from the *computed* display value, so
+              `block`/`flex` here would drop the implicit table roles and break the
+              sr-only <thead> associations exactly where they are needed most.
+              The explicit roles below survive the display override and are a
+              no-op at `md`+, where they match what the elements already imply. */}
+          <table role="table" className="w-full text-sm max-md:block">
             <caption className="sr-only">Earlier orders</caption>
-            <thead className="sr-only">
-              <tr>
+            <thead role="rowgroup" className="sr-only">
+              <tr role="row">
                 <th scope="col">Order</th>
                 <th scope="col">Placed</th>
                 <th scope="col">Status</th>
@@ -42,7 +54,7 @@ export function AccountEarlierOrders({
                 <th scope="col">Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody role="rowgroup" className="max-md:block">
               {orders.map((order) => {
                 const lineCount = `${order.itemsCount} ${
                   order.itemsCount === 1 ? "line" : "lines"
@@ -51,26 +63,37 @@ export function AccountEarlierOrders({
                 return (
                   <tr
                     key={order.id}
-                    className="border-b border-border last:border-b-0"
+                    role="row"
+                    className="border-b border-border last:border-b-0 max-md:flex max-md:flex-col max-md:gap-2 max-md:py-3"
                   >
                     <th
+                      role="rowheader"
                       scope="row"
-                      className="py-3 pr-4 text-left font-normal tabular-nums"
+                      className="py-3 pr-4 text-left font-normal tabular-nums max-md:flex max-md:items-baseline max-md:justify-between max-md:gap-3 max-md:py-0 max-md:pr-0 md:table-cell"
                     >
-                      {order.humanOrderId}
+                      <span aria-hidden="true" className={stackedLabelClassName}>Order</span>
+                      <span className="figures">{order.humanOrderId}</span>
                     </th>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {formatDayMonth(order.createdAt)}
-                      <span aria-hidden="true"> · </span>
-                      {lineCount}
+                    <td role="cell" className="px-4 py-3 text-muted-foreground max-md:flex max-md:items-baseline max-md:justify-between max-md:gap-3 max-md:px-0 max-md:py-0 md:table-cell">
+                      <span aria-hidden="true" className={stackedLabelClassName}>Placed</span>
+                      <span className="figures text-right md:text-left">
+                        {formatDayMonth(order.createdAt)}
+                        <span aria-hidden="true"> · </span>
+                        {lineCount}
+                      </span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td role="cell" className="px-4 py-3 max-md:flex max-md:items-center max-md:justify-between max-md:gap-3 max-md:px-0 max-md:py-0 md:table-cell">
+                      <span aria-hidden="true" className={stackedLabelClassName}>Status</span>
                       <OrderStatusBadge status={order.status} />
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums">
-                      <Money value={order.totalOrderPrice} />
+                    <td role="cell" className="px-4 py-3 text-right tabular-nums max-md:flex max-md:items-baseline max-md:justify-between max-md:gap-3 max-md:px-0 max-md:py-0 md:table-cell">
+                      <span aria-hidden="true" className={stackedLabelClassName}>Total</span>
+                      <span className="figures">
+                        <Money value={order.totalOrderPrice} />
+                      </span>
                     </td>
-                    <td className="py-3 pl-4 text-right">
+                    <td role="cell" className="py-3 pl-4 text-right max-md:flex max-md:items-baseline max-md:justify-between max-md:gap-3 max-md:py-0 max-md:pl-0 md:table-cell">
+                      <span aria-hidden="true" className={stackedLabelClassName}>Details</span>
                       <Link
                         href={`/account/orders/${order.id}`}
                         className={detailsLinkClassName}

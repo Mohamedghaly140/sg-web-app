@@ -36,13 +36,16 @@ export function WishlistList() {
 
   if (wishlistQuery.isError && !wishlistQuery.data) {
     return (
-      <Alert variant="destructive">
+      <Alert
+        variant="destructive"
+        className="max-sm:has-data-[slot=alert-action]:pr-2.5"
+      >
         <LucideTriangleAlert />
         <AlertTitle>Unable to load your wishlist</AlertTitle>
         <AlertDescription>
           Check your connection, then try again.
         </AlertDescription>
-        <AlertAction>
+        <AlertAction className="max-sm:static max-sm:col-span-full max-sm:mt-2 max-sm:justify-self-start">
           <Button
             type="button"
             variant="outline"
@@ -75,7 +78,7 @@ export function WishlistList() {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {entries.map((entry) => (
         <ProductCard
           key={entry.product.id}

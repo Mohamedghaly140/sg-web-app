@@ -274,9 +274,12 @@
 }
 
 @utility measure {
-  text-align: justify;
   hyphens: auto;
   max-width: 52ch;
+
+  @media (width >= 40rem) {
+    text-align: justify;
+  }
 }
 
 @utility figures {

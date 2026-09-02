@@ -37,7 +37,7 @@ export default async function AddressesFeature({
     >
       <section className="flex min-w-0 flex-col gap-3">
         <header className="flex flex-col gap-2 border-b border-border pb-2">
-          <div className="flex items-baseline justify-between gap-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
             <h1 className="font-heading text-2xl font-normal text-foreground">
               Addresses
             </h1>
@@ -70,7 +70,7 @@ export default async function AddressesFeature({
       </section>
 
       {panelTarget ? (
-        <aside aria-label="Address editor">
+        <aside aria-label="Address editor" className="order-first lg:order-last">
           {panelTarget.variant === "create" ? (
             <AddressPanel
               key={requestedAddress}

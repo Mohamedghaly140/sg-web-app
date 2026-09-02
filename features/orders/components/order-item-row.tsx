@@ -38,7 +38,7 @@ export function OrderItemRow({ item }: OrderItemRowProps) {
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-baseline justify-between gap-4">
-          <p className="font-heading text-[19px] font-normal">{item.name}</p>
+          <p className="min-w-0 font-heading text-[19px] font-normal">{item.name}</p>
           <span className="figures shrink-0 text-right text-[14.5px]">
             <Money value={item.lineTotal} />
           </span>

@@ -38,7 +38,7 @@ export function OrderDetailView({
   return (
     <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
       <section className="flex min-w-0 flex-col gap-4">
-        <header className="flex items-baseline gap-3">
+        <header className="flex flex-wrap items-baseline gap-3">
           {/* Screen S13 draws this at h3 size, but it is the page's only
               top-level heading on both the account and guest tracking routes —
               neither parent renders one above it — so the level is h1 and the
@@ -47,7 +47,7 @@ export function OrderDetailView({
             {order.humanOrderId}
           </h1>
           <OrderStatusBadge status={order.status} />
-          <span className="figures ml-auto text-xs text-muted-foreground">
+          <span className="figures w-full text-xs text-muted-foreground sm:ml-auto sm:w-auto">
             Placed {formatDateTime(order.createdAt)}
           </span>
         </header>

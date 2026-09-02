@@ -35,6 +35,7 @@ Four parts of the designed account area cannot be built as drawn. All are filed 
 
 - [x] Create `app/account/profile/page.tsx` and a minimal read-only profile rendering `GET /users/me` plus a Clerk "manage account" link. **Read-only is the designed behaviour, not a shortcut** — screen S10's own copy states that email is managed by the sign-in provider.
 - [x] This exists primarily so the Phase 8 sub-nav does not link to a route that does not exist. It is small; do not expand it into an editable profile without a design.
+- [x] **Correction, landed in 12.7 (2026-09-03):** the sub-nav was never updated when this route shipped, so `components/shared/account-sub-nav/index.tsx` kept rendering Profile as a non-interactive `<span>` — correct in Phase 8, wrong from the moment 12.2 landed, and a failure against this phase's DoD line requiring the correct highlight on all five account routes. It is now a real `<Link>` with the same active treatment as the other four.
 
 ### 12.3 S11 Addresses — **done** (code landed 2026-09-01; browser checklist not yet run)
 
@@ -101,6 +102,130 @@ Four parts of the designed account area cannot be built as drawn. All are filed 
 - **The S11/S12 `h1` defect recorded in the 12.5 notes was closed here.** `features/addresses/index.tsx` and `orders-header.tsx` promoted their top-level `h3` to `h1` with class lists unchanged, so nothing moves visually. `features/wishlist/index.tsx` also lost its own `max-w-6xl px-4 py-8` wrapper, which was nesting inside `app/account/layout.tsx`'s wrapper — the same defect 12.5 fixed for `order-detail-feature.tsx`.
 - **Not verified — the wishlist browser checklist has not been run.** `bun lint`, `bunx tsc --noEmit` and `bun run build` all pass, and `/sign-in` plus the `/products` no-regression check were confirmed at 1280px. But `/account` is auth-gated and no test account was available, so the grid at three columns, the `available: false` disabled-and-unlinked path, the optimistic-toggle rollback, the two promoted `h1`s, and the `PRODUCT_CARD_ACCOUNT_GRID_SIZES` measurement (a derived 959.6px account column) are all still unchecked.
 
+### 12.7 Responsive account area — **done** (code landed 2026-09-03; verified in a browser at 360/414/640/768/1024/1280, two carried-forward gaps below)
+
+Phase 12 built every account surface against the 1280px design and this doc's own
+out-of-scope line deferred the breakpoints to Phase 13. That left the shipped
+account area unusable on a phone, so the account slice of Phase 13 is being done
+here instead. Scope is the six account screens plus `/orders/track/[token]`
+(it shares `order-detail-view.tsx`) plus the account sub-nav collapse. The
+storefront header nav, listing filters, PDP, cart and checkout stay in Phase 13.
+
+**The root cause, measured.** `app/globals.css` sets `--spacing: 0.2875rem`, so
+`gap-8` is 36.8px and `px-4` is 18.4px — the arithmetic below is not the Tailwind
+default. `app/account/layout.tsx` was an unconditional `flex ... gap-8` row and
+`components/shared/account-sub-nav/index.tsx` a `flex w-[210px] shrink-0`
+sidebar, with no responsive prefix anywhere in either file. The content column
+therefore resolved to **76.4px at 360px**, 130px at 414px, 338px at 640px and
+466px at 768px. It never showed as horizontal page scroll because
+`components/ui/card.tsx` carries `overflow-hidden`, so every account screen was
+silently clipping instead.
+
+- [x] Stack the account shell below `lg` and collapse the sub-nav into a
+  horizontally scrolling tab row, keeping the accent active treatment as an
+  underline rather than a left border, per `docs/phase-13-responsive.md` §13.4.
+  One `<Link>` set with orientation-conditional classes, never two navs.
+- [x] Recompute `PRODUCT_CARD_ACCOUNT_GRID_SIZES`
+  (`features/products/components/product-card.tsx`), which hard-coded the 210px
+  sub-nav and its 36.8px gap into every rung including the sub-640px ones, where
+  it evaluated to about 17px at 360px. This is the measurement 12.6 left
+  unverified; verify it in the browser this time.
+- [x] Two primitive-level edits: `flex-wrap` on `CardFooter`
+  (`components/ui/card.tsx`) and `text-align: justify` gated to `>= 40rem` on the
+  `.measure` utility (`app/globals.css`). Both amend their originating phase docs.
+- [x] Wrap or stack the overflowing rows on S12 and S13 — `order-card.tsx`
+  header, content and footer, `orders-header.tsx`, `order-detail-view.tsx`'s
+  header — and keep `orders-list-skeleton.tsx` in lockstep with the card so the
+  loading state reserves the height the wrapped footer takes.
+- [x] S11: `order-first lg:order-last` on the address editor `<aside>` so an
+  opened form appears above the list on a phone instead of below the whole list,
+  and a one-column base on the address form's field grid.
+- [x] Wishlist: adopt the full `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` ladder
+  from §13.1, and stack the error `Alert`'s action below its description at
+  narrow widths at the call site.
+- [x] S10: convert the earlier-orders table (a `min-w-[640px]` table inside an
+  `overflow-x-auto`) to stacked rows below `md`, and move the info cards from
+  `sm:grid-cols-2` to `lg:grid-cols-2`.
+- [x] Verify at 360 / 414 / 768 / 1024 / 1280 on all six account routes and on
+  `/orders/track/[token]`, plus 200% zoom, asserting no horizontal page scroll
+  **and** no clipped content — `Card`'s `overflow-hidden` hides the latter from
+  the scroll metric.
+
+**Decisions and gaps recorded by this task**
+
+- **The four-column status timeline keeps `grid-cols-4` at every width.** A 2x2
+  grid was considered and rejected: row two's top rule reads as a fresh start,
+  breaking the linear rule-connector metaphor, and `detail` shares
+  `OrderStatusColumns` geometry with S10's `track`, so the change would hit a
+  screen that never asked for it. Swapping to the `row` variant below `sm` was
+  also rejected — `row` is `aria-hidden` with no step semantics, so mobile would
+  lose the accessible progress list and Phase 15 would have to undo it. The four
+  stage labels fit a ~74px column; only the timestamp did not. It is therefore
+  `hidden sm:block`, which is lossless because `order-detail-view.tsx` already
+  prints `Placed {formatDateTime(...)}` in the page header.
+- **The account header's missing nav is the design, not a bug.** On `/account` at
+  `sm`+ there is no nav and no search, because
+  `docs/design_handoff_sg_storefront/README.md` says "Account screens replace
+  nav+search with the customer name and keep the bag button", and
+  `header-nav-area.tsx` implements that verbatim with the wordmark still linking
+  to `/`. Not touched here. The real oddity is that the `sm:hidden` hamburger
+  gives *mobile* account users a catalogue nav that desktop account users do not
+  get; that is recorded against §13.4's "verify the three header variants".
+- **The address form's three-column branch was left alone.** `columns === 3` is
+  the guest-checkout path (`guest-shipping-step.tsx` via the `columns = 3`
+  default); only the `columns === 2` account path got a one-column base. It is
+  equally non-responsive and is recorded against §13.1.
+- **The Profile sub-nav item was a `<span>`, not a link.** 12.2 shipped
+  `/account/profile` but the Phase 8 sub-nav — where the non-interactive `<span>`
+  was correct, because the route did not exist yet — was never updated. That is
+  an open failure against this phase's own DoD line requiring the correct
+  highlight on all five account routes, so it is fixed here and recorded as a
+  **12.2 correction**. `aria-current="page"` was added at the same time rather
+  than leaving a second pass for Phase 15.
+- **Deferred, deliberately:** 44px coarse-pointer touch targets are a global
+  `@media (pointer: coarse)` change, not an account-area edit, and stay in
+  §13.6/Phase 15.
+- **Verified in a browser**, signed in as a Clerk test user against a live
+  backend, with a real `PENDING` order placed through checkout. At 360px the
+  account content column is **323.2px** (it was 76.4px); the sub-nav is a
+  scrolling tab row with an underlined active item and switches to the 210px
+  left column with a left border at `lg`; `/account`, `/account/orders`,
+  `/account/orders/[id]`, `/account/addresses`, `/account/wishlist` and
+  `/account/profile` all report `scrollWidth === innerWidth` with no element
+  painting past its card — checked for clipping as well as page scroll, because
+  `Card`'s `overflow-hidden` hides the former from the scroll metric. The orders
+  card footer wraps to 97px instead of overflowing, the S13 stepper's four
+  labels fit their 81px columns with the timestamp hidden, the address editor
+  renders above the list, and the wishlist grid steps 1 / 2 / 3 with Next now
+  requesting a **384px** source at 360px instead of the ~17px one the old
+  `sizes` string asked for. At 1280px the content column is still exactly
+  959.6px with 307.6px cells, so the desktop composition is unchanged. 640px
+  (≈200% zoom at 1280) is clean. `.measure` computes `start` at 360px and
+  `justify` at 1280px on the home hero, with `hyphens: auto` and the 52ch cap
+  intact at both.
+- **The Profile sub-nav link is now provably correct:** `/account/profile`
+  highlights its own item, which was impossible while the item was a `<span>`.
+  That closes this phase's DoD line about all five account routes.
+- **Two gaps carried forward, both data-availability, not code.**
+  `/orders/track/[token]` still has not been rendered with a real token: the
+  token is delivered by email, no mail catcher runs in dev, and it is not
+  surfaced in the confirmation UI. A guest order was placed to try. What can be
+  said is that the route's lookup page and wrapper are clean at 360px and gain
+  no account chrome, and that every component the token page shares
+  (`order-detail-view`, `order-status-stepper`, `order-item-row`,
+  `order-payment-card`, `order-help-card`) was verified at 323.2px on the
+  account route — which, below `lg`, is now exactly the width the guest route
+  gives them. The **earlier-orders stacked table** is likewise unverified in a
+  browser: it only renders for terminal orders, and the test account's single
+  order is `PENDING`, so it shows as the in-progress card instead.
+- **Known cosmetic defect, not fixed:** at 360px the S10 `track` stepper
+  truncates `PROCESSING` to fit its 71px column. The `truncate` is pre-existing
+  and it degrades to an ellipsis rather than breaking the layout, and the card
+  header already carries the authoritative status as a badge, so the information
+  is not lost. Fixing it means changing S10's designed 11px/0.08em label
+  treatment, which is a design call rather than a breakpoint one — recorded
+  against §13.6's type ladder instead.
+
 ## Definition of Done
 
 - All four account screens match `designs/Storefront Screens.dc.html` at 1280px, with the five documented gap reductions applied and each one visible as an omission rather than a placeholder.
@@ -118,4 +243,4 @@ Four parts of the designed account area cannot be built as drawn. All are filed 
 
 ## Out of scope
 
-An editable profile form. The order-detail address band, the receipt card, and product links from order lines, all blocked on GAP-4, GAP-7 and GAP-8 respectively. Responsive collapse of the account sub-nav is Phase 13.
+An editable profile form. The order-detail address band, the receipt card, and product links from order lines, all blocked on GAP-4, GAP-7 and GAP-8 respectively. The rest of the responsive derivation — storefront header nav, listing filters, PDP, cart and checkout — is Phase 13; the account slice landed here as 12.7.

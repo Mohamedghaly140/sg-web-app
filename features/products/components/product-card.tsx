@@ -17,13 +17,14 @@ import { cn } from "@/lib/utils";
 export const PRODUCT_CARD_GRID_SIZES =
   "(min-width: 1280px) 288px, (min-width: 1024px) calc(25vw - 32px), (min-width: 768px) calc(33.333vw - 31px), (min-width: 640px) calc(50vw - 37px), calc(50vw - 28px)";
 
-/* The capped account content column is 959.6px after its real 36.8px layout
-   gap, 210px subnav, and 73.6px horizontal padding. Two real 18.4px grid gaps
-   leave 307.6px per card; the plate's 6px mat on each side leaves a 295.6px
-   image. The lower rungs use the same measured spacing for the two-column
-   account grid before it becomes three columns at `lg`. */
+/* Account wishlist grid: 1 col <640, 2 cols 640–1023, 3 cols from 1024.
+   Below lg the sub-nav is a tab row (no horizontal column). Page padding is
+   px-4 (18.4×2), sm:px-6 (27.6×2), lg:px-8 (36.8×2). At lg+ subtract the
+   210px nav and 36.8px layout gap. Grid gaps are gap-4 (18.4); plate mat is
+   6px each side (12px). Capped frame at 1280 → content 959.6 → cell 307.6 →
+   image 295.6. */
 export const PRODUCT_CARD_ACCOUNT_GRID_SIZES =
-  "(min-width: 1280px) 296px, (min-width: 1024px) calc(33.333vw - 131px), (min-width: 640px) calc(50vw - 172px), calc(50vw - 163px)";
+  "(min-width: 1280px) 296px, (min-width: 1024px) calc(33.333vw - 131px), (min-width: 640px) calc(50vw - 49px), calc(100vw - 49px)";
 
 type ProductCardProps = {
   product: ProductSummary;
