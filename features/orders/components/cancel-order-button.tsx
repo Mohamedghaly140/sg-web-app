@@ -11,12 +11,16 @@ import { cancelOrderAction } from "@/features/orders/actions/cancel-order";
 
 export type CancelOrderButtonProps = {
   orderId: string;
+  label?: string;
+  className?: string;
   variant?: VariantProps<typeof buttonVariants>["variant"];
   size?: VariantProps<typeof buttonVariants>["size"];
 };
 
 export function CancelOrderButton({
   orderId,
+  label = "Cancel order",
+  className,
   variant = "destructive",
   size = "default",
 }: CancelOrderButtonProps) {
@@ -48,8 +52,9 @@ export function CancelOrderButton({
           variant={variant}
           size={size}
           disabled={isPending}
+          className={className}
         >
-          Cancel order
+          {label}
         </Button>
       }
       onConfirm={handleConfirm}

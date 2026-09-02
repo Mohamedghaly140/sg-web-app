@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 
+import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { RatingSummary } from "@/components/shared/rating-summary";
 import { Separator } from "@/components/ui/separator";
-import { Breadcrumb } from "@/features/products/components/breadcrumb";
 import { Gallery } from "@/features/products/components/gallery";
 import { PriceBlock } from "@/features/products/components/price-block";
 import { ProductKicker } from "@/features/products/components/product-kicker";
@@ -62,6 +62,7 @@ export default async function ProductDetailFeature({
   }
 
   const isSoldOut = product.quantity <= 0;
+  const subCategory = product.subCategories[0];
   const productSummary: ProductSummary = {
     id: product.id,
     name: product.name,
@@ -87,9 +88,26 @@ export default async function ProductDetailFeature({
     >
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pt-8 pb-24 sm:px-6 sm:pb-8 lg:px-8">
         <Breadcrumb
-          category={product.category}
-          subCategory={product.subCategories[0]}
-          productName={product.name}
+          items={[
+            { label: "Home", href: "/" },
+            {
+              label: product.category.name,
+              href: `/categories/${product.category.slug}`,
+            },
+            ...(subCategory
+              ? [
+                  {
+                    label: subCategory.name,
+                    href: `/products?category=${product.category.slug}&subCategory=${subCategory.slug}`,
+                  },
+                ]
+              : []),
+            { label: product.name },
+          ]}
+          back={{
+            label: product.category.name,
+            href: `/categories/${product.category.slug}`,
+          }}
         />
 
         {/* The designed 1fr/380px pair is a desktop composition: the buy box is
@@ -105,7 +123,7 @@ export default async function ProductDetailFeature({
           <div className="flex flex-col gap-3 self-start">
             <ProductKicker
               category={product.category}
-              subCategory={product.subCategories[0]}
+              subCategory={subCategory}
             />
             {/* The handoff's frame heading is not part of the real page, so the
                 product name is the page's single h1. */}

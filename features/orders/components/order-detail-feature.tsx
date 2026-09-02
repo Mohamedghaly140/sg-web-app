@@ -1,3 +1,4 @@
+import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { OrderDetailView } from "@/features/orders/components/order-detail-view";
 import { getOrder } from "@/features/orders/queries/get-order";
 
@@ -11,12 +12,15 @@ export default async function OrderDetailFeature({
   const order = await getOrder(id);
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
-      <OrderDetailView
-        order={order}
-        back={{ href: "/account/orders", label: "Back to orders" }}
-        allowCancel
+    <div className="flex flex-col gap-6">
+      <Breadcrumb
+        items={[
+          { label: "Account", href: "/account" },
+          { label: "Orders", href: "/account/orders" },
+          { label: order.humanOrderId },
+        ]}
       />
+      <OrderDetailView order={order} allowCancel />
     </div>
   );
 }

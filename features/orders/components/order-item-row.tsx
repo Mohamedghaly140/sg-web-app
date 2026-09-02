@@ -1,8 +1,8 @@
 import Image from "next/image";
 
 import { Money } from "@/components/shared/money";
-import { Badge } from "@/components/ui/badge";
 import type { OrderItem } from "@/features/checkout/types/order";
+import { OrderLineBuyAgainButton } from "@/features/orders/components/order-line-buy-again-button";
 import { cldUrl } from "@/lib/format";
 
 type OrderItemRowProps = {
@@ -10,50 +10,45 @@ type OrderItemRowProps = {
 };
 
 export function OrderItemRow({ item }: OrderItemRowProps) {
+  const variantSegments = [
+    ...(item.color ? [item.color] : []),
+    ...(item.size ? [item.size] : []),
+  ];
+
   return (
-    <article className="grid grid-cols-[5rem_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[6rem_minmax(0,1fr)_auto] sm:gap-4 sm:py-4">
-      <div className="relative size-20 overflow-hidden bg-muted sm:size-24">
-        <Image
-          src={cldUrl(item.imageUrl, {
-            width: 256,
-            height: 256,
-            crop: "fill",
-            gravity: "auto",
-            quality: "auto",
-            format: "auto",
-          })}
-          alt={item.name}
-          fill
-          sizes="(min-width: 640px) 96px, 80px"
-          className="object-cover"
-        />
+    <article className="flex gap-4 border-b border-border py-4">
+      <div className="relative aspect-[3/4] w-[88px] shrink-0">
+        <span className="plate absolute inset-0 overflow-hidden">
+          <Image
+            src={cldUrl(item.imageUrl, {
+              width: 152,
+              height: 203,
+              crop: "fill",
+              gravity: "auto",
+              quality: "auto",
+              format: "auto",
+            })}
+            alt={item.name}
+            fill
+            sizes="88px"
+            className="object-cover"
+          />
+        </span>
       </div>
 
-      <div className="flex min-w-0 flex-col gap-1.5">
-        <p className="font-heading text-sm font-medium text-foreground sm:text-base">
-          {item.name}
-        </p>
-        <div className="flex flex-wrap gap-1.5">
-          {item.color ? <Badge variant="outline">{item.color}</Badge> : null}
-          {item.size ? (
-            <Badge variant="outline">Size {item.size}</Badge>
-          ) : null}
-        </div>
-        <p className="text-sm text-muted-foreground">Qty {item.quantity}</p>
-      </div>
-
-      <dl className="col-span-2 flex flex-col gap-1 text-sm sm:col-span-1 sm:min-w-36 sm:items-end">
-        <div className="flex items-baseline justify-between gap-4 sm:justify-end">
-          <dt className="text-xs text-muted-foreground">Unit price</dt>
-          <dd><Money value={item.price} /></dd>
-        </div>
-        <div className="flex items-baseline justify-between gap-4 sm:justify-end">
-          <dt className="text-xs text-muted-foreground">Line total</dt>
-          <dd className="font-semibold text-foreground">
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-baseline justify-between gap-4">
+          <p className="font-heading text-[19px] font-normal">{item.name}</p>
+          <span className="figures shrink-0 text-right text-[14.5px]">
             <Money value={item.lineTotal} />
-          </dd>
+          </span>
         </div>
-      </dl>
+        <p className="text-xs text-muted-foreground">
+          {variantSegments.length > 0 ? `${variantSegments.join(" · ")} · ` : null}
+          {item.quantity} × <Money value={item.price} />
+        </p>
+        <OrderLineBuyAgainButton item={item} />
+      </div>
     </article>
   );
 }

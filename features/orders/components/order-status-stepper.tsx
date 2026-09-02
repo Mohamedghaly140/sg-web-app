@@ -7,16 +7,38 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 import type { OrderStatus } from "@/features/orders/types/order";
+import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 const STEPPER_STAGES = [
-  { key: "PENDING", label: "Placed", Icon: LucideReceipt },
-  { key: "PROCESSING", label: "Processing", Icon: LucidePackage },
-  { key: "SHIPPED", label: "Shipped", Icon: LucideTruck },
-  { key: "DELIVERED", label: "Delivered", Icon: LucideCircleCheck },
+  {
+    key: "PENDING",
+    label: "Placed",
+    detailLabel: "Placed",
+    Icon: LucideReceipt,
+  },
+  {
+    key: "PROCESSING",
+    label: "Processing",
+    detailLabel: "Preparing",
+    Icon: LucidePackage,
+  },
+  {
+    key: "SHIPPED",
+    label: "Shipped",
+    detailLabel: "Shipped",
+    Icon: LucideTruck,
+  },
+  {
+    key: "DELIVERED",
+    label: "Delivered",
+    detailLabel: "Delivered",
+    Icon: LucideCircleCheck,
+  },
 ] as const satisfies ReadonlyArray<{
   key: OrderStatus;
   label: string;
+  detailLabel: string;
   Icon: LucideIcon;
 }>;
 
@@ -30,36 +52,43 @@ const STAGE_INDEX: Partial<Record<OrderStatus, number>> = {
 type OrderStatusStepperProps = {
   status: OrderStatus;
   variant: "row" | "detail" | "track";
+  placedAt?: string;
 };
 
-export function OrderStatusStepper({
-  status,
+type OrderStatusColumnsProps = {
+  currentIndex: number;
+  variant: "detail" | "track";
+  placedAt?: string;
+};
+
+function OrderStatusColumns({
+  currentIndex,
   variant,
-}: OrderStatusStepperProps) {
-  const currentIndex = STAGE_INDEX[status];
-  if (currentIndex === undefined) {
-    return null;
-  }
+  placedAt,
+}: OrderStatusColumnsProps) {
+  return (
+    <ol className="grid grid-cols-4" aria-label="Order progress">
+      {STEPPER_STAGES.map((stage, index) => {
+        const isReached = index <= currentIndex;
 
-  if (variant === "track") {
-    return (
-      <ol className="grid grid-cols-4" aria-label="Order progress">
-        {STEPPER_STAGES.map((stage, index) => {
-          const isReached = index <= currentIndex;
-
-          return (
-            <li
-              key={stage.key}
-              aria-current={index === currentIndex ? "step" : undefined}
-              className="flex min-w-0 flex-col gap-2"
-            >
-              <span
-                aria-hidden
-                className={cn(
-                  "w-full border-t",
-                  isReached ? "border-t-accent" : "border-t-border",
-                )}
-              />
+        return (
+          <li
+            key={stage.key}
+            aria-current={index === currentIndex ? "step" : undefined}
+            className={cn(
+              "flex min-w-0 flex-col",
+              variant === "track" && "gap-2",
+            )}
+          >
+            <span
+              aria-hidden
+              className={cn(
+                "w-full border-t",
+                variant === "detail" && "mb-2",
+                isReached ? "border-t-accent" : "border-t-border",
+              )}
+            />
+            {variant === "track" ? (
               <span
                 className={cn(
                   "truncate text-[11px] tracking-[0.08em] uppercase",
@@ -70,11 +99,42 @@ export function OrderStatusStepper({
               >
                 {stage.label}
               </span>
-            </li>
-          );
-        })}
-      </ol>
-    );
+            ) : (
+              <>
+                <span
+                  className={cn(
+                    "text-xs",
+                    isReached
+                      ? "text-accent-strong"
+                      : "text-muted-foreground",
+                  )}
+                >
+                  {stage.detailLabel}
+                </span>
+                <span className="figures text-[11.5px] text-muted-foreground">
+                  {index === 0 && placedAt ? formatDateTime(placedAt) : "—"}
+                </span>
+              </>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+export function OrderStatusStepper({
+  status,
+  variant,
+  placedAt,
+}: OrderStatusStepperProps) {
+  const currentIndex = STAGE_INDEX[status];
+  if (currentIndex === undefined) {
+    return null;
+  }
+
+  if (variant === "track") {
+    return <OrderStatusColumns currentIndex={currentIndex} variant="track" />;
   }
 
   if (variant === "row") {
@@ -101,63 +161,10 @@ export function OrderStatusStepper({
   }
 
   return (
-    <ol
-      className="flex flex-col gap-0 sm:flex-row sm:items-start sm:gap-0"
-      aria-label="Order progress"
-    >
-      {STEPPER_STAGES.map((stage, index) => {
-        const isComplete = index < currentIndex;
-        const isCurrent = index === currentIndex;
-        const isUpcoming = index > currentIndex;
-        const Icon = stage.Icon;
-
-        return (
-          <li
-            key={stage.key}
-            className={cn(
-              "relative flex flex-1 gap-3 sm:flex-col sm:items-center sm:gap-2 sm:px-1",
-              index < STEPPER_STAGES.length - 1 && "pb-6 sm:pb-0",
-            )}
-          >
-            {index < STEPPER_STAGES.length - 1 ? (
-              <span
-                aria-hidden
-                className={cn(
-                  "absolute bg-border sm:top-5 sm:right-0 sm:left-[calc(50%+1.25rem)] sm:h-px sm:w-[calc(100%-2.5rem)]",
-                  "top-10 bottom-0 left-[1.1875rem] w-px",
-                  isComplete && "bg-foreground",
-                )}
-              />
-            ) : null}
-
-            <span
-              className={cn(
-                "relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full border",
-                isComplete && "border-foreground bg-foreground text-background",
-                isCurrent && "border-accent bg-accent text-accent-foreground",
-                isUpcoming &&
-                  "border-border bg-muted text-muted-foreground",
-              )}
-            >
-              <Icon className="size-3.5" aria-hidden />
-            </span>
-
-            <div className="flex min-w-0 flex-col gap-0.5 pt-2 sm:items-center sm:pt-0 sm:text-center">
-              <span
-                className={cn(
-                  "text-sm font-medium",
-                  isUpcoming ? "text-muted-foreground" : "text-foreground",
-                )}
-              >
-                {stage.label}
-              </span>
-              {isCurrent ? (
-                <span className="text-xs text-muted-foreground">Current</span>
-              ) : null}
-            </div>
-          </li>
-        );
-      })}
-    </ol>
+    <OrderStatusColumns
+      currentIndex={currentIndex}
+      variant="detail"
+      placedAt={placedAt}
+    />
   );
 }

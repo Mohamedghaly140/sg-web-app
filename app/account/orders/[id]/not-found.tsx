@@ -14,7 +14,11 @@ export default function OrderNotFound() {
         title="Order not found"
         description="This order may have been removed or does not belong to your account."
         action={
-          <Button render={<Link href="/account/orders" />} nativeButton={false}>
+          <Button
+            render={<Link href="/account/orders" />}
+            nativeButton={false}
+            variant="default"
+          >
             View all orders
           </Button>
         }

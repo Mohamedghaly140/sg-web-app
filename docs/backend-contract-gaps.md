@@ -222,6 +222,18 @@ But product detail is **`GET /products/:slug`** — there is no `GET /products/:
 
 ---
 
+## GAP-16 · Order detail carries no status timestamps
+
+**Blocks:** nothing hard — Phase 12 (account area, S13). **Severity: low** — one designed detail degrades, nothing is blocked.
+
+**Contract today:** `GET /orders/:id` and `GET /orders/guest/:token` both reuse the `09-checkout.md` order shape. It carries `createdAt`, but no `processedAt`, `shippedAt`, `deliveredAt`, or `cancelledAt` timestamp.
+
+**What we need:** add the real transition timestamps to the order detail shape so S13's four-column timeline can date each reached stage. Nullable fields are sufficient for stages the order has not reached.
+
+**Our fallback:** date only the first stage from `createdAt` and render `—` for every undated stage rather than inventing or interpolating dates.
+
+---
+
 ## Resolution log
 
 | Gap | Status | Resolved by / notes |
@@ -238,6 +250,7 @@ But product detail is **`GET /products/:slug`** — there is no `GET /products/:
 | GAP-13 | open | Raised 2026-08-25 from task 9.3 (S2 title band) |
 | GAP-14 | open | Raised 2026-08-25 from task 9.4 (S3 delivery row) |
 | GAP-15 | open | Raised 2026-09-02 from task 12.4 (S12 order cards) |
+| GAP-16 | open | Raised 2026-09-02 from task 12.5 (S13 timeline) |
 
 ---
 

@@ -1,135 +1,98 @@
-import { LucideArrowLeft } from "lucide-react";
-import Link from "next/link";
+import type { ReactNode } from "react";
 
-import { Money } from "@/components/shared/money";
 import { OrderStatusBadge } from "@/components/shared/order-status-badge";
-import { PaymentStatusBadge } from "@/components/shared/payment-status-badge";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { OrderDetail } from "@/features/checkout/types/order";
-import { CancelOrderButton } from "@/features/orders/components/cancel-order-button";
+import { OrderHelpCard } from "@/features/orders/components/order-help-card";
 import { OrderItemRow } from "@/features/orders/components/order-item-row";
+import { OrderPaymentCard } from "@/features/orders/components/order-payment-card";
 import { OrderStatusStepper } from "@/features/orders/components/order-status-stepper";
-import { PAYMENT_METHODS } from "@/lib/constants/payment-methods";
-import { formatDate, isSameDecimal } from "@/lib/format";
+import { formatDateTime } from "@/lib/format";
 
 type OrderDetailViewProps = {
   order: OrderDetail;
-  back?: { href: string; label: string };
   /** Owner account detail only — never set on guest tracking. */
   allowCancel?: boolean;
+  /** Extra rail content, e.g. guest tracking's claim card. */
+  rail?: ReactNode;
 };
 
-const TERMINAL_STATUSES = new Set(["CANCELLED", "REFUNDED"]);
+const TERMINAL_STATUSES = new Set<OrderDetail["status"]>([
+  "CANCELLED",
+  "REFUNDED",
+]);
 
 export function OrderDetailView({
   order,
-  back,
   allowCancel = false,
+  rail,
 }: OrderDetailViewProps) {
-  const paymentLabel =
-    PAYMENT_METHODS.find((method) => method.value === order.paymentMethod)
-      ?.label ?? order.paymentMethod;
-  const hasDiscount = !isSameDecimal(order.discountApplied, "0");
-  const canCancel =
-    allowCancel && order.status === "PENDING" && !order.isPaid;
+  const canCancel = Boolean(
+    allowCancel && order.status === "PENDING" && !order.isPaid,
+  );
   const isTerminal = TERMINAL_STATUSES.has(order.status);
+  const lineCount = `${order.items.length} ${
+    order.items.length === 1 ? "line" : "lines"
+  }`;
 
   return (
-    <>
-      {back ? (
-        <Link
-          href={back.href}
-          className="inline-flex w-fit items-center gap-2 text-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        >
-          <LucideArrowLeft className="size-3.5" aria-hidden />
-          {back.label}
-        </Link>
-      ) : null}
-
-      <header className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
+    <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <section className="flex min-w-0 flex-col gap-4">
+        <header className="flex items-baseline gap-3">
+          {/* Screen S13 draws this at h3 size, but it is the page's only
+              top-level heading on both the account and guest tracking routes —
+              neither parent renders one above it — so the level is h1 and the
+              Classical 25px treatment comes from the utilities. */}
+          <h1 className="figures font-heading text-2xl font-normal">
             {order.humanOrderId}
           </h1>
           <OrderStatusBadge status={order.status} />
-          <PaymentStatusBadge isPaid={order.isPaid} />
-          {canCancel ? <CancelOrderButton orderId={order.id} /> : null}
-        </div>
-        <p className="text-sm text-muted-foreground">
-          {formatDate(order.createdAt)}
-          {" · "}
-          {paymentLabel}
-        </p>
-      </header>
+          <span className="figures ml-auto text-xs text-muted-foreground">
+            Placed {formatDateTime(order.createdAt)}
+          </span>
+        </header>
+        <Separator />
 
-      {isTerminal ? (
-        <div className="flex items-center gap-2 border border-border bg-muted/40 px-3 py-2">
-          <Badge variant={order.status === "CANCELLED" ? "destructive" : "outline"}>
-            {order.status === "CANCELLED" ? "Order cancelled" : "Order refunded"}
-          </Badge>
-          <p className="text-sm text-muted-foreground">
+        {isTerminal ? (
+          // The header already carries the status tag, so the terminal notice
+          // is the explanatory line alone — repeating the badge here would
+          // print the same word twice, two rows apart.
+          <p className="text-xs text-muted-foreground">
             This order is no longer in progress.
           </p>
+        ) : (
+          <OrderStatusStepper
+            status={order.status}
+            variant="detail"
+            placedAt={order.createdAt}
+          />
+        )}
+        <Separator />
+
+        <div className="flex items-baseline justify-between gap-4">
+          <h2 className="font-heading text-xl font-normal">{lineCount}</h2>
+          <span className="text-[11.5px] text-muted-foreground">
+            Prices as they were when you ordered
+          </span>
         </div>
-      ) : (
-        <OrderStatusStepper status={order.status} variant="detail" />
-      )}
+        <ul>
+          {order.items.map((item, index) => (
+            <li key={`${item.productId}-${index}`}>
+              <OrderItemRow item={item} />
+            </li>
+          ))}
+        </ul>
+      </section>
 
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-        <Card className="min-w-0 flex-1">
-          <CardHeader>
-            <CardTitle>Items</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <ul className="flex flex-col">
-              {order.items.map((item, index) => (
-                <li key={`${item.productId}-${index}`}>
-                  {index > 0 ? <Separator /> : null}
-                  <OrderItemRow item={item} />
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-
-        <Card className="w-full shrink-0 lg:sticky lg:top-6 lg:w-84">
-          <CardHeader>
-            <CardTitle>Summary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <dl className="flex flex-col gap-3 text-sm">
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-muted-foreground">Items subtotal</dt>
-                <dd><Money value={order.itemsSubtotal} /></dd>
-              </div>
-              {hasDiscount ? (
-                <div className="flex items-center justify-between gap-4">
-                  <dt className="text-muted-foreground">Discount</dt>
-                  <dd>-<Money value={order.discountApplied} /></dd>
-                </div>
-              ) : null}
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-muted-foreground">Shipping</dt>
-                <dd><Money value={order.shippingFees} /></dd>
-              </div>
-              <Separator />
-              <div className="flex items-end justify-between gap-4">
-                <dt className="font-medium text-foreground">Total</dt>
-                <dd className="text-xl font-semibold tracking-tight text-foreground">
-                  <Money value={order.totalOrderPrice} />
-                </dd>
-              </div>
-            </dl>
-          </CardContent>
-        </Card>
-      </div>
-    </>
+      <aside className="flex flex-col gap-4 lg:sticky lg:top-6">
+        <OrderPaymentCard order={order} />
+        <OrderHelpCard
+          orderId={order.id}
+          isOwner={allowCancel}
+          canCancel={canCancel}
+        />
+        {rail}
+      </aside>
+    </div>
   );
 }

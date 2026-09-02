@@ -23,7 +23,7 @@ export default function TrackOrderError({ retry }: TrackOrderErrorProps) {
         title="Something went wrong"
         description="Something went wrong loading this order"
         action={
-          <Button type="button" onClick={() => retry()}>
+          <Button type="button" variant="outline" onClick={() => retry()}>
             <LucideRefreshCw />
             Try again
           </Button>

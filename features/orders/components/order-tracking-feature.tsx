@@ -26,15 +26,19 @@ export default async function OrderTrackingFeature({
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
-      <OrderDetailView order={result.order} />
-      <Card>
-        <CardHeader>
-          <CardTitle>Claim this order</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ClaimOrderGate action={claimAction} />
-        </CardContent>
-      </Card>
+      <OrderDetailView
+        order={result.order}
+        rail={
+          <Card>
+            <CardHeader>
+              <CardTitle>Claim this order</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ClaimOrderGate action={claimAction} />
+            </CardContent>
+          </Card>
+        }
+      />
     </div>
   );
 }

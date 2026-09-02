@@ -22,7 +22,11 @@ export default function TrackOrderNotFound() {
         title="Order not found"
         description={TRACKING_INVALID_MESSAGE}
         action={
-          <Button render={<Link href="/" />} nativeButton={false}>
+          <Button
+            render={<Link href="/" />}
+            nativeButton={false}
+            variant="default"
+          >
             Continue shopping
           </Button>
         }
