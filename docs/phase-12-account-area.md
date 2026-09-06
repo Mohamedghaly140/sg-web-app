@@ -218,6 +218,28 @@ silently clipping instead.
   gives them. The **earlier-orders stacked table** is likewise unverified in a
   browser: it only renders for terminal orders, and the test account's single
   order is `PENDING`, so it shows as the in-progress card instead.
+- **Two keyboard/focus regressions caught in review and fixed** (Codex review of
+  the 12.7 branch, 2026-09-06). Both were introduced by the responsive changes
+  themselves, and neither shows up in a scroll-width or clipping check:
+  - `order-first` on the address editor is **visual order only** — the `<aside>`
+    is still last in the DOM, and both entry points navigate with
+    `scroll={false}`. A customer who opened the editor from a card partway down
+    the list kept their scroll position while the panel rendered off-screen
+    *above* them, and a keyboard customer tabbed through the rest of the list
+    before reaching the form they had just opened. `AddressPanel` now focuses
+    its heading on mount, which scrolls the panel into view and fixes reading
+    and tab order at every width. It is keyed on the requested address, so it
+    runs once per opened target. Verified: from a bottom-scrolled list the page
+    moves to the panel and focus lands on the panel title.
+  - `overflow-x-auto` on the sub-nav also makes `overflow-y` compute to `auto`,
+    so the tab row is a clipping scroll container. The global focus ring
+    (§7.5, a 2px outline at a 2px offset) is drawn *outside* the link box, so it
+    was clipped on every tab's top and bottom and on the outer edge of the first
+    and last. The nav now carries a 4.6px inset with a matching negative margin
+    below `lg` — the ring gets room inside the scroll box while the first tab
+    stays flush with the content column, and the layout's own `px-4` absorbs the
+    negative margin. Both are dropped at `lg`, where nothing clips. Verified in
+    screenshots of the focused first and last tabs.
 - **Known cosmetic defect, not fixed:** at 360px the S10 `track` stepper
   truncates `PROCESSING` to fit its 71px column. The `truncate` is pre-existing
   and it degrades to an ellipsis rather than breaking the layout, and the card

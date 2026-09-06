@@ -2,7 +2,7 @@
 
 import { LucideX } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Money } from "@/components/shared/money";
 import SubmitButton from "@/components/shared/submit-button";
@@ -68,10 +68,30 @@ export function AddressPanel(props: AddressPanelProps) {
       ? "Add address"
       : `Edit “${props.address.alias}”`;
 
+  /* `order-first` moves the panel above the list visually, but the <aside> is
+     still last in the DOM, and both entry points ("+ Add address" and a card's
+     "Edit") navigate with `scroll={false}`. Without this, a phone customer who
+     opens the editor from a card partway down the list keeps their scroll
+     position while the panel renders off-screen above them, and a keyboard
+     customer tabs through the rest of the list before reaching the form they
+     just opened. Focusing the heading fixes both: it scrolls the panel into
+     view and puts the form next in reading and tab order. The panel is keyed on
+     the requested address in `features/addresses/index.tsx`, so this runs once
+     per opened target rather than on every render. */
+  const titleRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    titleRef.current?.focus();
+  }, []);
+
   return (
     <Card className="gap-3">
       <CardHeader className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-2">
-        <CardTitle className="font-heading text-[19px] font-normal">
+        <CardTitle
+          ref={titleRef}
+          tabIndex={-1}
+          className="font-heading text-[19px] font-normal focus:outline-none"
+        >
           {title}
         </CardTitle>
         <Button

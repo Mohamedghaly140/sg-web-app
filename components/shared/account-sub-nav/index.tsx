@@ -34,7 +34,16 @@ export function AccountSubNav() {
   return (
     <nav
       aria-label="Account"
-      className="flex w-full gap-1 overflow-x-auto lg:w-[210px] lg:shrink-0 lg:flex-col lg:overflow-visible"
+      /* `overflow-x-auto` also makes overflow-y compute to `auto`, so the tab
+         row is a clipping scroll container below `lg`. The global focus ring
+         (`app/globals.css`) is a 2px outline at a 2px offset drawn *outside*
+         the link box, so with no room inside the scroll box it is clipped on
+         every item's top and bottom edge and on the outer edge of the first
+         and last. The 4.6px inset gives it room; the matching negative margin
+         keeps the first tab flush with the content column below it, and is
+         absorbed by the layout's own px-4. Both are dropped at `lg`, where the
+         nav is `overflow-visible` and nothing clips. */
+      className="-m-1 flex w-full gap-1 overflow-x-auto p-1 lg:m-0 lg:w-[210px] lg:shrink-0 lg:flex-col lg:overflow-visible lg:p-0"
     >
       <span className="hidden text-[11px] tracking-[0.14em] text-muted-foreground uppercase lg:block">
         YOUR ACCOUNT
