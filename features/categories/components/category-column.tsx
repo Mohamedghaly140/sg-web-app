@@ -14,10 +14,12 @@ export function CategoryColumn({ category }: { category: Category }) {
       <Link href={categoryHref} aria-label={category.name}>
         <div className="plate relative aspect-4/3 overflow-hidden bg-muted">
           {category.imageUrl && (
+            /* gap-8 is 36.8px; at ≥1280, (1206.4 − 73.6) / 3 gives a
+               377.6px cell, then the 12px plate mat leaves 365.6px. */
             <Image
               src={category.imageUrl}
               fill
-              sizes="(min-width: 1280px) 380px, (min-width: 640px) 33vw, 100vw"
+              sizes="(min-width: 1280px) 366px, (min-width: 1024px) calc(33.333vw - 61.07px), (min-width: 640px) calc(50vw - 58px), calc(100vw - 48.8px)"
               className="object-cover"
               alt={category.name}
             />

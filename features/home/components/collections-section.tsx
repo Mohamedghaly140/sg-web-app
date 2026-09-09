@@ -34,11 +34,14 @@ export async function CollectionsSection() {
           <Link key={category.id} href={`/categories/${category.slug}`}>
             <div className="plate relative aspect-[4/3] overflow-hidden bg-muted">
               {category.imageUrl && (
+                /* Exactly three cards go straight from 1 to 3 columns so a
+                   2-column rung cannot orphan the third. At ≥1280,
+                   (1206.4 − 55.2) / 3 − 12px plate mat = 371.7px. */
                 <Image
                   src={category.imageUrl}
                   alt={`${category.name} collection`}
                   fill
-                  sizes="(min-width: 1280px) 380px, (min-width: 640px) 33vw, 100vw"
+                  sizes="(min-width: 1280px) 372px, (min-width: 1024px) calc(33.333vw - 54.93px), (min-width: 640px) calc(33.333vw - 48.8px), calc(100vw - 48.8px)"
                   className="object-cover"
                 />
               )}

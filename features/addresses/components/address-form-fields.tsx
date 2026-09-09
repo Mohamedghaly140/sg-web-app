@@ -91,11 +91,15 @@ export function AddressFormFields({
       : EGYPT_GOVERNORATE_NAMES;
 
   if (layout === "grid") {
+    // The max-w-2xl guest column reaches its shipped three-up layout at md;
+    // waiting for lg would not widen the capped column.
     return (
       <div
         className={cn(
           "grid gap-3",
-          columns === 2 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-3",
+          columns === 2
+            ? "grid-cols-1 sm:grid-cols-2"
+            : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
         )}
       >
         {mode === "registered" ? (

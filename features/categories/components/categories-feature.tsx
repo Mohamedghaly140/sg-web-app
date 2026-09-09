@@ -42,15 +42,17 @@ export async function CategoriesFeature() {
         <span className="ml-auto text-xs text-muted-foreground">Updated hourly</span>
       </div>
 
-      <div className="grid grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((category) => (
           <CategoryColumn key={category.id} category={category} />
         ))}
       </div>
 
-      <div className="flex items-center gap-3 border-t border-border pt-4">
+      {/* The three tags plus the label need ~380px on one line, so the band
+          wraps rather than pushing the page past 360px. */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-border pt-4">
         <span className="text-eyebrow">Shortcuts</span>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Badge variant="outline" render={<Link href="/products?sort=newest" />}>
             New in
           </Badge>

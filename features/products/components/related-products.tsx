@@ -33,7 +33,10 @@ export function RelatedProducts({
           View all →
         </Link>
       </div>
-      <div className="flex gap-4 overflow-x-auto pb-2">
+      <div
+        tabIndex={0}
+        className="flex gap-4 overflow-x-auto pb-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
         {products.map((product) => (
           <ProductCard
             key={product.id}

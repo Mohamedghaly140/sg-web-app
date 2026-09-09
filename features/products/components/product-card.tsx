@@ -13,9 +13,18 @@ import { cn } from "@/lib/utils";
 /* The card is shared by two different layouts, so its `sizes` hint cannot be a
    single constant: a grid cell and a fixed-width rail card resolve to very
    different widths at the same viewport. Under-requesting makes Next pick an
-   undersized source and stretch it, so each consumer declares its own. */
+   undersized source and stretch it, so each consumer declares its own.
+   Public grid: 1 col <640, 2 cols 640–1023, 3 cols 1024–1279, 4 cols ≥1280.
+   At ≥1280 the frame content is 1280 − 73.6 = 1206.4px; subtract three
+   18.4px gaps, divide by four, then subtract the 12px plate mat: 275.8px,
+   rounded to 276px. From 1024–1279: (100vw − 73.6 − 36.8) / 3 − 12 =
+   calc(33.333vw - 48.8px). From 640–1023: (100vw − 55.2 − 18.4) / 2 − 12 =
+   calc(50vw - 48.8px). Below 640: 100vw − 36.8 − 12 =
+   calc(100vw - 48.8px). ProductCard also carries a 1px border outside the
+   plate on each side, so these deliberately approximate hints over-request
+   the true image box by about 2px, which is the safe direction. */
 export const PRODUCT_CARD_GRID_SIZES =
-  "(min-width: 1280px) 288px, (min-width: 1024px) calc(25vw - 32px), (min-width: 768px) calc(33.333vw - 31px), (min-width: 640px) calc(50vw - 37px), calc(50vw - 28px)";
+  "(min-width: 1280px) 276px, (min-width: 1024px) calc(33.333vw - 48.8px), (min-width: 640px) calc(50vw - 48.8px), calc(100vw - 48.8px)";
 
 /* Account wishlist grid: 1 col <640, 2 cols 640–1023, 3 cols from 1024.
    Below lg the sub-nav is a tab row (no horizontal column). Page padding is
@@ -29,7 +38,7 @@ export const PRODUCT_CARD_ACCOUNT_GRID_SIZES =
 type ProductCardProps = {
   product: ProductSummary;
   className?: string;
-  /** Next.js `sizes`. Defaults to the 4-column grid ladder used by the home
+  /** Next.js `sizes`. Defaults to the 1/2/3/4-column grid ladder used by the home
       bands and the listing; rail consumers must pass their own card widths. */
   imageSizes?: string;
   unavailable?: boolean;

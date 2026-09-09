@@ -8,7 +8,7 @@ export function CategoryProductsSkeleton() {
       <div className="flex items-center justify-between">
         <h2 className="font-heading text-lg font-semibold text-foreground">Products</h2>
       </div>
-      <div className="flex gap-4 overflow-x-hidden">
+      <div className="flex gap-4 overflow-x-auto">
         {Array.from({ length: SKELETON_CARD_COUNT }).map((_, index) => (
           <div key={index} className="flex w-[75vw] shrink-0 flex-col gap-2 sm:w-56">
             <Skeleton className="aspect-[3/4] w-full rounded-md" />

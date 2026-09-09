@@ -262,7 +262,7 @@ export function ContactForm() {
         </Card>
       </form>
 
-      <div className="mt-6 grid grid-cols-2 gap-4">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <p className="text-eyebrow mb-1">Delivery</p>
           <p className="text-justify text-xs text-muted-foreground">

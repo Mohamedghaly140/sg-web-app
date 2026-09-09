@@ -30,7 +30,7 @@ export function GuestContactStep({
 
   return (
     <section hidden={!active} className="flex flex-col gap-4" aria-label="Contact details">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <FormControl
           name="contact.name"
           label="Full name"

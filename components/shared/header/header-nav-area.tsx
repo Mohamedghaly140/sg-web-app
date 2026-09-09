@@ -25,16 +25,27 @@ export function HeaderNavArea({ categories }: HeaderNavAreaProps) {
   }
 
   if (pathname?.startsWith("/checkout")) {
+    /* The context line is a flex item in the header's nowrap row and had no
+       `min-w-0`, so it refused to shrink and pushed the page past the viewport
+       — measured at 391px against 360px on /checkout/guest.
+       `min-w-0 truncate` alone is not enough: the row's other children leave
+       only 9.4px at 360px, 63px at 414px and 112px at 640px, against the
+       131px this line needs for the words "Secure checkout" by themselves.
+       Every narrow width therefore truncates to an unreadable stub, so the
+       line is hidden until `md`, where 240px is finally available. The full
+       string including the sign-in link needs 335px and fits from `lg`.
+       Consequence recorded against §13.4: the header is the only sign-in
+       affordance on guest checkout, so below `md` there is now none. */
     if (isSignedIn) {
       return (
-        <span className="text-eyebrow text-muted-foreground">
+        <span className="text-eyebrow hidden min-w-0 truncate text-muted-foreground md:inline">
           Secure checkout · signed in as {user?.firstName ?? "you"}
         </span>
       );
     }
 
     return (
-      <span className="text-eyebrow text-muted-foreground">
+      <span className="text-eyebrow hidden min-w-0 truncate text-muted-foreground md:inline">
         Secure checkout ·{" "}
         <Link
           href="/sign-in"

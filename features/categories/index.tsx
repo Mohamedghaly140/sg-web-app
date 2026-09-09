@@ -22,7 +22,7 @@ export default async function CategoryFeature({ slug }: CategoryFeatureProps) {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-16 px-4 py-8 sm:px-6 lg:px-8">
       <Link
         href="/categories"
         className="text-sm font-medium text-muted-foreground hover:text-foreground"
