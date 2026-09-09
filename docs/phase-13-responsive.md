@@ -61,16 +61,26 @@ element whose `overflow-x` is `hidden` while its content is wider than its box.
 
 ### 13.2 Two-column screens
 
-- [ ] Stack every `1fr / Npx` layout below `lg` (1024px).
-- [ ] On cart and both checkouts, move the **summary rail above** the content, per the handoff's "summary rails move above the fold". Implement with `order-first lg:order-last` rather than duplicating the markup.
-- [ ] On product detail, move the buy box under the gallery.
-- [ ] On order detail, move the right rail below the timeline and lines. *(account done in 12.7 — in fact it already held: `order-detail-view.tsx` was written mobile-first with a `lg:`-only two-column grid, so the rail already fell below. Verified, not changed.)*
-- [ ] On addresses, stack the edit panel above the list when it is open, so the form the customer just opened is what they see. *(account done in 12.7 as `order-first lg:order-last` on the editor `<aside>`; no markup duplication.)*
+- [x] Stack every `1fr / Npx` layout below `lg` (1024px). *Already held everywhere: `cart-content.tsx:180`, `product-detail-feature.tsx:116`, `order-detail-view.tsx:39`, `features/home/components/hero.tsx:7` and `features/contact/index.tsx:8` each carry a `lg:`-only `grid-cols` declaration with no base-width column declaration, so all five stacks already existed and none needed rebuilding.*
+- [x] On cart and both checkouts, move the **summary rail above** the content, per the handoff's "summary rails move above the fold". Implement with `order-first lg:order-last` rather than duplicating the markup. *Landed on cart as `order-first lg:order-last` on `CartSummary`'s own root: the summary paints above the bag below `lg`, while staying last in the DOM after the bag lines because bag-before-totals is the correct reading and tab order for a screen reader at both widths. Both checkouts are N/A, recorded rather than built: Phase 10.2/10.3 shipped single-column stepped wizards (`features/checkout/index.tsx:23` at `max-w-5xl`, `features/checkout-guest/index.tsx:5` at `max-w-2xl`, with `flex flex-col gap-6` bodies at `registered-checkout-content.tsx:197` and `guest-checkout-wizard.tsx:196`), and `CheckoutCartSummary` lives inside the review step's card at `registered-review-step.tsx:42` and `guest-review-step.tsx:65`. There is no `1fr / Npx` grid or persistent rail to reorder; hoisting the summary out of the review card would be a new composition, not a breakpoint change.*
+- [x] On product detail, move the buy box under the gallery. *Already held by source order at `product-detail-feature.tsx:116`: the gallery precedes the buy box in the single-column base grid, with the `1fr / 380px` pair introduced only at `lg`; no `order-*` override was needed.*
+- [x] On order detail, move the right rail below the timeline and lines. *(account done in 12.7 — in fact it already held: `order-detail-view.tsx:39` was written mobile-first with a `lg:`-only two-column grid, so the rail already fell below. Verified, not changed. The same component also serves public `/orders/track/[token]` through `order-tracking-feature.tsx:29`, as well as the account route through `order-detail-feature.tsx:23`; 12.7 verified only the account route.)*
+- [x] On addresses, stack the edit panel above the list when it is open, so the form the customer just opened is what they see. *(account done in 12.7 as `order-first lg:order-last` on the editor `<aside>`; verified here with no markup duplication and no further change.)*
 
 ### 13.3 The product-detail gallery exception
 
-- [ ] Let the hero's fixed 660px height bend below `lg`: `aspect-[3/4] lg:aspect-auto lg:h-[660px]`, with the thumbnail strip moving from a vertical column to a horizontal row beneath the hero.
-- [ ] **State this exception in the code and in the phase notes.** Phase 9 forbids giving the hero an aspect ratio because the handoff names that as its one broken variant — but that constraint is about the *desktop* composition. Without an explicit note, a later reviewer reads this as a violation and reverts it.
+- [x] Preserve the shipped mobile gallery below `sm`, and cap the thumbnail-strip/hero pair in the `sm`–`lg` band instead of deriving height from the runaway width. *Landed: below `sm`, the gallery was already the full-width snap carousel with tick indicators specified by `docs/screens/product-detail.md` §Narrow width and was left untouched. The real gap was 640–1023px, where the desktop grid renders inside the PDP's single stacked column. Measured before the cap:*
+
+  | Viewport | Hero box | Width / height |
+  |---:|---:|---:|
+  | 640px | 472 × 660 | 0.72 |
+  | 768px | 600 × 660 | 0.91 |
+  | 1023px | 855 × 660 | **1.30 — the defect** |
+  | 1024px | 428 × 660 | 0.65 |
+  | 1280px | ~684 × 660 | ~1.04 |
+
+  *`aspect-[3/4]` was measured and rejected: it computes a 629px-tall hero at 640px, no material improvement over 660px, and a **1140px-tall hero at 1023px**, taller than the viewport. `aspect-ratio` derives height from width, but width is the runaway variable. A centred `max-w-[792px]` cap below `lg` instead limits the 108px thumbnails + 12px gap + hero pair to its designed width, so the hero tops out at about 672 × 660.*
+- [x] **Record the Phase 9 relationship in the code and phase notes.** *The prescription changed after measurement: no aspect-ratio exception was needed after all, so Phase 9 §9.5's "do not give the hero an aspect ratio" rule remains in force at every width; the hero keeps `h-[660px]`. The `cldUrl` crop at 600 × 648 was treated as verify-then-decide and left unchanged because `object-cover` absorbs the resulting 0.72–1.02 hero-box ratio across the capped band without requiring a second source.*
 
 ### 13.4 Shell
 
@@ -132,6 +142,10 @@ the remaining screens and hands the whole thing back for review.
 | S10 overview | `< md` | Earlier-orders table becomes stacked rows | A `min-w-[640px]` table in a 323px viewport |
 | S10 overview | `sm`–`lg` | Info cards stay one column until `lg` | At 640px two cards are ~160px each |
 | All body copy | `< sm` | `.measure` is left-aligned, not justified | Justified serif at a narrow measure; `hyphens: auto` does not rescue it |
+| Cart | `< lg` | Summary card paints above the bag lines via `order-first`; DOM order unchanged | The handoff's "summary rails move above the fold"; the DOM keeps bag-before-totals as the correct reading and tab order |
+| Both checkouts | all | No change — the wizard has no summary rail to move | 10.2/10.3 shipped single-column stepped flows with the summary inside the review step |
+| PDP gallery | `sm`–`lg` | Thumb strip + hero capped at 792px and centred | A single full-width column stretched the 660px hero to a 1.30 landscape box at 1023px |
+| PDP hero | all | Keeps `h-[660px]`, still no aspect ratio | `aspect-[3/4]` computes a 1140px hero at 1023px; Phase 9 §9.5's rule needs no exception |
 
 #### Designer-review ambiguities from 13.1
 

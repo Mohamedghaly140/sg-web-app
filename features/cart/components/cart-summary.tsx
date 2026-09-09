@@ -78,7 +78,14 @@ export function CartSummary({
   );
 
   return (
-    <aside aria-labelledby="cart-summary-heading" className="lg:sticky lg:top-6">
+    /* `order-*` is visual-only: the summary stays last in the DOM, after the
+       bag lines, because bag contents before totals is the correct reading and
+       tab order for a screen reader at both widths. The visual reorder serves
+       the handoff's "summary rails move above the fold" direction. */
+    <aside
+      aria-labelledby="cart-summary-heading"
+      className="order-first lg:order-last lg:sticky lg:top-6"
+    >
       <Card className="gap-3 shadow-none [--card-spacing:--spacing(3)]">
         <CardHeader className="pb-0">
           <CardTitle id="cart-summary-heading" className="font-normal">
