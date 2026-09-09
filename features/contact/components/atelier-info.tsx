@@ -12,7 +12,7 @@ export function AtelierInfo() {
   return (
     <div className="flex flex-col">
       <p className="text-eyebrow">Get in touch</p>
-      <h2 className="mt-3 mb-3 font-heading text-[38px] leading-[1.06] font-normal text-foreground">
+      <h2 className="mt-3 mb-3 font-heading text-display-3 font-normal text-foreground">
         Speak to the atelier
       </h2>
       <p className="measure max-w-[46ch] text-sm text-muted-foreground">

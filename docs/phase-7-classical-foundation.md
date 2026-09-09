@@ -52,6 +52,23 @@ Classical is editorial and book-like on a soft near-white ground. **Colour is ap
 
 - [x] Retune Tailwind's type ramp in `@theme` rather than editing call sites. The primitives are `text-xs` (12px) almost everywhere and Classical's ladder is 15px body / 13.5px controls / 12.5px secondary / 12px meta / 11.5–11px notes, so retuning the ramp lands every existing `text-xs` and `text-sm` on a Classical value for free. Set `--text-2xs: 0.6875rem` (11px, a **new** step), `--text-xs: 0.78125rem` (12.5px), `--text-sm: 0.84375rem` (13.5px), `--text-base: 0.9375rem` with `--text-base--line-height: 1.55` (15px), `--text-lg: 1.0625rem` (17px), `--text-xl: 1.25rem` (20px), `--text-2xl: 1.5625rem` (25px), `--text-3xl: 2rem` (32px), `--text-4xl: 2.625rem` (42px).
 - [x] Retune the existing `.text-eyebrow` utility **in place** rather than renaming it — it has nine call sites across the header, footer, sidenav and category tiles. Its Classical form is the kicker: 11px, `0.14em` tracking, uppercase, muted. **Implementation note:** converted from its legacy hand-written `@layer utilities { .text-eyebrow {...} }` block to Tailwind v4's `@utility text-eyebrow { ... }` at-rule (verified against current Tailwind docs). This matters because 8 of the 9 call sites pair `text-eyebrow` with an explicit `text-foreground` to force full ink; a raw `@layer utilities {}` block sits after `@import "tailwindcss"` and would win that tie by source order, silently muting all 8 sites. `@utility`-defined classes sort by property count instead, so the multi-property `.text-eyebrow` sorts before the single-property `text-foreground`, letting the explicit override keep winning — zero call-site edits needed, confirmed in-browser.
+> **Amended in Phase 13.6 (2026-09-10) — the display ramp.** The ramp above covers
+> body and interface sizes; the handoff's six *display* sizes (52/42/38/36/34/31px)
+> were left as arbitrary values at ten call sites, and only 42px existed as a token
+> (`--text-4xl`). `docs/phase-13-responsive.md` §13.6 added
+> `--text-display-1` … `--text-display-6` to the same `@theme inline` block, each a
+> `clamp()` pinned to its designed size at 1280px and interpolating to a derived
+> floor at 360px, each with a paired `--text-display-N--line-height`. This follows
+> 7.5's own rule — retune the ramp, never the call sites — and extends it to the
+> responsive axis the way 12.7 did for `.measure`.
+> Two constraints on anyone editing these: the middle term of each `clamp()` **must**
+> keep its `rem` component (a pure `vw` preferred size ignores browser text-resize
+> and breaks 200% zoom reflow), and weight is **not** baked into the tokens, because
+> `h1, h2 { font-weight: 400 }` in `@layer base` owns it and a token modifier would
+> lose to a call-site `font-semibold` anyway. On which: the 23 `font-semibold`
+> overrides this phase's §7.6 note counted, and deferred to Phases 9–12, are now all
+> cleared — 13.6 swept the last six.
+
 - [x] Add a sibling `.text-kicker` in `text-accent-strong`. The design uses two kickers with different roles — a muted one ("AUTUMN · 2026", "DELIVERING TO") and an accent one (`.card-kicker`, "IN PROGRESS", "ORDER PLACED") — and collapsing them into one loses the distinction. Also authored as `@utility text-kicker` for the same cascade-safety reason; no call sites yet.
 - [x] Add a `.measure` utility for justified body copy: `text-align: justify`, `hyphens: auto`, `max-width: 52ch`. **`hyphens: auto` is mandatory, not decorative** — justified serif text without hyphenation produces rivers at the 44–58ch measure the design specifies, which is precisely the failure mode that makes editorial systems look amateurish. Authored as `@utility measure`; no call sites yet. **Amended in Phase 12.7 (2026-09-03):** `text-align: justify` is now gated behind `@media (width >= 40rem)`. Justified serif at a narrow measure is unreadable and `hyphens: auto` does not rescue it, so below `sm` the copy is left-aligned; `hyphens: auto` and `max-width: 52ch` still apply at every width. The utility is the edit site named by `docs/phase-13-responsive.md` §13.6, so the seven call sites are untouched.
 - [x] Set global `:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px }` and an accent-tinted `::selection` in `@layer base`. The system's rule is that states are themed, never browser defaults.

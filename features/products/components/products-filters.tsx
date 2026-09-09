@@ -232,10 +232,24 @@ export function ProductsFilters({
       <SheetTrigger render={<Button />}>
         Filter (<span className="figures">{activeFilterCount}</span>)
       </SheetTrigger>
+      {/* One Sheet, two presentations. `side="bottom"` is the BASE case, not a
+          fallback: a 340px side panel is 94% of a 360px viewport, so below `sm`
+          the drawer rises from the bottom, and the `sm:` overrides restore S2's
+          designed 340px left rail.
+
+          The side must be flipped rather than overridden in CSS. The primitive
+          writes the rail as `data-[side=left]:…` attribute selectors, which win
+          on specificity over unprefixed call-site classes AND sit in a
+          different tailwind-merge group, so a "bottom sheet below sm" written
+          against `side="left"` would silently never apply while the horizontal
+          enter/exit transform kept firing. Every override below therefore
+          carries the same `data-[side=bottom]:` prefix as the class it
+          replaces, and every one is a `sm:` min-width rule, so it is emitted
+          after the base declaration and wins on source order. */}
       <SheetContent
-        side="left"
+        side="bottom"
         overlayClassName="bg-background/55 supports-backdrop-filter:backdrop-blur-none"
-        className="gap-4 border-border bg-background p-6 data-[side=left]:w-[340px] data-[side=left]:sm:max-w-[340px]"
+        className="gap-4 rounded-t-lg border-border bg-background p-4 data-[side=bottom]:max-h-[85svh] sm:rounded-none sm:p-6 data-[side=bottom]:sm:inset-x-auto data-[side=bottom]:sm:inset-y-0 data-[side=bottom]:sm:left-0 data-[side=bottom]:sm:h-full data-[side=bottom]:sm:max-h-none data-[side=bottom]:sm:w-[340px] data-[side=bottom]:sm:border-t-0 data-[side=bottom]:sm:border-r data-[side=bottom]:sm:data-ending-style:translate-x-[-2.5rem] data-[side=bottom]:sm:data-ending-style:translate-y-0 data-[side=bottom]:sm:data-starting-style:translate-x-[-2.5rem] data-[side=bottom]:sm:data-starting-style:translate-y-0"
       >
         <SheetHeader className="p-0">
           <SheetTitle className="font-normal">Refine</SheetTitle>
@@ -250,7 +264,7 @@ export function ProductsFilters({
               className="flex flex-col gap-[7px] text-sm"
             >
               <label
-                className="flex cursor-pointer items-center gap-2"
+                className="flex cursor-pointer items-center gap-2 pointer-coarse:min-h-10"
                 htmlFor="filter-category-all"
               >
                 <RadioGroupItem id="filter-category-all" value="all" />
@@ -259,7 +273,7 @@ export function ProductsFilters({
               {categories.map((category) => (
                 <label
                   key={category.id}
-                  className="flex cursor-pointer items-center gap-2"
+                  className="flex cursor-pointer items-center gap-2 pointer-coarse:min-h-10"
                   htmlFor={`filter-category-${category.id}`}
                 >
                   <RadioGroupItem
@@ -282,7 +296,7 @@ export function ProductsFilters({
                 className="mt-2 flex flex-col gap-[7px] pl-4 text-sm"
               >
                 <label
-                  className="flex cursor-pointer items-center gap-2"
+                  className="flex cursor-pointer items-center gap-2 pointer-coarse:min-h-10"
                   htmlFor={`filter-sub-category-all-${selectedCategory.id}`}
                 >
                   <RadioGroupItem
@@ -294,7 +308,7 @@ export function ProductsFilters({
                 {selectedCategory.subCategories.map((subCategory) => (
                   <label
                     key={subCategory.id}
-                    className="flex cursor-pointer items-center gap-2"
+                    className="flex cursor-pointer items-center gap-2 pointer-coarse:min-h-10"
                     htmlFor={`filter-sub-category-${subCategory.id}`}
                   >
                     <RadioGroupItem
@@ -331,7 +345,7 @@ export function ProductsFilters({
                       badgeVariants({
                         variant: selected ? "outline" : "secondary",
                       }),
-                      "cursor-pointer",
+                      "cursor-pointer pointer-coarse:min-h-10 pointer-coarse:px-4",
                     )}
                     onClick={() => handleSizeToggle(size)}
                   >
@@ -359,7 +373,7 @@ export function ProductsFilters({
                       badgeVariants({
                         variant: selected ? "outline" : "secondary",
                       }),
-                      "cursor-pointer",
+                      "cursor-pointer pointer-coarse:min-h-10 pointer-coarse:px-4",
                     )}
                     onClick={() => handleColorToggle(color)}
                   >

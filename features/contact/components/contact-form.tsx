@@ -265,13 +265,13 @@ export function ContactForm() {
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <p className="text-eyebrow mb-1">Delivery</p>
-          <p className="text-justify text-xs text-muted-foreground">
+          <p className="text-left text-xs text-muted-foreground sm:text-justify">
             Cash on delivery across Egypt, from 65 EGP.
           </p>
         </div>
         <div>
           <p className="text-eyebrow mb-1">Returns</p>
-          <p className="text-justify text-xs text-muted-foreground">
+          <p className="text-left text-xs text-muted-foreground sm:text-justify">
             14 days, unworn and with tags. Alterations are final sale.
           </p>
         </div>

@@ -80,7 +80,7 @@ export function GuestReviewStep({
             <CouponForm applied={applied} onApplied={onApplied} />
             <input type="hidden" name="couponCode" value={applied?.code ?? ""} />
 
-            <p className="text-justify text-[11.5px] text-muted-foreground">
+            <p className="text-left text-[11.5px] text-muted-foreground sm:text-justify">
               Checking out as a guest. We email a tracking link valid for 30
               days — sign in with the same email later to keep the order in
               your account.

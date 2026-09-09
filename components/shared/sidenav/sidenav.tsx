@@ -6,7 +6,7 @@ import { LucideMenu } from "lucide-react";
 
 import { HeaderAuthControls } from "@/components/shared/header/header-auth-controls";
 import { HeaderWishlistLink } from "@/components/shared/header/header-wishlist-link";
-import { SearchField } from "@/components/shared/search-field";
+import { useHeaderVariant } from "@/components/shared/header/use-header-variant";
 import type { Category } from "@/features/categories/types/category";
 import {
   Accordion,
@@ -28,12 +28,23 @@ type SidenavProps = {
 };
 
 export function Sidenav({ categories }: SidenavProps) {
+  const variant = useHeaderVariant();
   const [isOpen, setIsOpen] = useState(false);
 
   const close = () => setIsOpen(false);
 
+  /* Checkout is a focus flow: a catalogue menu inside it is a leak, not a
+     feature. This removes chrome, never a route — the wordmark still links to
+     `/` — so the guest-first, no-hard-redirect stance is untouched. Account
+     keeps the menu: the desktop account header drops nav and search by design
+     (the handoff's "Account screens replace nav+search with the customer
+     name"), and without this a phone would have no navigation at all. */
+  if (variant === "checkout") {
+    return null;
+  }
+
   return (
-    <div className="sm:hidden">
+    <div className="lg:hidden">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger
           render={
@@ -48,10 +59,6 @@ export function Sidenav({ categories }: SidenavProps) {
           </SheetHeader>
 
           <div className="flex flex-col gap-6 px-4 pb-4">
-            <form action="/products" method="GET">
-              <SearchField className="w-full" />
-            </form>
-
             <nav aria-label="Main" className="flex flex-col gap-4">
               <Link
                 href="/products?sort=newest"

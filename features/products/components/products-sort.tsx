@@ -39,6 +39,16 @@ export function ProductsSort() {
       <Select value={params.sort} onValueChange={handleSortChange}>
         <SelectTrigger
           aria-label="Sort products"
+          /* The `h-auto` here is inert and always has been: the primitive's own
+             `data-[size=default]:h-8` is an attribute selector and outranks a
+             plain `h-auto` utility, so this trigger renders at the standard
+             36.8px rather than collapsing to its line box. Measured in §13.7.
+             It is left in place rather than removed because the padding resets
+             beside it are doing the real work of making the control read as part
+             of the "Sort: Newest" sentence, and this keeps the intent legible.
+             It follows that this control takes the primitive's
+             `pointer-coarse:min-h-10` touch floor like any other -- it was never
+             the inline text run an opt-out would have been justified for. */
           className="h-auto border-transparent px-0 py-0 text-[13px] text-accent-strong hover:border-transparent focus-visible:border-transparent [&_svg]:text-accent"
         >
           {/* Base UI renders the raw item value unless given a formatter, which

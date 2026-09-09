@@ -103,7 +103,7 @@ export function Gallery({
               key={slide.id}
               type="button"
               className={cn(
-                "h-6 w-8 border-t transition-colors",
+                "h-6 w-8 border-t transition-colors pointer-coarse:min-h-10 pointer-coarse:min-w-10",
                 activeIndex === index
                   ? "border-accent-strong"
                   : "border-muted-foreground/30",

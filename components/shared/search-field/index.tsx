@@ -7,12 +7,14 @@ type SearchFieldProps = {
   className?: string;
   defaultValue?: string;
   name?: string;
+  autoFocus?: boolean;
 };
 
 export function SearchField({
   className,
   defaultValue,
   name,
+  autoFocus,
 }: SearchFieldProps) {
   return (
     <div className="relative">
@@ -23,6 +25,7 @@ export function SearchField({
         placeholder="Search products..."
         aria-label="Search products"
         defaultValue={defaultValue}
+        autoFocus={autoFocus}
         className={cn("pl-8", className)}
       />
     </div>

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 export function CheckoutSignInPrompt() {
   return (
     <div className="flex flex-col items-center gap-4 py-12 text-center">
-      <h1 className="font-heading text-2xl font-semibold text-foreground">
+      <h1 className="font-heading text-2xl text-foreground">
         Sign in to check out faster
       </h1>
       <p className="max-w-sm text-sm text-muted-foreground">

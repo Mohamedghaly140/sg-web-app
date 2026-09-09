@@ -24,7 +24,7 @@ export function ProductsTitleBand({
 
   return (
     <div className="flex items-baseline gap-6 border-b border-border pb-6">
-      <h1 className="flex-none font-heading text-[34px] leading-tight font-normal text-foreground">
+      <h1 className="flex-none font-heading text-display-5 font-normal text-foreground">
         {selectedCategory?.name ?? "The catalogue"}
       </h1>
     </div>

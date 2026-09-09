@@ -19,15 +19,31 @@ const buttonVariants = cva(
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:outline-destructive dark:bg-destructive/20 dark:hover:bg-destructive/30",
         link: "text-accent-strong underline-offset-3 hover:underline",
       },
+      /* Touch targets (Phase 13.6, docs/phase-13-responsive.md §13.6). The
+         designed control height is `h-8` -- 36.8px against this app's
+         `--spacing: 0.2875rem` -- which is below the 44px coarse-pointer
+         guidance. `pointer-coarse:` is Tailwind's own built-in variant
+         (`@media (pointer: coarse)`); do not register a custom one.
+         `min-h-*`/`min-w-*` rather than `h-*`/`size-*` deliberately: a
+         `pointer-coarse:h-10` sorts after a plain `h-auto` and would win inside
+         the media query, clipping the deliberate `h-auto` sites
+         (features/contact/components/contact-form.tsx:232,244 and
+         features/products/components/products-sort.tsx). `min-h-10` is 46px --
+         `min-h-9` is 41.4px and misses the target.
+         `lg`/`icon-lg` already clear 44px. `variant: "link"` is intentionally
+         untouched: it sets inline in a paragraph and a height floor would break
+         the line box. */
       size: {
         default:
-          "h-8 gap-1.5 px-4 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 rounded-sm px-2 text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 rounded-sm px-2.5 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+          "h-8 gap-1.5 px-4 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 pointer-coarse:min-h-10",
+        xs: "h-6 gap-1 rounded-sm px-2 text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3 pointer-coarse:min-h-10",
+        sm: "h-7 gap-1 rounded-sm px-2.5 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5 pointer-coarse:min-h-10",
         lg: "h-10 gap-1.5 px-5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        icon: "size-8",
-        "icon-xs": "size-6 rounded-sm [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm": "size-7 rounded-sm",
+        icon: "size-8 pointer-coarse:min-h-10 pointer-coarse:min-w-10",
+        "icon-xs":
+          "size-6 rounded-sm [&_svg:not([class*='size-'])]:size-3 pointer-coarse:min-h-10 pointer-coarse:min-w-10",
+        "icon-sm":
+          "size-7 rounded-sm pointer-coarse:min-h-10 pointer-coarse:min-w-10",
         "icon-lg": "size-12",
       },
     },

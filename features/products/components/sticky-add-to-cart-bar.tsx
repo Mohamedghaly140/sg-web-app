@@ -65,7 +65,12 @@ export function StickyAddToCartBar({
   return (
     <div
       className={cn(
-        "fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 backdrop-blur transition-transform motion-reduce:transition-none sm:hidden",
+        /* Scoped to the stacked layout (Phase 13.6). The boundary is `lg`, not
+           `sm`: product-detail-feature.tsx holds the designed `1fr / 380px` pair
+           only from `lg`, so between 640px and 1023px the buy box sits *below*
+           the 660px gallery and is off screen for the same reason it is on a
+           phone. `sm:hidden` left that whole band without the bar. */
+        "fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 backdrop-blur transition-transform motion-reduce:transition-none lg:hidden",
         isVisible ? "translate-y-0" : "pointer-events-none translate-y-full",
       )}
       aria-hidden={!isVisible}

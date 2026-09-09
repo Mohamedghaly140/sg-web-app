@@ -51,7 +51,7 @@ export function RegisteredAddressStep({
 
   return (
     <section hidden={!active} className="flex flex-col gap-4" aria-label="Shipping address">
-      <h2 className="font-heading text-lg font-semibold text-foreground">
+      <h2 className="font-heading text-lg text-foreground">
         Shipping address
       </h2>
       {addresses.length > 0 ? (

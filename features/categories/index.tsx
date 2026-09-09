@@ -48,7 +48,7 @@ export default async function CategoryFeature({ slug }: CategoryFeatureProps) {
           )}
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
+          <h1 className="font-heading text-display-2 text-foreground">
             {category.name}
           </h1>
           <Badge variant="secondary">

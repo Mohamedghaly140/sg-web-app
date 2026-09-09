@@ -20,7 +20,7 @@ export function Hero() {
       </div>
       <div className="self-center">
         <div className="text-eyebrow">Autumn · 2026</div>
-        <h1 className="my-3 font-heading text-[52px] font-normal leading-[1.03] text-foreground">
+        <h1 className="my-3 font-heading text-display-1 font-normal text-foreground">
           A world of timeless designs
         </h1>
         <p className="measure max-w-[44ch] text-muted-foreground">

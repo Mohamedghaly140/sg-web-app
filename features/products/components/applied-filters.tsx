@@ -139,12 +139,21 @@ export function AppliedFilters({
   });
 
   return (
-    <div className="flex flex-wrap items-center gap-2 py-3">
-      <span className="text-eyebrow">Applied</span>
+    /* Below `sm` the tags scroll as one line instead of wrapping into three
+       (Phase 13 §13.5). `-mx-4 px-4` bleeds the scroller through the feature's
+       own `px-4` so tags run edge to edge. `overflow-x-auto` also makes
+       overflow-y compute to `auto`, so a focused tag would be clipped by the
+       scroll box -- the row's existing `py-3` (13.8px) already clears the
+       global 2px outline at a 2px offset, which is why this needs no vertical
+       inset of its own, unlike the account sub-nav's `gap-1` tab row. The
+       bleed is dropped at `sm`, where the row wraps as designed. */
+    <div className="-mx-4 flex items-center gap-2 overflow-x-auto px-4 py-3 sm:mx-0 sm:flex-wrap sm:overflow-x-visible sm:px-0">
+      <span className="text-eyebrow shrink-0">Applied</span>
       {applied.map((filter) => (
         <Badge
           key={filter.key}
           variant="outline"
+          className="shrink-0 pointer-coarse:min-h-10 pointer-coarse:px-4"
           render={
             <Link href={filter.href} aria-label={`Remove filter: ${filter.label}`} />
           }
@@ -155,7 +164,7 @@ export function AppliedFilters({
       ))}
       <Link
         href={clearAllHref}
-        className="ml-2 text-[11.5px] text-accent-strong underline-offset-3 hover:underline"
+        className="ml-2 inline-flex shrink-0 items-center text-[11.5px] text-accent-strong underline-offset-3 hover:underline pointer-coarse:min-h-10"
       >
         Clear all
       </Link>

@@ -30,7 +30,7 @@ export async function CategoryProducts({ categorySlug }: CategoryProductsProps) 
   return (
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
+        <h2 className="font-heading text-xl text-foreground sm:text-2xl">
           Products
         </h2>
         <Link

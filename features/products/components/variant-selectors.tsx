@@ -104,7 +104,7 @@ export function VariantSelectors({
                 // `outline-1` sets only the width; without an explicit
                 // `outline-solid` the style stays `none` and the selected
                 // swatch renders no ring at all.
-                className="size-[26px] flex-none rounded-full border border-border p-0 shadow-none data-pressed:outline-solid data-pressed:outline-1 data-pressed:outline-accent data-pressed:outline-offset-2"
+                className="size-[26px] flex-none rounded-full border border-border p-0 shadow-none pointer-coarse:size-11 data-pressed:outline-solid data-pressed:outline-1 data-pressed:outline-accent data-pressed:outline-offset-2"
                 style={{
                   backgroundColor: getColorSwatch(color) ?? "var(--muted)",
                 }}

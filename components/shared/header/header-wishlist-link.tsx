@@ -50,7 +50,7 @@ export function HeaderWishlistLink({
           variant="ghost"
           size="icon"
           aria-label="Wishlist"
-          className="hidden sm:inline-flex"
+          className="hidden lg:inline-flex"
           onClick={handleClick}
         >
           <LucideHeart />

@@ -13,6 +13,7 @@ import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { GuestContactStep } from "@/features/checkout-guest/components/guest-contact-step";
 import { GuestReviewStep } from "@/features/checkout-guest/components/guest-review-step";
+import { GuestSignInRow } from "@/features/checkout-guest/components/guest-sign-in-row";
 import { GuestShippingStep } from "@/features/checkout-guest/components/guest-shipping-step";
 import { placeGuestOrderAction } from "@/features/checkout/actions/place-guest-order";
 import { CheckoutStepRail } from "@/features/checkout/components/checkout-step-rail";
@@ -195,6 +196,11 @@ export function GuestCheckoutWizard() {
   return (
     <div className="flex flex-col gap-6">
       <CheckoutStepRail steps={STEP_ITEMS} currentStep={step.step} />
+
+      {/* Outside <Form> on purpose: a Clerk trigger inside it would be a button
+          in the checkout form. It sits with the step summaries so it leaves the
+          screen once the customer has committed to guest details. */}
+      {step.step === "contact" ? <GuestSignInRow /> : null}
 
       {step.step !== "contact" && contactSummary ? (
         <CompletedStepSummary

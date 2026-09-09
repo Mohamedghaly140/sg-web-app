@@ -43,6 +43,7 @@ export function OrderStatusFilter({ searchParams }: OrderStatusFilterProps) {
             <li key={option.value ?? "all"}>
               <Badge
                 variant={isActive ? "outline" : "secondary"}
+                className="pointer-coarse:min-h-10 pointer-coarse:px-4"
                 render={
                   <Link
                     href={buildOrdersHref(searchParams, {

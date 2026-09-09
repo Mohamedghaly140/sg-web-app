@@ -83,6 +83,31 @@
   --text-2xl: 1.5625rem;
   --text-3xl: 2rem;
   --text-4xl: 2.625rem;
+  /* Display ramp (Phase 13.6, docs/phase-13-responsive.md §13.6). The handoff
+     draws six display sizes -- 52/42/38/36/34/31px -- and draws them at 1280px
+     only. Each rung is PINNED to its designed size at the 1280px end, so the
+     designed composition is unchanged, and interpolates linearly down to a
+     floor derived at 360px. The floors are ours, not the designer's; they are
+     recorded in §13.7's derived-decisions table.
+     The middle term must keep its `rem` component -- a pure `vw` preferred
+     size ignores the browser's text-size setting and would fail §13.7's 200%
+     zoom reflow check. Pair each rung with its line height here rather than
+     leaving `leading-[...]` at the call site, so the ramp stays one edit site.
+     Weight is deliberately NOT baked in: `h1, h2 { font-weight: 400 }` in
+     `@layer base` owns that, and a token modifier would lose to a call-site
+     `font-semibold` anyway (Tailwind v4 sorts utilities above base). */
+  --text-display-1: clamp(2rem, 1.5109rem + 2.1739vw, 3.25rem);
+  --text-display-1--line-height: 1.03;
+  --text-display-2: clamp(1.75rem, 1.4076rem + 1.5217vw, 2.625rem);
+  --text-display-2--line-height: 1.06;
+  --text-display-3: clamp(1.625rem, 1.3315rem + 1.3043vw, 2.375rem);
+  --text-display-3--line-height: 1.06;
+  --text-display-4: clamp(1.5rem, 1.2065rem + 1.3043vw, 2.25rem);
+  --text-display-4--line-height: 1.08;
+  --text-display-5: clamp(1.4375rem, 1.1685rem + 1.1957vw, 2.125rem);
+  --text-display-5--line-height: 1.1;
+  --text-display-6: clamp(1.375rem, 1.1549rem + 0.9783vw, 1.9375rem);
+  --text-display-6--line-height: 1.12;
 }
 
 @theme {

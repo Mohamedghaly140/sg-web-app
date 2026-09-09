@@ -32,10 +32,10 @@ export async function CategoriesFeature() {
   return (
     <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex items-baseline gap-6 border-b border-border pb-6">
-        <h1 className="flex-none font-heading text-[34px] leading-tight font-normal text-foreground">
+        <h1 className="flex-none font-heading text-display-5 font-normal text-foreground">
           The index
         </h1>
-        <p className="text-justify max-w-[58ch] text-[13px] text-muted-foreground">
+        <p className="max-w-[58ch] text-left text-[13px] text-muted-foreground sm:text-justify">
           {categories.length} collections, {pieceCount} pieces. Every line below goes
           straight to what is in stock under it.
         </p>
@@ -53,17 +53,23 @@ export async function CategoriesFeature() {
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-border pt-4">
         <span className="text-eyebrow">Shortcuts</span>
         <div className="flex flex-wrap gap-2">
-          <Badge variant="outline" render={<Link href="/products?sort=newest" />}>
+          <Badge
+            variant="outline"
+            className="pointer-coarse:min-h-10 pointer-coarse:px-4"
+            render={<Link href="/products?sort=newest" />}
+          >
             New in
           </Badge>
           <Badge
             variant="outline"
+            className="pointer-coarse:min-h-10 pointer-coarse:px-4"
             render={<Link href="/products?maxPrice=2000" />}
           >
             Under 2,000 EGP
           </Badge>
           <Badge
             variant="outline"
+            className="pointer-coarse:min-h-10 pointer-coarse:px-4"
             render={<Link href="/products?sort=top_rated" />}
           >
             Top rated

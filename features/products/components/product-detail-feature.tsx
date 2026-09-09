@@ -127,7 +127,7 @@ export default async function ProductDetailFeature({
             />
             {/* The handoff's frame heading is not part of the real page, so the
                 product name is the page's single h1. */}
-            <h1 className="font-heading text-[31px] text-foreground">
+            <h1 className="font-heading text-display-6 text-foreground">
               {product.name}
             </h1>
             <PriceBlock
@@ -147,7 +147,7 @@ export default async function ProductDetailFeature({
               colors={product.colors}
               quantity={product.quantity}
             />
-            <p className="whitespace-pre-line text-justify text-xs text-muted-foreground">
+            <p className="whitespace-pre-line text-left text-xs text-muted-foreground sm:text-justify">
               {product.description}
             </p>
             <Separator className="my-2" />
