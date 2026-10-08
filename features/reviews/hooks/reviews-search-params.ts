@@ -24,7 +24,7 @@ const parseAsLimit = createParser<number>({
   },
 }).withDefault(20);
 
-export const reviewsParamsParsers = {
+const reviewsParamsParsers = {
   page: parseAsPage,
   limit: parseAsLimit,
 };

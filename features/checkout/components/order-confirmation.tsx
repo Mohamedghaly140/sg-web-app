@@ -4,8 +4,7 @@ import Link from "next/link";
 import { Money } from "@/components/shared/money";
 import { OrderStatusBadge } from "@/components/shared/order-status-badge";
 import { Button } from "@/components/ui/button";
-import type { OrderItemParsed } from "@/features/checkout/schema/order-item-schema";
-import type { OrderStatus } from "@/features/checkout/types/order";
+import type { OrderItem, OrderStatus } from "@/features/checkout/types/order";
 import { formatDate, isSameDecimal } from "@/lib/format";
 
 /* Visible column labels for the stacked presentation below `md`. They are
@@ -23,7 +22,7 @@ export type OrderConfirmationProps = {
   status: OrderStatus;
   paymentMethod: string;
   totalOrderPrice: string;
-  items: OrderItemParsed[];
+  items: OrderItem[];
   itemsSubtotal: string;
   discountApplied: string;
   couponCode?: string;

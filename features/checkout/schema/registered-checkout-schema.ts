@@ -10,5 +10,3 @@ export const placeOrderSchema = z.object({
   couponCode: z.preprocess(optionalBlankToUndefined, couponCodeSchema.optional()),
   notes: z.preprocess(optionalBlankToUndefined, z.string().trim().max(1000).optional()),
 });
-
-export type PlaceOrderInput = z.infer<typeof placeOrderSchema>;

@@ -20,10 +20,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { removeCartItemAction } from "@/features/cart/actions/remove-cart-item";
 import { CartDrawerLine } from "@/features/cart/components/cart-drawer-line";
 import { cartKeys } from "@/features/cart/hooks/cart-keys";
 import { fetchCurrentCart, useCart } from "@/features/cart/hooks/use-cart";
-import { useRemoveCartItem } from "@/features/cart/hooks/use-remove-cart-item";
+import { useCartMutation } from "@/features/cart/hooks/use-cart-mutation";
+import type { RemoveCartItemInput } from "@/features/cart/schema/remove-cart-item-schema";
 
 export function CartDrawer() {
   const { data: cart, isPending, isError, refetch } = useCart();
@@ -37,7 +39,7 @@ export function CartDrawer() {
     }
   };
 
-  const removeCartItem = useRemoveCartItem({
+  const removeCartItem = useCartMutation<RemoveCartItemInput>(removeCartItemAction, {
     onSuccess: async (result, { itemId }) => {
       try {
         if (!("error" in result)) {

@@ -15,12 +15,15 @@ import Spinner from "@/components/shared/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { removeCartItemAction } from "@/features/cart/actions/remove-cart-item";
+import { updateCartItemQuantityAction } from "@/features/cart/actions/update-cart-item-quantity";
 import {
   availableForProduct,
   type CartErrorView,
 } from "@/features/cart/hooks/use-cart-error-state";
-import { useRemoveCartItem } from "@/features/cart/hooks/use-remove-cart-item";
-import { useUpdateCartItemQuantity } from "@/features/cart/hooks/use-update-cart-item-quantity";
+import { useCartMutation } from "@/features/cart/hooks/use-cart-mutation";
+import type { RemoveCartItemInput } from "@/features/cart/schema/remove-cart-item-schema";
+import type { UpdateCartItemQuantityInput } from "@/features/cart/schema/update-cart-item-quantity-schema";
 import type { CartActionResult, CartItem } from "@/features/cart/types/cart";
 import { cldUrl, isSameDecimal } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -47,7 +50,7 @@ export function CartLineItem({
   onMutationResult,
   onUnexpectedError,
 }: CartLineItemProps) {
-  const updateQuantity = useUpdateCartItemQuantity({
+  const updateQuantity = useCartMutation<UpdateCartItemQuantityInput>(updateCartItemQuantityAction, {
     onSuccess: (result) => {
       void onMutationResult(item, result);
     },
@@ -55,7 +58,7 @@ export function CartLineItem({
       onUnexpectedError(item.id, mutationError);
     },
   });
-  const removeItem = useRemoveCartItem({
+  const removeItem = useCartMutation<RemoveCartItemInput>(removeCartItemAction, {
     onSuccess: (result) => {
       void onMutationResult(item, result);
     },

@@ -3,16 +3,19 @@ import { z, ZodError } from "zod";
 import { ApiError, getValidationErrors } from "@/lib/api/api-error";
 import { redirectOnAuthError } from "@/lib/api/redirect-on-auth-error";
 
-export type ActionState = {
+// `data` carries a typed, serializable action payload (e.g. the placed order)
+// so callers never stringify structured values into `response`.
+export type ActionState<TData = unknown> = {
   status?: "SUCCESS" | "ERROR";
   message: string;
   payload?: Record<string, string | string[]>;
   fieldErrors: Record<string, string[] | undefined>;
   timestamp: number;
   response?: Record<string, string | number | undefined | null>;
+  data?: TData;
 };
 
-export const EMPTY_ACTION_STATE: ActionState = {
+export const EMPTY_ACTION_STATE: ActionState<never> = {
   message: "",
   fieldErrors: {},
   timestamp: Date.now(),
@@ -40,7 +43,7 @@ export const fromErrorToActionState = (
   mode: "public" | "optional" | "required",
   formData?: FormData,
   response?: Record<string, string | number>,
-): ActionState => {
+): ActionState<never> => {
   redirectOnAuthError(error, mode);
 
   if (isClerkAPIResponseError(error)) {
@@ -119,12 +122,13 @@ export const fromErrorToActionState = (
   );
 };
 
-export const toActionState = (
+export const toActionState = <TData = never>(
   status: ActionState["status"],
   message: string,
   formData?: FormData,
   response?: Record<string, string | number | undefined | null>,
-): ActionState => {
+  data?: TData,
+): ActionState<TData> => {
   return {
     status,
     message,
@@ -132,5 +136,6 @@ export const toActionState = (
     timestamp: Date.now(),
     payload: toPayload(formData),
     response,
+    data,
   };
 };

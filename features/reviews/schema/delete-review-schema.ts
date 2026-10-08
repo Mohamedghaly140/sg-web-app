@@ -7,5 +7,3 @@ export const deleteReviewSchema = z
     slug: z.string().min(1),
   })
   .strict();
-
-export type DeleteReviewInput = z.infer<typeof deleteReviewSchema>;

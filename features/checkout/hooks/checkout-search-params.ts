@@ -1,6 +1,6 @@
 import { createParser } from "nuqs/server";
 
-export const GUEST_CHECKOUT_STEPS = [
+const GUEST_CHECKOUT_STEPS = [
   "contact",
   "shipping",
   "payment",
@@ -8,7 +8,7 @@ export const GUEST_CHECKOUT_STEPS = [
 ] as const;
 export type GuestCheckoutStep = (typeof GUEST_CHECKOUT_STEPS)[number];
 
-export const REGISTERED_CHECKOUT_STEPS = ["address", "payment", "review"] as const;
+const REGISTERED_CHECKOUT_STEPS = ["address", "payment", "review"] as const;
 export type RegisteredCheckoutStep = (typeof REGISTERED_CHECKOUT_STEPS)[number];
 
 const parseAsGuestCheckoutStep = createParser<GuestCheckoutStep>({

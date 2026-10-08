@@ -6,7 +6,10 @@ import {
   toActionState,
   type ActionState,
 } from "@/components/shared/form/utils/to-action-state";
-import { fromCheckoutErrorToActionState } from "@/features/checkout/lib/checkout-error-resolver";
+import {
+  fromCheckoutErrorToActionState,
+  type CheckoutErrorProjection,
+} from "@/features/checkout/lib/checkout-error-resolver";
 import { placeOrderSchema } from "@/features/checkout/schema/registered-checkout-schema";
 import type { OrderDetail } from "@/features/checkout/types/order";
 import { apiFetch } from "@/lib/api/http";
@@ -18,7 +21,7 @@ import { apiFetch } from "@/lib/api/http";
 export async function placeOrderAction(
   _prev: ActionState,
   formData: FormData,
-): Promise<ActionState> {
+): Promise<ActionState<OrderDetail | CheckoutErrorProjection>> {
   try {
     const input = placeOrderSchema.parse(Object.fromEntries(formData));
 
@@ -35,19 +38,7 @@ export async function placeOrderAction(
 
     revalidatePath("/account/orders");
 
-    return toActionState("SUCCESS", "Order placed", formData, {
-      humanOrderId: order.humanOrderId,
-      orderId: order.id,
-      status: order.status,
-      paymentMethod: order.paymentMethod,
-      isPaid: order.isPaid ? "true" : "false",
-      createdAt: order.createdAt,
-      items: JSON.stringify(order.items),
-      itemsSubtotal: order.itemsSubtotal,
-      discountApplied: order.discountApplied,
-      shippingFees: order.shippingFees,
-      totalOrderPrice: order.totalOrderPrice,
-    });
+    return toActionState("SUCCESS", "Order placed", formData, undefined, order);
   } catch (error) {
     return fromCheckoutErrorToActionState(error, "required", formData);
   }

@@ -32,7 +32,7 @@ const parseAsLimit = createParser<number>({
 
 const status = parseAsStringEnum<OrderStatus>(ORDER_STATUSES);
 
-export const ordersParsers = {
+const ordersParsers = {
   status,
   page: parseAsPage,
   limit: parseAsLimit,

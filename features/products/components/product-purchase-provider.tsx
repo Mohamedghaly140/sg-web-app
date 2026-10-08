@@ -11,11 +11,12 @@ import {
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { useAddCartItem } from "@/features/cart/hooks/use-add-cart-item";
+import { addCartItemAction } from "@/features/cart/actions/add-cart-item";
 import {
   useCartErrorState,
   type CartErrorView,
 } from "@/features/cart/hooks/use-cart-error-state";
+import { useCartMutation } from "@/features/cart/hooks/use-cart-mutation";
 import type { AddCartItemInput } from "@/features/cart/schema/add-cart-item-schema";
 
 type ProductPurchaseContextValue = {
@@ -64,7 +65,7 @@ export function ProductPurchaseProvider({
   const [isProductUnavailable, setIsProductUnavailable] = useState(false);
   const { getError, setError, clearError } = useCartErrorState();
 
-  const addItem = useAddCartItem({
+  const addItem = useCartMutation<AddCartItemInput>(addCartItemAction, {
     onSuccess: (result) => {
       if ("error" in result) {
         setError(productId, result.error);

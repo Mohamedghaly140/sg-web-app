@@ -4,8 +4,10 @@ import { useIsMutating } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { addCartItemAction } from "@/features/cart/actions/add-cart-item";
 import { cartKeys } from "@/features/cart/hooks/cart-keys";
-import { useAddCartItem } from "@/features/cart/hooks/use-add-cart-item";
+import { useCartMutation } from "@/features/cart/hooks/use-cart-mutation";
+import type { AddCartItemInput } from "@/features/cart/schema/add-cart-item-schema";
 import type { OrderItem } from "@/features/checkout/types/order";
 
 type OrderLineBuyAgainButtonProps = {
@@ -28,7 +30,7 @@ export function OrderLineBuyAgainButton({
   // first line in an unreachable cart behind two success toasts. The cart page
   // needs no such guard because a guest standing on it already holds the
   // cookie. See the guest-cart lifecycle in AGENTS.md.
-  const addItem = useAddCartItem({ mutationKey: cartKeys.current });
+  const addItem = useCartMutation<AddCartItemInput>(addCartItemAction, { mutationKey: cartKeys.current });
   const isAnyLineAdding = useIsMutating({ mutationKey: cartKeys.current }) > 0;
 
   function handleBuyAgain() {

@@ -9,5 +9,3 @@ export const updateReviewSchema = z
     reviewId: z.string().min(1),
   })
   .strict();
-
-export type UpdateReviewInput = z.infer<typeof updateReviewSchema>;

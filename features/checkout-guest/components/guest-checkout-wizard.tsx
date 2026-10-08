@@ -21,13 +21,8 @@ import { CompletedStepSummary } from "@/features/checkout/components/completed-s
 import { OrderConfirmation } from "@/features/checkout/components/order-confirmation";
 import type { GuestCheckoutStep } from "@/features/checkout/hooks/checkout-search-params";
 import { useGuestCheckoutStep } from "@/features/checkout/hooks/use-checkout-step";
-import { parseCheckoutStructuredErrors } from "@/features/checkout/lib/checkout-error-resolver";
-import {
-  parseOrderItems,
-  type OrderItemParsed,
-} from "@/features/checkout/schema/order-item-schema";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
-import type { OrderStatus } from "@/features/checkout/types/order";
+import type { PlacedGuestOrder } from "@/features/checkout/types/order";
 import type { ShippingFee } from "@/features/shipping/types/shipping";
 import { cartKeys } from "@/features/cart/hooks/cart-keys";
 import { fetchCurrentCart, useCart } from "@/features/cart/hooks/use-cart";
@@ -48,27 +43,15 @@ export function GuestCheckoutWizard() {
   const [shippingFee, setShippingFee] = useState<ShippingFee | null>(null);
   const [contactSummary, setContactSummary] = useState("");
   const [shippingSummary, setShippingSummary] = useState("");
-  const [placedOrder, setPlacedOrder] = useState<{
-    humanOrderId: string;
-    status: OrderStatus;
-    paymentMethod: string;
-    createdAt: string;
-    items: OrderItemParsed[];
-    isPaid: boolean;
-    claimToken: "sent-by-email";
-    customerName: string;
-    email: string;
-    deliveryCity: string;
-    deliveryGovernorate: string;
-    itemsSubtotal: string;
-    discountApplied: string;
-    shippingFees: string;
-    totalOrderPrice: string;
-  } | null>(null);
+  // Set from `onSuccess`, not derived from `actionState`: rendering the
+  // confirmation in the same commit would unmount `Form` before its feedback
+  // effect runs the cart reset and toast.
+  const [placedOrder, setPlacedOrder] = useState<PlacedGuestOrder | null>(null);
 
   const [actionState, formAction] = useActionState(placeGuestOrderAction, EMPTY_ACTION_STATE);
   const cart: Cart | undefined = cartQuery.data;
-  const { variantErrors, stockErrors } = parseCheckoutStructuredErrors(actionState.response);
+  const data = actionState.data;
+  const checkoutError = data && "step" in data ? data : undefined;
 
   // `queryClient.setQueryData` is a side effect and must not run during
   // render — `Form`'s `onSuccess` (via `useActionFeedback`) fires it exactly
@@ -77,46 +60,8 @@ export function GuestCheckoutWizard() {
     if (cartQuery.data && cartQuery.data.items.length > 0) {
       queryClient.setQueryData(cartKeys.current, EMPTY_CART);
     }
-    if (
-      typeof actionState.response?.humanOrderId === "string" &&
-      typeof actionState.response.itemsSubtotal === "string" &&
-      typeof actionState.response.discountApplied === "string" &&
-      typeof actionState.response.shippingFees === "string" &&
-      typeof actionState.response.totalOrderPrice === "string" &&
-      (actionState.response.status === "PENDING" ||
-        actionState.response.status === "PROCESSING" ||
-        actionState.response.status === "SHIPPED" ||
-        actionState.response.status === "DELIVERED" ||
-        actionState.response.status === "CANCELLED" ||
-        actionState.response.status === "REFUNDED") &&
-      typeof actionState.response.paymentMethod === "string" &&
-      typeof actionState.response.createdAt === "string" &&
-      typeof actionState.response.items === "string" &&
-      (actionState.response.isPaid === "true" ||
-        actionState.response.isPaid === "false") &&
-      actionState.response.claimToken === "sent-by-email" &&
-      typeof actionState.response.customerName === "string" &&
-      typeof actionState.payload?.["contact.email"] === "string" &&
-      typeof actionState.payload["shipping.city"] === "string" &&
-      typeof actionState.payload["shipping.governorate"] === "string"
-    ) {
-      setPlacedOrder({
-        humanOrderId: actionState.response.humanOrderId,
-        status: actionState.response.status,
-        paymentMethod: actionState.response.paymentMethod,
-        createdAt: actionState.response.createdAt,
-        items: parseOrderItems(actionState.response.items),
-        isPaid: actionState.response.isPaid === "true",
-        claimToken: actionState.response.claimToken,
-        customerName: actionState.response.customerName,
-        email: actionState.payload["contact.email"].trim(),
-        deliveryCity: actionState.payload["shipping.city"].trim(),
-        deliveryGovernorate: actionState.payload["shipping.governorate"].trim(),
-        itemsSubtotal: actionState.response.itemsSubtotal,
-        discountApplied: actionState.response.discountApplied,
-        shippingFees: actionState.response.shippingFees,
-        totalOrderPrice: actionState.response.totalOrderPrice,
-      });
+    if (data && "humanOrderId" in data) {
+      setPlacedOrder(data);
     }
   };
 
@@ -231,7 +176,7 @@ export function GuestCheckoutWizard() {
         actionState={actionState}
         onSuccess={handleSuccess}
         onError={() => {
-          const checkoutCode = actionState.response?.checkoutCode;
+          const checkoutCode = checkoutError?.code;
           if (
             checkoutCode === "INSUFFICIENT_STOCK" ||
             checkoutCode === "INVALID_VARIANT" ||
@@ -244,7 +189,7 @@ export function GuestCheckoutWizard() {
               .catch(() => {});
           }
 
-          const responseStep = actionState.response?.step;
+          const responseStep = checkoutError?.step;
           if (responseStep === "address") {
             void setStep({ step: "shipping" });
           } else if (
@@ -293,8 +238,8 @@ export function GuestCheckoutWizard() {
           onPaymentBack={() => void setStep({ step: "shipping" })}
           onPaymentNext={() => void setStep({ step: "review" })}
           onReviewBack={() => void setStep({ step: "payment" })}
-          variantErrors={variantErrors}
-          stockErrors={stockErrors}
+          variantErrors={checkoutError?.variantErrors ?? []}
+          stockErrors={checkoutError?.stockErrors ?? []}
         />
       </Form>
     </div>

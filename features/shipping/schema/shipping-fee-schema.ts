@@ -9,5 +9,3 @@ export const shippingFeeInputSchema = z.object({
   governorate: destinationSchema,
   city: destinationSchema.optional(),
 });
-
-export type ShippingFeeInput = z.infer<typeof shippingFeeInputSchema>;

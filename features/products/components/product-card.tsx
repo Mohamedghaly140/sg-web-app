@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
    calc(100vw - 48.8px). ProductCard also carries a 1px border outside the
    plate on each side, so these deliberately approximate hints over-request
    the true image box by about 2px, which is the safe direction. */
-export const PRODUCT_CARD_GRID_SIZES =
+const PRODUCT_CARD_GRID_SIZES =
   "(min-width: 1280px) 276px, (min-width: 1024px) calc(33.333vw - 48.8px), (min-width: 640px) calc(50vw - 48.8px), calc(100vw - 48.8px)";
 
 /* Account wishlist grid: 1 col <640, 2 cols 640–1023, 3 cols from 1024.

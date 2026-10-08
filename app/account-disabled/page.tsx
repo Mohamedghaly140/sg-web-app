@@ -1,7 +1,7 @@
 import { LucideCircleAlert } from "lucide-react";
 import Link from "next/link";
 
-import { AccountDisabledCleanup } from "@/components/shared/account-disabled/account-disabled-cleanup";
+import { AccountDisabledSignOut } from "@/components/shared/account-disabled/account-disabled-sign-out";
 import { EmptyState } from "@/components/shared/empty-state";
 import { buttonVariants } from "@/components/ui/button";
 import { isAccountDisabled } from "@/lib/api/check-account-disabled";
@@ -11,7 +11,7 @@ export default async function AccountDisabledPage() {
 
   return (
     <div className="flex flex-1 items-center justify-center py-24">
-      <AccountDisabledCleanup shouldSignOut={shouldSignOut} />
+      <AccountDisabledSignOut when={shouldSignOut} />
       <EmptyState
         icon={<LucideCircleAlert className="size-6 text-muted-foreground" />}
         title="This account has been disabled"

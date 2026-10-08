@@ -14,8 +14,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { clearCartAction } from "@/features/cart/actions/clear-cart";
 import { CartCouponForm } from "@/features/cart/components/cart-coupon-form";
-import { useClearCart } from "@/features/cart/hooks/use-clear-cart";
+import { useCartMutation } from "@/features/cart/hooks/use-cart-mutation";
 import { isSameDecimal } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -33,7 +34,7 @@ export function CartClearButton({
   disabled,
   onSuccess,
 }: CartClearButtonProps) {
-  const clearCart = useClearCart({
+  const clearCart = useCartMutation<void>(() => clearCartAction(), {
     onSuccess: (result) => {
       if ("error" in result) {
         toast.error(result.error.message);

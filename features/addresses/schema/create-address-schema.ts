@@ -29,5 +29,3 @@ export const createAddressSchema = z
     longitude: longitudeSchema,
   })
   .strict();
-
-export type CreateAddressInput = z.infer<typeof createAddressSchema>;

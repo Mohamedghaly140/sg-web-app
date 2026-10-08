@@ -5,5 +5,3 @@ export const cancelOrderSchema = z
     id: z.string().min(1),
   })
   .strict();
-
-export type CancelOrderInput = z.infer<typeof cancelOrderSchema>;

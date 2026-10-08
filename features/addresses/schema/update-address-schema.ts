@@ -31,5 +31,3 @@ export const updateAddressSchema = z
     longitude: longitudeSchema,
   })
   .strict();
-
-export type UpdateAddressInput = z.infer<typeof updateAddressSchema>;

@@ -10,7 +10,7 @@ export const countrySchema = z.literal(DEFAULT_COUNTRY);
  * Extendable — add cities as shipping coverage expands; labels must stay
  * canonical (shipping-zone matching is case-sensitive on the backend).
  */
-export const EGYPT_LOCATIONS = [
+const EGYPT_LOCATIONS = [
   { governorate: "Cairo", cities: ["Nasr City", "Heliopolis", "Maadi", "Zamalek", "New Cairo"] },
   { governorate: "Giza", cities: ["Dokki", "Mohandessin", "6th of October", "Sheikh Zayed", "Haram"] },
   { governorate: "Alexandria", cities: ["Smouha", "Stanley", "Gleem", "Montaza", "Agami"] },

@@ -43,11 +43,6 @@ type CldTransformOptions = {
   dpr?: "auto" | number;
 };
 
-type CldTransformation =
-  | string
-  | readonly string[]
-  | CldTransformOptions;
-
 export function formatEGP(amount: string | number): string {
   const value = typeof amount === "number" ? amount : Number(amount);
 
@@ -116,7 +111,7 @@ export function formatAmount(amount: string | number): string {
  * sends variable-scale decimal strings and the storefront does no money math,
  * so this must never round-trip through `Number`.
  */
-export function normalizeDecimal(value: string): string {
+function normalizeDecimal(value: string): string {
   const trimmed = value.trim();
   const negative = trimmed.startsWith("-");
   const unsigned = negative ? trimmed.slice(1) : trimmed;
@@ -164,7 +159,7 @@ export function formatMonthYear(value: string | Date): string {
 
 export function cldUrl(
   imageUrl: string,
-  transformation: CldTransformation,
+  transformation: CldTransformOptions,
 ): string {
   const params = serializeCldTransformation(transformation);
   if (!params) {
@@ -196,16 +191,8 @@ function toDate(value: string | Date): Date {
 }
 
 function serializeCldTransformation(
-  transformation: CldTransformation,
+  transformation: CldTransformOptions,
 ): string {
-  if (typeof transformation === "string") {
-    return sanitizeCldPart(transformation);
-  }
-
-  if (isCldParts(transformation)) {
-    return transformation.map(sanitizeCldPart).filter(Boolean).join(",");
-  }
-
   const parts = [
     transformation.width ? `w_${transformation.width}` : undefined,
     transformation.height ? `h_${transformation.height}` : undefined,
@@ -217,14 +204,4 @@ function serializeCldTransformation(
   ];
 
   return parts.filter(Boolean).join(",");
-}
-
-function sanitizeCldPart(part: string): string {
-  return part.trim().replace(/^\/+|\/+$/g, "");
-}
-
-function isCldParts(
-  transformation: CldTransformation,
-): transformation is readonly string[] {
-  return Array.isArray(transformation);
 }

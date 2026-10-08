@@ -8,5 +8,3 @@ export const createReviewSchema = z
     slug: z.string().min(1),
   })
   .strict();
-
-export type CreateReviewInput = z.infer<typeof createReviewSchema>;

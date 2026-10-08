@@ -22,13 +22,8 @@ import { RegisteredPaymentStep } from "@/features/checkout/components/registered
 import { RegisteredReviewStep } from "@/features/checkout/components/registered-review-step";
 import type { RegisteredCheckoutStep } from "@/features/checkout/hooks/checkout-search-params";
 import { useRegisteredCheckoutStep } from "@/features/checkout/hooks/use-checkout-step";
-import { parseCheckoutStructuredErrors } from "@/features/checkout/lib/checkout-error-resolver";
-import {
-  parseOrderItems,
-  type OrderItemParsed,
-} from "@/features/checkout/schema/order-item-schema";
 import type { CouponPreview } from "@/features/checkout/types/coupon";
-import type { OrderStatus } from "@/features/checkout/types/order";
+import type { OrderDetail } from "@/features/checkout/types/order";
 import type { ShippingFee } from "@/features/shipping/types/shipping";
 import { cartKeys } from "@/features/cart/hooks/cart-keys";
 import { fetchCurrentCart, useCart } from "@/features/cart/hooks/use-cart";
@@ -58,22 +53,14 @@ export function RegisteredCheckoutContent({
   );
   const [shippingFee, setShippingFee] = useState<ShippingFee | null>(null);
   const [applied, setApplied] = useState<CouponPreview | null>(null);
-  const [placedOrder, setPlacedOrder] = useState<{
-    humanOrderId: string;
-    orderId?: string;
-    status: OrderStatus;
-    paymentMethod: string;
-    createdAt: string;
-    items: OrderItemParsed[];
-    isPaid: boolean;
-    itemsSubtotal: string;
-    discountApplied: string;
-    shippingFees: string;
-    totalOrderPrice: string;
-  } | null>(null);
+  // Set from `onSuccess`, not derived from `actionState`: rendering the
+  // confirmation in the same commit would unmount `Form` before its feedback
+  // effect runs the cart reset and toast.
+  const [placedOrder, setPlacedOrder] = useState<OrderDetail | null>(null);
 
   const [actionState, formAction] = useActionState(placeOrderAction, EMPTY_ACTION_STATE);
-  const { variantErrors, stockErrors } = parseCheckoutStructuredErrors(actionState.response);
+  const data = actionState.data;
+  const checkoutError = data && "step" in data ? data : undefined;
   const selectedAddress = addresses.find((address) => address.id === selectedId) ?? null;
 
   // `queryClient.setQueryData` is a side effect and must not run during
@@ -83,40 +70,8 @@ export function RegisteredCheckoutContent({
     if (cartQuery.data && cartQuery.data.items.length > 0) {
       queryClient.setQueryData(cartKeys.current, EMPTY_CART);
     }
-    if (
-      typeof actionState.response?.humanOrderId === "string" &&
-      typeof actionState.response.itemsSubtotal === "string" &&
-      typeof actionState.response.discountApplied === "string" &&
-      typeof actionState.response.shippingFees === "string" &&
-      typeof actionState.response.totalOrderPrice === "string" &&
-      (actionState.response.status === "PENDING" ||
-        actionState.response.status === "PROCESSING" ||
-        actionState.response.status === "SHIPPED" ||
-        actionState.response.status === "DELIVERED" ||
-        actionState.response.status === "CANCELLED" ||
-        actionState.response.status === "REFUNDED") &&
-      typeof actionState.response.paymentMethod === "string" &&
-      typeof actionState.response.createdAt === "string" &&
-      typeof actionState.response.items === "string" &&
-      (actionState.response.isPaid === "true" ||
-        actionState.response.isPaid === "false")
-    ) {
-      setPlacedOrder({
-        humanOrderId: actionState.response.humanOrderId,
-        orderId:
-          typeof actionState.response.orderId === "string"
-            ? actionState.response.orderId
-            : undefined,
-        status: actionState.response.status,
-        paymentMethod: actionState.response.paymentMethod,
-        createdAt: actionState.response.createdAt,
-        items: parseOrderItems(actionState.response.items),
-        isPaid: actionState.response.isPaid === "true",
-        itemsSubtotal: actionState.response.itemsSubtotal,
-        discountApplied: actionState.response.discountApplied,
-        shippingFees: actionState.response.shippingFees,
-        totalOrderPrice: actionState.response.totalOrderPrice,
-      });
+    if (data && "humanOrderId" in data) {
+      setPlacedOrder(data);
     }
   };
 
@@ -125,7 +80,7 @@ export function RegisteredCheckoutContent({
       <OrderConfirmation
         customerName={customerName}
         humanOrderId={placedOrder.humanOrderId}
-        orderId={placedOrder.orderId}
+        orderId={placedOrder.id}
         createdAt={placedOrder.createdAt}
         status={placedOrder.status}
         paymentMethod={placedOrder.paymentMethod}
@@ -217,7 +172,7 @@ export function RegisteredCheckoutContent({
         actionState={actionState}
         onSuccess={handleSuccess}
         onError={() => {
-          const checkoutCode = actionState.response?.checkoutCode;
+          const checkoutCode = checkoutError?.code;
           if (
             checkoutCode === "INSUFFICIENT_STOCK" ||
             checkoutCode === "INVALID_VARIANT" ||
@@ -234,7 +189,7 @@ export function RegisteredCheckoutContent({
             setApplied(null);
           }
 
-          const responseStep = actionState.response?.step;
+          const responseStep = checkoutError?.step;
           if (responseStep === "address") {
             void setStep({ step: "address" });
           } else if (responseStep === "payment") {
@@ -265,8 +220,8 @@ export function RegisteredCheckoutContent({
           applied={applied}
           onApplied={setApplied}
           onBack={() => void setStep({ step: "payment" })}
-          variantErrors={variantErrors}
-          stockErrors={stockErrors}
+          variantErrors={checkoutError?.variantErrors ?? []}
+          stockErrors={checkoutError?.stockErrors ?? []}
         />
       </Form>
     </div>

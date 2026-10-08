@@ -79,6 +79,7 @@ The action pipeline is: Zod whitelist parse → `apiFetch` → `revalidatePath` 
 
 - *Why:* this gives progressive form submission, server-only credentials, field-level validation, preserved payloads, and one consistent feedback model.
 - *Consequence:* forms compose the shared `Form`, `FormControl`, `FieldError`, and `SubmitButton`. `Form` emits sonner feedback; redirect flows set the `toast` flash cookie and let `RedirectToast` display it after navigation.
+- *Typed payloads:* `ActionState<TData>` carries structured results in `data` (for example the placed checkout order or the checkout error projection) instead of stringified values in `response`.
 
 Interactive cart and wishlist Server Actions are the separate typed-result style in ADR-W003: they return an authoritative payload or serializable error to `useMutation`, not `ActionState`.
 

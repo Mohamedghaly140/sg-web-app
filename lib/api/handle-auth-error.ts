@@ -1,5 +1,5 @@
 import "server-only";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { ApiError } from "./api-error";
 import { redirectOnAuthError } from "./redirect-on-auth-error";
 
@@ -18,8 +18,6 @@ export function handleAuthError(error: unknown): never {
   switch (error.code) {
     case "RESOURCE_NOT_FOUND":
       notFound();
-    case "FORBIDDEN":
-      redirect("/access-denied");
     default:
       throw error;
   }

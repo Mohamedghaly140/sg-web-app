@@ -6,8 +6,7 @@ import type { Cart } from "@/features/cart/types/cart";
 
 /**
  * Carries the root layout's server-read cart down to `useCart()` so the Header
- * badge and drawer can start from server data without taking an argument. An
- * explicit `useCart(initialData)` argument always wins over this context.
+ * badge and drawer can start from server data without taking an argument.
  */
 export const CartInitialDataContext = createContext<Cart | undefined>(
   undefined,

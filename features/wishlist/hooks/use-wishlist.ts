@@ -9,7 +9,7 @@ import { wishlistKeys } from "@/features/wishlist/hooks/wishlist-keys";
 import type { Wishlist } from "@/features/wishlist/types/wishlist";
 import { ApiError } from "@/lib/api/api-error";
 
-export async function fetchCurrentWishlist(
+async function fetchCurrentWishlist(
   signal?: AbortSignal,
 ): Promise<Wishlist> {
   const response = await fetch("/api/wishlist", {

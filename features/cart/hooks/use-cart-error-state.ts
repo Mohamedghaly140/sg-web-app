@@ -25,7 +25,7 @@ export type CartErrorView = {
   fieldErrors?: Record<string, string[]>;
 };
 
-export function toCartErrorView(
+function toCartErrorView(
   error: CartActionErrorPayload,
 ): CartErrorView {
   return {

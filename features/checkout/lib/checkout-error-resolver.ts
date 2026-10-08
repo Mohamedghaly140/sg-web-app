@@ -40,7 +40,7 @@ export type CheckoutErrorProjection = {
  * correction once the cart cache is refreshed, so checkout does not
  * duplicate it. Never branch on `error.message`.
  */
-export function resolveCheckoutError(error: unknown): CheckoutErrorProjection {
+function resolveCheckoutError(error: unknown): CheckoutErrorProjection {
   if (!(error instanceof ApiError)) {
     return {
       step: "review",
@@ -113,15 +113,15 @@ export function resolveCheckoutError(error: unknown): CheckoutErrorProjection {
  * `placeGuestOrderAction` and `placeOrderAction` both funnel their catch
  * block through this instead of the generic `fromErrorToActionState` —
  * reuses its `ZodError`/`ApiError` field-error extraction and
- * `redirectOnAuthError` side effect, but overrides `message`/`response`
- * with checkout-specific step routing so the wizard knows where to send the
+ * `redirectOnAuthError` side effect, but overrides `message` and returns the
+ * checkout step routing in `data` so the wizard knows where to send the
  * customer back to.
  */
 export function fromCheckoutErrorToActionState(
   error: unknown,
   mode: "public" | "optional" | "required",
   formData: FormData,
-): ActionState {
+): ActionState<CheckoutErrorProjection> {
   if (error instanceof ZodError) {
     const base = fromErrorToActionState(error, mode, formData);
     return {
@@ -134,38 +134,5 @@ export function fromCheckoutErrorToActionState(
   const projection = resolveCheckoutError(error);
   const base = fromErrorToActionState(error, mode, formData);
 
-  return {
-    ...base,
-    message: projection.message,
-    response: {
-      ...base.response,
-      step: projection.step,
-      checkoutCode: projection.code,
-      variantErrors: projection.variantErrors
-        ? JSON.stringify(projection.variantErrors)
-        : undefined,
-      stockErrors: projection.stockErrors
-        ? JSON.stringify(projection.stockErrors)
-        : undefined,
-    },
-  };
-}
-
-export function parseCheckoutStructuredErrors(
-  response: ActionState["response"],
-): { variantErrors: VariantErrorEntry[]; stockErrors: StockErrorEntry[] } {
-  const parseArray = <T,>(value: unknown): T[] => {
-    if (typeof value !== "string") return [];
-    try {
-      const parsed = JSON.parse(value);
-      return Array.isArray(parsed) ? (parsed as T[]) : [];
-    } catch {
-      return [];
-    }
-  };
-
-  return {
-    variantErrors: parseArray<VariantErrorEntry>(response?.variantErrors),
-    stockErrors: parseArray<StockErrorEntry>(response?.stockErrors),
-  };
+  return { ...base, message: projection.message, data: projection };
 }

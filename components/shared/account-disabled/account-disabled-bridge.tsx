@@ -1,44 +1,16 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
-
-import { useAccountDisabledSignOut } from "@/components/shared/account-disabled/use-account-disabled-sign-out";
+import { AccountDisabledSignOut } from "@/components/shared/account-disabled/account-disabled-sign-out";
 import { useCart } from "@/features/cart/hooks/use-cart";
 import { ApiError } from "@/lib/api/api-error";
 
+// Lives inside the providers so `useCart()` has a QueryClient above it.
 export function AccountDisabledBridge() {
   const { error } = useCart();
-  const router = useRouter();
-  const signOut = useAccountDisabledSignOut();
-  const handledRef = useRef(false);
 
-  useEffect(() => {
-    if (!error) {
-      handledRef.current = false;
-      return;
-    }
-
-    if (!(error instanceof ApiError && error.code === "ACCOUNT_DISABLED")) {
-      return;
-    }
-
-    if (handledRef.current) {
-      return;
-    }
-    handledRef.current = true;
-
-    void (async () => {
-      try {
-        await signOut();
-      } catch {
-        // The session-id guard inside useAccountDisabledSignOut resets on
-        // failure, so a later disabled detection can retry; still surface
-        // the disabled state now rather than leaving the user stranded.
-      }
-      router.replace("/account-disabled");
-    })();
-  }, [error, signOut, router]);
-
-  return null;
+  return (
+    <AccountDisabledSignOut
+      when={error instanceof ApiError && error.code === "ACCOUNT_DISABLED"}
+    />
+  );
 }

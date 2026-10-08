@@ -62,9 +62,9 @@ const parseAsPrice = createParser<number>({
 // Defaults are named so the parsers and `buildProductsHref` cannot drift: the
 // href builder omits any value still sitting on its default, which is what
 // keeps a freshly cleared listing at a bare `/products`.
-export const DEFAULT_SORT: ProductsSortOption = "newest";
-export const DEFAULT_PAGE = 1;
-export const DEFAULT_LIMIT = 20;
+const DEFAULT_SORT: ProductsSortOption = "newest";
+const DEFAULT_PAGE = 1;
+const DEFAULT_LIMIT = 20;
 
 const parseAsPage = createParser<number>({
   parse(value) {

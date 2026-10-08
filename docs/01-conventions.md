@@ -71,15 +71,18 @@ Also mirror the backend's sliding expiry after every successful anonymous cart-a
 Form mutations for addresses, reviews, and checkout live in `features/<name>/actions/`, one action per file. They return the existing `ActionState` type from `components/shared/form/utils/to-action-state.ts`:
 
 ```ts
-type ActionState = {
+type ActionState<TData = unknown> = {
   status?: "SUCCESS" | "ERROR";
   message: string;
   payload?: Record<string, string | string[]>;
   fieldErrors: Record<string, string[] | undefined>;
   timestamp: number;
   response?: Record<string, string | number | undefined | null>;
+  data?: TData;
 };
 ```
+
+Structured results go in the typed `data` field, never as JSON strings in `response`. `toActionState(status, message, formData?, response?, data?)` sets it. Checkout returns the placed order there on success (`OrderDetail`, or `PlacedGuestOrder` for guests) and the `CheckoutErrorProjection` (`step`, `code`, `variantErrors`, `stockErrors`) on failure. Clients narrow it with an `in` check.
 
 The canonical action is:
 
@@ -107,7 +110,7 @@ export async function updateProfileAction(
 
 - Zod schemas are strict request whitelists because unknown body fields return `422 VALIDATION_ERROR`. Never spread API response objects or raw form objects into request bodies.
 - `Object.fromEntries(formData)` is acceptable only for single-value inputs. For repeated values such as sizes, colors, or multi-select IDs, construct the input with `formData.getAll(name)` so values are not collapsed.
-- `fromErrorToActionState` preserves submitted values in `payload`, maps validation entries to `fieldErrors`, records API code/status in `response`, and always returns a fresh `timestamp` for feedback effects. During Phase 0, adapt the copied helper from its admin-shaped `{ field, message }` assumption to the storefront contract's `{ field, constraints }` entries by flattening validated constraint values into field messages.
+- `fromErrorToActionState` preserves submitted values in `payload`, maps validation entries to `fieldErrors`, records API code/status in `response` (checkout additionally returns its step-routing projection in `data`), and always returns a fresh `timestamp` for feedback effects. During Phase 0, adapt the copied helper from its admin-shaped `{ field, message }` assumption to the storefront contract's `{ field, constraints }` entries by flattening validated constraint values into field messages.
 - Expected failures return `ActionState`; actions do not throw. Only Next control flow such as `redirect()` or `notFound()` may escape, and redirect calls must not be swallowed by the action's error conversion.
 
 Client forms wire `useActionState` and render the shared `Form`, `FormControl`, and `SubmitButton`. `Form` observes the timestamp and emits success/error sonner feedback. `FormControl` composes the label/control with `FieldError`; `SubmitButton` uses `useFormStatus()` to disable itself and show pending state.

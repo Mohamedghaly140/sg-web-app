@@ -12,6 +12,12 @@ export const ORDER_STATUSES: OrderStatus[] = [
   "REFUNDED",
 ];
 
+export const IN_PROGRESS_STATUSES: ReadonlySet<OrderStatus> = new Set([
+  "PENDING",
+  "PROCESSING",
+  "SHIPPED",
+]);
+
 export type OrderSummary = {
   id: string;
   humanOrderId: string;

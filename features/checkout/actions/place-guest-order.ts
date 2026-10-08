@@ -6,16 +6,22 @@ import {
   toActionState,
   type ActionState,
 } from "@/components/shared/form/utils/to-action-state";
-import { fromCheckoutErrorToActionState } from "@/features/checkout/lib/checkout-error-resolver";
+import {
+  fromCheckoutErrorToActionState,
+  type CheckoutErrorProjection,
+} from "@/features/checkout/lib/checkout-error-resolver";
 import { parseGuestCheckoutFormData } from "@/features/checkout/schema/guest-checkout-schema";
-import type { GuestOrderDetail } from "@/features/checkout/types/order";
+import type {
+  GuestOrderDetail,
+  PlacedGuestOrder,
+} from "@/features/checkout/types/order";
 import { apiFetch } from "@/lib/api/http";
 import { clearCartSession } from "@/lib/cart-session";
 
 export async function placeGuestOrderAction(
   _prev: ActionState,
   formData: FormData,
-): Promise<ActionState> {
+): Promise<ActionState<PlacedGuestOrder | CheckoutErrorProjection>> {
   try {
     const input = parseGuestCheckoutFormData(formData);
     const { postalCode, latitude, longitude, ...requiredShipping } = input.shipping;
@@ -44,20 +50,14 @@ export async function placeGuestOrderAction(
     await clearCartSession();
     revalidatePath("/account/orders");
 
-    return toActionState("SUCCESS", "Order placed", formData, {
-      humanOrderId: order.humanOrderId,
-      status: order.status,
-      paymentMethod: order.paymentMethod,
-      isPaid: order.isPaid ? "true" : "false",
-      createdAt: order.createdAt,
-      items: JSON.stringify(order.items),
-      claimToken: order.claimToken,
+    const placedOrder: PlacedGuestOrder = {
+      ...order,
       customerName: input.contact.name,
-      itemsSubtotal: order.itemsSubtotal,
-      discountApplied: order.discountApplied,
-      shippingFees: order.shippingFees,
-      totalOrderPrice: order.totalOrderPrice,
-    });
+      email: input.contact.email,
+      deliveryCity: input.shipping.city,
+      deliveryGovernorate: input.shipping.governorate,
+    };
+    return toActionState("SUCCESS", "Order placed", formData, undefined, placedOrder);
   } catch (error) {
     return fromCheckoutErrorToActionState(error, "optional", formData);
   }

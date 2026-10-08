@@ -7,8 +7,9 @@ import { AccountInfoCards } from "@/features/account/components/account-info-car
 import { AccountInProgressOrderCard } from "@/features/account/components/account-in-progress-order-card";
 import { getCurrentUser } from "@/features/account/queries/get-current-user";
 import { getAddresses } from "@/features/addresses/queries/get-addresses";
-import { getOrder } from "@/features/orders/queries/get-order";
+import { getOrderPreview } from "@/features/orders/queries/get-order";
 import { getOrders } from "@/features/orders/queries/get-orders";
+import { IN_PROGRESS_STATUSES } from "@/features/orders/types/order";
 import { handleAuthError } from "@/lib/api/handle-auth-error";
 
 export default async function AccountFeature() {
@@ -19,14 +20,11 @@ export default async function AccountFeature() {
     currentUser(),
   ]);
 
-  const inProgressOrder = orders.data.find(
-    (order) =>
-      order.status === "PENDING" ||
-      order.status === "PROCESSING" ||
-      order.status === "SHIPPED",
+  const inProgressOrder = orders.data.find((order) =>
+    IN_PROGRESS_STATUSES.has(order.status),
   );
   const inProgressItems = inProgressOrder
-    ? (await getOrder(inProgressOrder.id)).items.slice(0, 2)
+    ? ((await getOrderPreview(inProgressOrder.id))?.items.slice(0, 2) ?? [])
     : [];
   const earlierOrders = orders.data.filter(
     (order) => order.id !== inProgressOrder?.id,

@@ -136,9 +136,8 @@
   /* Classical status roles (Phase 7.2, docs/phase-7-classical-foundation.md
      §7.2). Classical is a mono scheme, but order status still needs six
      distinguishable states -- docs/01-conventions.md §7 mandates semantic
-     badge variants, and components/shared/order-status-badge.tsx,
-     payment-status-badge.tsx and active-badge.tsx all depend on these
-     four roles, so they're retuned rather than deleted.
+     badge variants, and components/shared/order-status-badge.tsx
+     depends on these four roles, so they're retuned rather than deleted.
      --warning aliases to --accent-strong: gold is this palette's one
      caution colour, a second yellow would be noise.
      --info aliases to --neutral-700: blue is the one hue that would

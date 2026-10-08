@@ -16,14 +16,13 @@ import {
 } from "@/features/orders/hooks/orders-search-params";
 import { getOrderPreview } from "@/features/orders/queries/get-order";
 import { getOrders } from "@/features/orders/queries/get-orders";
+import { IN_PROGRESS_STATUSES } from "@/features/orders/types/order";
 import { redirectToLastPageIfOutOfRange } from "@/lib/pagination";
 
 type OrdersResultsProps = {
   searchParams: OrdersSearchParams;
   filter: ReactNode;
 };
-
-const IN_PROGRESS_STATUSES = new Set(["PENDING", "PROCESSING", "SHIPPED"]);
 
 export async function OrdersResults({
   searchParams,

@@ -161,7 +161,7 @@ app/                         # thin pages/layouts only; no feature logic
   account-disabled/            # landing for ACCOUNT_DISABLED redirects
 features/<name>/             # components/ hooks/ actions/ queries/ schema/ types/ index.tsx
                              # index.tsx exports default <Name>Feature (Server Component)
-lib/                         # utils.ts, env.ts, format.ts, pagination.ts, nuqs-parsers.ts
+lib/                         # utils.ts, env.ts, format.ts, pagination.ts
   cart-session.ts            # sg_cart_session cookie read/write/delete
   cart-response.ts           # captureRefreshAndSanitizeCart + sanitizeCartResponse
   api/                       # http.ts (apiFetch), api-error.ts,
@@ -246,6 +246,10 @@ export async function updateAddressAction(
   }
 }
 ```
+
+Structured results (the placed order, the checkout error projection) go in the
+typed `ActionState<TData>.data` field via `toActionState`'s fifth argument,
+never as JSON strings in `response`.
 
 Schemas are whitelists because unknown fields return 422. Use
 `formData.getAll(...)` for multi-value form inputs because

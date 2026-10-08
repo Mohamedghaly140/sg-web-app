@@ -5,5 +5,3 @@ export const setDefaultAddressSchema = z
     id: z.string().min(1),
   })
   .strict();
-
-export type SetDefaultAddressInput = z.infer<typeof setDefaultAddressSchema>;

@@ -45,14 +45,14 @@ export async function fetchCurrentCart(signal?: AbortSignal): Promise<Cart> {
   return (await response.json()) as Cart;
 }
 
-export function useCart(initialData?: Cart): UseQueryResult<Cart, Error> {
-  const contextInitialData = useContext(CartInitialDataContext);
+export function useCart(): UseQueryResult<Cart, Error> {
+  const initialData = useContext(CartInitialDataContext);
 
   return useQuery({
     queryKey: cartKeys.current,
     queryFn: ({ signal }) => fetchCurrentCart(signal),
     staleTime: 30_000,
     refetchOnWindowFocus: true,
-    initialData: initialData ?? contextInitialData,
+    initialData,
   });
 }

@@ -3,12 +3,13 @@
 import { useAuth } from "@clerk/nextjs";
 import { useEffect, useRef } from "react";
 
-import { useSyncCart } from "@/features/cart/hooks/use-sync-cart";
+import { syncCartAction } from "@/features/cart/actions/sync-cart";
+import { useCartMutation } from "@/features/cart/hooks/use-cart-mutation";
 
 export function CartMergeBridge() {
   const { isLoaded, sessionId } = useAuth();
   const syncedSessionId = useRef<string | null>(null);
-  const { mutate } = useSyncCart({
+  const { mutate } = useCartMutation<void>(syncCartAction, {
     onSuccess: (result) => {
       if ("error" in result) {
         syncedSessionId.current = null;

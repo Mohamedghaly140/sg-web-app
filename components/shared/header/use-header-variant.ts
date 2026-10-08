@@ -13,7 +13,7 @@ import { usePathname } from "next/navigation";
    necessarily client-side; do not reach for `headers()` to move it. */
 export type HeaderVariant = "storefront" | "account" | "checkout";
 
-export function resolveHeaderVariant(pathname: string | null): HeaderVariant {
+function resolveHeaderVariant(pathname: string | null): HeaderVariant {
   if (pathname?.startsWith("/account")) return "account";
   if (pathname?.startsWith("/checkout")) return "checkout";
 

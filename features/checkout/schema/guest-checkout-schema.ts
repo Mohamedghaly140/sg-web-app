@@ -16,7 +16,7 @@ import { paymentMethodSchema } from "@/features/checkout/schema/payment-method-s
 import { countrySchema } from "@/lib/constants/egypt-locations";
 import { egyptPhoneSchema } from "@/lib/constants/egypt-phone";
 
-export const guestCheckoutSchema = z.object({
+const guestCheckoutSchema = z.object({
   contact: z.object({
     name: z.string().trim().min(1).max(120),
     phone: egyptPhoneSchema,

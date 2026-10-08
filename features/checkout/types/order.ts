@@ -34,3 +34,12 @@ export type OrderDetail = {
 // The real claim token is never returned by the API — `claimToken` is always
 // this literal marker (docs/integration/storefront/09-checkout.md §guest).
 export type GuestOrderDetail = OrderDetail & { claimToken: "sent-by-email" };
+
+// Guest confirmation data: the API order plus the validated form values the
+// confirmation echoes back.
+export type PlacedGuestOrder = GuestOrderDetail & {
+  customerName: string;
+  email: string;
+  deliveryCity: string;
+  deliveryGovernorate: string;
+};
