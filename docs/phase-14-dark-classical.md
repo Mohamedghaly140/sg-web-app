@@ -50,10 +50,34 @@ So this phase is three jobs, not one: derive the palette, wire the mechanism, an
 
 ### 14.4 The audit
 
-- [ ] **Review, do not inherit, the residual `dark:` classes in `components/ui/`.** The remaining `dark:aria-invalid:*` and `dark:hover:bg-muted/50` declarations are shadcn defaults authored for a different palette. Each one either becomes an authored decision or is deleted.
+- [x] **Review, do not inherit, the residual `dark:` classes in `components/ui/`.** The remaining `dark:aria-invalid:*` and `dark:hover:bg-muted/50` declarations are shadcn defaults authored for a different palette. Each one either becomes an authored decision or is deleted.
 - [ ] Walk every screen in both themes and check specifically: the two overlays; the Clerk sign-in and sign-up modals; sonner toasts; every skeleton; `.plate` on all its sizes; the semantic badge tints on the orders and order-detail screens; the wordmark's accent middle dot; and the focus ring against the dark ground.
 - [ ] Re-run contrast checks across the board. The light palette's `≥3:1` accent caveat does not carry over unchanged, and both documented light-mode deviations (`--muted-foreground`, `--accent-strong`) need re-derivation rather than translation.
-- [ ] Confirm the wordmark still recolours. This is why Phase 8 required live Cormorant type rather than the PNG lockup — verify no raster brand asset has crept back in.
+- [x] Confirm the wordmark still recolours. This is why Phase 8 required live Cormorant type rather than the PNG lockup — verify no raster brand asset has crept back in.
+
+**14.4 progress (2026-10-08).**
+
+*Residual `dark:` review — all eight deleted, one reason each.* The tokens now carry the theme, so a per-theme override inside a primitive would be a second source of truth.
+- `badge.tsx` `dark:aria-invalid:ring-destructive/40`: the `/20` ring is drawn from the lighter dark-theme `--destructive` and needs no boost.
+- `badge.tsx` ghost `dark:hover:bg-muted/50`: on dark `--muted` is `#2d2b2b`, a quiet lift off the ground at full strength; halving it made the hover almost invisible.
+- `button.tsx` base `dark:aria-invalid:border-destructive/50` / `ring-destructive/40`: same reasoning as the badge ring — a full-strength oxide border is the authored invalid state in both themes.
+- `button.tsx` destructive `dark:bg-destructive/20` / `dark:hover:bg-destructive/30`: the shared `/10` → `/20` tints keep the text at 5.84:1 at rest and 4.81:1 on hover, and match the badge `bg-<role>/10` pattern.
+- `input.tsx`, `select.tsx`, `textarea.tsx` `dark:aria-invalid:*`: as for the button. Measured: an invalid input's border computes to `rgb(217,145,127)`, the dark `--destructive`.
+- `toggle.tsx` `dark:aria-invalid:ring-destructive/40`: as for the badge.
+
+*Verified in the browser, dark theme, 2026-10-08:*
+- the OS dark preference resolves `.dark`, inline `color-scheme: dark`, and `theme-color` `rgb(28,26,25)`, with zero hydration warnings
+- `/contact` at 1280px
+- the mobile sheet at 390px: overlay `rgba(12,11,11,.7)`, surface `#2d2b2b`, `shadow-lg` at black 60%, gold focus ring
+- Clerk sign-in modal: palette surfaces, primary button `#c28d41` with `#1c1a19` ink
+- wordmark: live text, ink `#eae7e7`, middle dot `--accent-strong` `#e1ad66`; `public/brand/*.png` is referenced nowhere
+
+**Still open, blocked by the backend:** the datastore behind `localhost:8000` was unreachable (`/health` → `SERVICE_UNAVAILABLE`, catalogue → `INTERNAL_ERROR`). The walk of the catalogue, PDP, cart, checkout, orders and account screens is pending, and so are:
+- `.plate` on real photographs
+- skeletons with real loading states
+- the order status and payment badges, especially `--info` (`#d7d3d3` is only 1.21:1 from the ink, so check that it stays distinguishable)
+- colour swatches (they already carry `border-border`)
+- toasts against the new `--popover`
 
 ## Definition of Done
 
