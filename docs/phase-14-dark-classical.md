@@ -43,8 +43,10 @@ So this phase is three jobs, not one: derive the palette, wire the mechanism, an
 
 ### 14.3 The `.plate` override
 
-- [ ] Give `.plate` its own dark treatment. A sepia-warmed photograph inside a dark mat reads wrong — the grade was tuned against a near-white ground. Move the mat to `--muted` (now `#2d2b2b`) and soften the filter to roughly `sepia(.14) saturate(.9) contrast(1.02) brightness(.94)`.
+- [x] Give `.plate` its own dark treatment. A sepia-warmed photograph inside a dark mat reads wrong — the grade was tuned against a near-white ground. Move the mat to `--muted` (now `#2d2b2b`) and soften the filter to roughly `sepia(.14) saturate(.9) contrast(1.02) brightness(.94)`.
 - [ ] Verify the softened grade against real product photography at both large hero and 46px thumbnail sizes before settling the numbers.
+
+**Landed (2026-10-08):** the override lives *inside* `@utility plate` as `@variant dark { filter: … }`, not as a separate `.dark .plate` rule. It reuses the project's single `@custom-variant dark` definition and stays in `@layer utilities`; a standalone rule would be unlayered and beat every utility — the same trap documented for sonner and Clerk. The mat needs no rule, because `--color-muted` already resolves to `#2d2b2b` under `.dark`. Computed values measured in the browser: dark `sepia(0.14) saturate(0.9) contrast(1.02) brightness(0.94)` on a `rgb(45,43,43)` mat; light unchanged. **The photography check is still open:** on 2026-10-08 the backend's datastore was unreachable (`/health` → `SERVICE_UNAVAILABLE`), so no product image could be loaded. The numbers stay at the doc's starting values until that check runs.
 
 ### 14.4 The audit
 
