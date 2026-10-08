@@ -11,19 +11,6 @@
   --font-heading: var(--font-cormorant);
   --font-body: var(--font-lora);
   --font-sans: var(--font-lora);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -70,9 +57,13 @@
   --radius-sm: 2px;
   --radius-md: 4px;
   --radius-lg: 7px;
-  --shadow-sm: 0 1px 2px color-mix(in srgb, #2d2b2b 14%, transparent);
-  --shadow-md: 0 3px 10px color-mix(in srgb, #2d2b2b 16%, transparent);
-  --shadow-lg: 0 12px 32px color-mix(in srgb, #2d2b2b 22%, transparent);
+  /* Geometry stays literal here; only the colour is a per-theme token
+     (--elevation-* in :root / .dark). Ending each value on a bare var() keeps
+     Tailwind's --tw-shadow-color hook, so shadow-<color> modifiers still work
+     -- tokenising the whole value would silently drop it (Phase 14.2). */
+  --shadow-sm: 0 1px 2px var(--elevation-sm);
+  --shadow-md: 0 3px 10px var(--elevation-md);
+  --shadow-lg: 0 12px 32px var(--elevation-lg);
   --text-2xs: 0.6875rem;
   --text-xs: 0.78125rem;
   --text-sm: 0.84375rem;
@@ -176,6 +167,11 @@
      Phase 14 can invert it for dark mode without touching call sites. */
   --overlay: color-mix(in srgb, #2d2b2b 50%, transparent);
   --ring: #b68235;
+  /* Shadow colours (Phase 14.2). Values unchanged since Phase 7; they moved
+     out of @theme inline so .dark can retune them. */
+  --elevation-sm: color-mix(in srgb, #2d2b2b 14%, transparent);
+  --elevation-md: color-mix(in srgb, #2d2b2b 16%, transparent);
+  --elevation-lg: color-mix(in srgb, #2d2b2b 22%, transparent);
   /* Classical tonal ramps (Phase 7.1), ported verbatim from
      tokens/classical-styles.css as flat hex literals so :root stays
      eyeball-diffable against the source. accent-2 is intentionally NOT
@@ -201,61 +197,79 @@
   --accent-700: #7d5411;
   --accent-800: #5a3b0a;
   --accent-900: #3a270d;
-  --chart-1: oklch(0.879 0.169 91.605);
-  --chart-2: oklch(0.769 0.188 70.08);
-  --chart-3: oklch(0.666 0.179 58.318);
-  --chart-4: oklch(0.555 0.163 48.998);
-  --chart-5: oklch(0.473 0.137 46.201);
   --radius: 4px;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.681 0.162 75.834);
-  --sidebar-primary-foreground: oklch(0.987 0.026 102.212);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {
+  /* Dark Classical (Phase 14.2, docs/phase-14-dark-classical.md §14.2).
+     Classical is authored light-only; this palette is derived from the
+     readme's colophon direction -- a warm near-black a shade below
+     neutral-900, paper-coloured ink, gold lifted to accent-400/500. Flat hex
+     literals, like :root, so the two blocks stay eyeball-diffable. Every
+     colour token in :root has a counterpart here; nothing may fall through. */
   color-scheme: dark; /* see the note on :root */
-  --background: oklch(0.147 0.004 49.25);
-  --foreground: oklch(0.985 0.001 106.423);
-  --card: oklch(0.216 0.006 56.043);
-  --card-foreground: oklch(0.985 0.001 106.423);
-  --popover: oklch(0.216 0.006 56.043);
-  --popover-foreground: oklch(0.985 0.001 106.423);
-  --primary: oklch(0.985 0.001 106.423);
-  --primary-foreground: oklch(0.216 0.006 56.043);
-  --secondary: oklch(0.268 0.007 34.298);
-  --secondary-foreground: oklch(0.985 0.001 106.423);
-  --muted: oklch(0.268 0.007 34.298);
-  --muted-foreground: oklch(0.709 0.01 56.259);
-  --accent: oklch(0.70 0.145 79);
-  --accent-foreground: oklch(0.216 0.006 56.043);
-  --destructive: oklch(0.704 0.191 22.216);
-  --success: oklch(0.696 0.17 162.48);
-  --success-foreground: oklch(0.145 0 0);
-  --warning: oklch(0.795 0.184 86.047);
-  --warning-foreground: oklch(0.205 0 0);
-  --info: oklch(0.707 0.165 254.624);
-  --info-foreground: oklch(0.145 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0.01 58);
-  --chart-1: oklch(0.879 0.169 91.605);
-  --chart-2: oklch(0.769 0.188 70.08);
-  --chart-3: oklch(0.666 0.179 58.318);
-  --chart-4: oklch(0.555 0.163 48.998);
-  --chart-5: oklch(0.473 0.137 46.201);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.795 0.184 86.047);
-  --sidebar-primary-foreground: oklch(0.987 0.026 102.212);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #1c1a19;
+  --foreground: #eae7e7; /* neutral-200: warm, not pure white; 14.10:1 */
+  --card: #1c1a19; /* equal to the ground, so cards stay unfilled as on light */
+  --card-foreground: #eae7e7;
+  --popover: #2d2b2b;
+  --popover-foreground: #eae7e7;
+  --primary: #c28d41; /* accent-500 for strokes and fills; 5.93:1 on the ground */
+  --primary-foreground: #1c1a19; /* dark ink on the gold fill, 5.93:1 -- light ink would fail */
+  --secondary: color-mix(in srgb, #eae7e7 7%, transparent);
+  --secondary-foreground: #eae7e7;
+  --muted: #2d2b2b;
+  /* neutral-500, re-derived rather than translated from the light deviation:
+     6.00:1 on the ground, 4.87:1 on --muted. */
+  --muted-foreground: #9b9797;
+  --accent: #c28d41;
+  /* "Strong" inverts with the theme: darker on light, LIGHTER on dark. Every
+     small-text accent reads this token, so this one line flips them all.
+     accent-400, 8.56:1 on the ground. */
+  --accent-strong: #e1ad66;
+  --accent-foreground: #ffe3bf;
+  /* Lighter, still-desaturated oxide and moss. As text on their own /10 tint
+     over the ground: 5.84:1 and 6.55:1. Fills pair with dark ink. */
+  --destructive: #d9917f;
+  --success: #a5b38f;
+  --success-foreground: #1c1a19;
+  --warning: var(--accent-strong);
+  --warning-foreground: #1c1a19;
+  --info: var(--neutral-700);
+  --info-foreground: #1c1a19;
+  --border: color-mix(in srgb, #eae7e7 16%, transparent);
+  --input: color-mix(in srgb, #eae7e7 16%, transparent);
+  /* A backdrop must still dim an already-dark ground: near-black, heavier. */
+  --overlay: color-mix(in srgb, #0c0b0b 70%, transparent);
+  --ring: #c28d41;
+  /* Dark elevation is "a hairline edge plus ambient darkness": near-black at
+     a higher alpha, with --border doing the separating. */
+  --elevation-sm: color-mix(in srgb, #000000 40%, transparent);
+  --elevation-md: color-mix(in srgb, #000000 50%, transparent);
+  --elevation-lg: color-mix(in srgb, #000000 60%, transparent);
+  /* Both ramps INVERTED by index (100 takes 900's value, and so on) rather
+     than re-authored, so `bg-accent-100 text-accent-800` style pairings keep
+     working with zero class changes. Literals, not var() -- referencing the
+     ramp from inside itself would be a cycle. */
+  --neutral-100: #2d2b2b;
+  --neutral-200: #444141;
+  --neutral-300: #605d5d;
+  --neutral-400: #7d7979;
+  --neutral-500: #9b9797;
+  --neutral-600: #bab6b6;
+  --neutral-700: #d7d3d3;
+  --neutral-800: #eae7e7;
+  --neutral-900: #f8f4f4;
+
+  --accent-100: #3a270d;
+  --accent-200: #5a3b0a;
+  --accent-300: #7d5411;
+  --accent-400: #a06f24;
+  --accent-500: #c28d41;
+  --accent-600: #e1ad66;
+  --accent-700: #facb8d;
+  --accent-800: #ffe3bf;
+  --accent-900: #fff3e4;
 }
 
 @layer base {
