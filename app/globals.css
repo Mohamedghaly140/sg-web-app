@@ -235,7 +235,12 @@
   --success-foreground: #1c1a19;
   --warning: var(--accent-strong);
   --warning-foreground: #1c1a19;
-  --info: var(--neutral-700);
+  /* One ramp step lower than light's neutral-700 alias. Through the inverted
+     ramp, neutral-700 would be #d7d3d3 -- only 1.21:1 from the Pending
+     badge's #eae7e7 text, so Shipped and Pending read as the same chip.
+     neutral-600 (#bab6b6) restores light's separation (1.63:1 vs 1.55:1)
+     and holds 7.11:1 on its own /10 tint. */
+  --info: var(--neutral-600);
   --info-foreground: #1c1a19;
   --border: color-mix(in srgb, #eae7e7 16%, transparent);
   --input: color-mix(in srgb, #eae7e7 16%, transparent);

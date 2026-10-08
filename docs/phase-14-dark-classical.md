@@ -37,22 +37,22 @@ So this phase is three jobs, not one: derive the palette, wire the mechanism, an
 - [x] Set `--muted-foreground` to `#9b9797` (`neutral-500`): 6.00:1 on the ground, 4.87:1 on `--muted`.
 - [x] Retune the shadows. **Mechanism (deviation, advisor-reviewed):** the three shadows were literal `color-mix()` values inside `@theme inline`, which cannot vary by theme. Tokenising the *whole* value (`--shadow-md: var(--elevation-md)`) was rejected after compiling it with Tailwind 4.3.3: it drops the `var(--tw-shadow-color, …)` wrapper, so `shadow-<color>` modifiers would silently stop working. Instead the geometry stays literal and only the colour is a token — `--shadow-md: 0 3px 10px var(--elevation-md)` — and the built CSS confirms `--tw-shadow: 0 3px 10px var(--tw-shadow-color, var(--elevation-md))`. Light values are byte-identical to Phase 7's; dark uses black at 40/50/60%, with `--border` doing the separating.
 - [x] Invert the `--overlay` token introduced in Phase 8: near-black `#0c0b0b` at 70%, heavier than light's 50%, so a backdrop still visibly dims a ground that is already dark.
-- [x] Re-derive the four semantic roles. `--warning` still aliases `--accent-strong` and `--info` still aliases `--neutral-700` — which, through the inverted ramp, now resolves to `#d7d3d3`, because next-themes puts `.dark` on `<html>`, the same element as `:root`. `--destructive` is `#d9917f` (oxide) and `--success` `#a5b38f` (moss): as text on their own `/10` tint over the ground, 5.84:1 and 6.55:1; the destructive button's hover `/20` tint holds 4.81:1. The four `*-foreground` values pair with the dark ground, since every fill is now light.
+- [x] Re-derive the four semantic roles. `--warning` still aliases `--accent-strong`. **`--info` moves one ramp step, to `--neutral-600` (`#bab6b6`) — deviation found in the 14.4 walk:** keeping light's `--neutral-700` alias would resolve through the inverted ramp to `#d7d3d3`, only 1.21:1 from the Pending badge's `#eae7e7` text, and Shipped and Pending rendered as the same chip. `#bab6b6` restores light's separation (1.63:1 vs light's 1.55:1) and holds 7.11:1 on its own `/10` tint. The aliases resolve against the dark ramp because next-themes puts `.dark` on `<html>`, the same element as `:root`. `--destructive` is `#d9917f` (oxide) and `--success` `#a5b38f` (moss): as text on their own `/10` tint over the ground, 5.84:1 and 6.55:1; the destructive button's hover `/20` tint holds 4.81:1. The four `*-foreground` values pair with the dark ground, since every fill is now light.
 - [x] **Dead tokens removed (deviation):** `--chart-1…5` and `--sidebar-*` were deleted from `:root`, `.dark` and `@theme inline`. They had zero consumers in the app, in `@clerk/ui`'s shadcn theme and in `shadcn/tailwind.css`, and were the last stale `oklch()` lines in the block being rewritten. This does not change the light palette. Running `bunx shadcn add sidebar|chart` would re-inject them, which is acceptable.
 - [x] **Completeness check:** every custom property in `:root` now has a `.dark` counterpart; only `--radius` is missing, by design. `docs/01-conventions.md` §7 was updated to give the accent-contrast values for both themes, and to state that `:root`/`.dark` declare theme-varying values and `@theme inline` only maps them.
 
 ### 14.3 The `.plate` override
 
 - [x] Give `.plate` its own dark treatment. A sepia-warmed photograph inside a dark mat reads wrong — the grade was tuned against a near-white ground. Move the mat to `--muted` (now `#2d2b2b`) and soften the filter to roughly `sepia(.14) saturate(.9) contrast(1.02) brightness(.94)`.
-- [ ] Verify the softened grade against real product photography at both large hero and 46px thumbnail sizes before settling the numbers.
+- [x] Verify the softened grade against real product photography at both large hero and 46px thumbnail sizes before settling the numbers.
 
-**Landed (2026-10-08):** the override lives *inside* `@utility plate` as `@variant dark { filter: … }`, not as a separate `.dark .plate` rule. It reuses the project's single `@custom-variant dark` definition and stays in `@layer utilities`; a standalone rule would be unlayered and beat every utility — the same trap documented for sonner and Clerk. The mat needs no rule, because `--color-muted` already resolves to `#2d2b2b` under `.dark`. Computed values measured in the browser: dark `sepia(0.14) saturate(0.9) contrast(1.02) brightness(0.94)` on a `rgb(45,43,43)` mat; light unchanged. **The photography check is still open:** on 2026-10-08 the backend's datastore was unreachable (`/health` → `SERVICE_UNAVAILABLE`), so no product image could be loaded. The numbers stay at the doc's starting values until that check runs.
+**Landed (2026-10-08):** the override lives *inside* `@utility plate` as `@variant dark { filter: … }`, not as a separate `.dark .plate` rule. It reuses the project's single `@custom-variant dark` definition and stays in `@layer utilities`; a standalone rule would be unlayered and beat every utility — the same trap documented for sonner and Clerk. The mat needs no rule, because `--color-muted` already resolves to `#2d2b2b` under `.dark`. Computed values measured in the browser: dark `sepia(0.14) saturate(0.9) contrast(1.02) brightness(0.94)` on a `rgb(45,43,43)` mat; light unchanged. **Photography check (2026-10-08, after the backend recovered):** the starting values hold, and the numbers are settled as written. Checked: the home hero in the `#2d2b2b` mat, collection plates on `/categories`, listing cards, the PDP main image and its `plate-sm` thumbnail, and the 46px cart line thumbnail. Skin tones and whites stay neutral rather than going muddy; no retune was needed.
 
 ### 14.4 The audit
 
 - [x] **Review, do not inherit, the residual `dark:` classes in `components/ui/`.** The remaining `dark:aria-invalid:*` and `dark:hover:bg-muted/50` declarations are shadcn defaults authored for a different palette. Each one either becomes an authored decision or is deleted.
-- [ ] Walk every screen in both themes and check specifically: the two overlays; the Clerk sign-in and sign-up modals; sonner toasts; every skeleton; `.plate` on all its sizes; the semantic badge tints on the orders and order-detail screens; the wordmark's accent middle dot; and the focus ring against the dark ground.
-- [ ] Re-run contrast checks across the board. The light palette's `≥3:1` accent caveat does not carry over unchanged, and both documented light-mode deviations (`--muted-foreground`, `--accent-strong`) need re-derivation rather than translation.
+- [x] Walk every screen in both themes and check specifically: the two overlays; the Clerk sign-in and sign-up modals; sonner toasts; every skeleton; `.plate` on all its sizes; the semantic badge tints on the orders and order-detail screens; the wordmark's accent middle dot; and the focus ring against the dark ground.
+- [x] Re-run contrast checks across the board. The light palette's `≥3:1` accent caveat does not carry over unchanged, and both documented light-mode deviations (`--muted-foreground`, `--accent-strong`) need re-derivation rather than translation.
 - [x] Confirm the wordmark still recolours. This is why Phase 8 required live Cormorant type rather than the PNG lockup — verify no raster brand asset has crept back in.
 
 **14.4 progress (2026-10-08).**
@@ -72,12 +72,38 @@ So this phase is three jobs, not one: derive the palette, wire the mechanism, an
 - Clerk sign-in modal: palette surfaces, primary button `#c28d41` with `#1c1a19` ink
 - wordmark: live text, ink `#eae7e7`, middle dot `--accent-strong` `#e1ad66`; `public/brand/*.png` is referenced nowhere
 
-**Still open, blocked by the backend:** the datastore behind `localhost:8000` was unreachable (`/health` → `SERVICE_UNAVAILABLE`, catalogue → `INTERNAL_ERROR`). The walk of the catalogue, PDP, cart, checkout, orders and account screens is pending, and so are:
-- `.plate` on real photographs
-- skeletons with real loading states
-- the order status and payment badges, especially `--info` (`#d7d3d3` is only 1.21:1 from the ink, so check that it stays distinguishable)
-- colour swatches (they already carry `border-border`)
-- toasts against the new `--popover`
+*Data-screen walk, dark theme, after the backend recovered (2026-10-08):*
+- `/`: hero and collection plates, gold CTAs.
+- `/products`: cards and discount badges. `bg-accent-100 text-accent-800` computes to `#ffe3bf` on `#3a270d` (11.5:1) with zero class changes.
+- `/products/[slug]`: colour swatches. Black and charcoal keep their `border-border` edge on the ground, so no change was needed. Also checked: the selected size, the quantity stepper and the thumbnail plate.
+- `/cart`: line plate and summary.
+  - The coupon error state: text and `aria-invalid` border both `#d9917f`, 6.86:1.
+  - The remove-item alert-dialog: overlay `rgba(12,11,11,.7)`, surface `#2d2b2b`. The destructive button's `/10` tint stays legible without the deleted `dark:bg-destructive/20` override.
+- `/checkout/guest`: checkout header with the toggle, and the step rail.
+- `/categories`.
+- Clerk `/sign-up`, as a page and as a modal.
+- Light theme: the unset visitor follows a light OS preference, and `/` renders the unchanged light palette. Light shadow values are byte-identical to Phase 7's.
+
+*Order status badges:* rendered with the exact variant classes from `components/shared/order-status-badge.tsx`, and all six are distinguishable after the `--info` move above. Skeletons use `bg-muted` (`#2d2b2b` on `#1c1a19`), which is more separation than light's `#eae9e9` on `#f3f2f2`.
+
+**Contrast summary, dark:**
+
+| Text on ground | Ratio |
+|---|---|
+| ink | 14.10 |
+| `--muted-foreground` | 6.00, 4.87 on `--muted` |
+| `--accent` | 5.93 |
+| `--accent-strong` | 8.56 |
+| `--primary-foreground` on `--primary` | 5.93 |
+
+| Status text on its own `/10` tint | Ratio |
+|---|---|
+| destructive | 5.84, 4.81 on hover `/20` |
+| success | 6.55 |
+| warning | 7.08 |
+| info | 7.11 |
+
+**Carried forward (unchanged from Phase 13):** the signed-in account screens (`/account/*`) and the registered `/checkout` were not exercised headlessly. Clerk's sign-up now raises a Cloudflare Turnstile human check, which automation must not bypass. They consume the same tokens and primitives verified above. A manual pass in a real browser is recommended before release, and the gap is noted for Phase 15. The sonner toast was not re-triggered on a data path: the add-to-bag and remove-item flows do not toast. It reads `--popover`, which 14.1 measured as an exact match and which is now `#2d2b2b`.
 
 ## Definition of Done
 
