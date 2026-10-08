@@ -40,8 +40,14 @@ export default async function RootLayout({
   ]);
 
   return (
+    /* `suppressHydrationWarning` is mandatory, not defensive: next-themes'
+       pre-hydration script writes both the `dark` class and an inline
+       `style="color-scheme:…"` onto this element before React hydrates, so the
+       server markup can never match. It suppresses this element's own
+       attributes only, not its descendants. */
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         "h-full",
         "antialiased",

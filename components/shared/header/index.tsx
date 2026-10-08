@@ -5,6 +5,7 @@ import { getCategories } from "@/features/categories/queries/get-categories";
 import { HeaderAuthControls } from "@/components/shared/header/header-auth-controls";
 import { HeaderNavArea } from "@/components/shared/header/header-nav-area";
 import { HeaderSearch } from "@/components/shared/header/header-search";
+import { HeaderThemeToggle } from "@/components/shared/header/header-theme-toggle";
 import { HeaderWishlistLink } from "@/components/shared/header/header-wishlist-link";
 import { Sidenav } from "@/components/shared/sidenav/sidenav";
 
@@ -32,6 +33,10 @@ export async function Header() {
           <div className="hidden items-center gap-2 lg:flex">
             <HeaderAuthControls />
           </div>
+          {/* Deliberately not gated on `useHeaderVariant`: Sidenav and
+              HeaderSearch null out on checkout because they are navigation-away
+              chrome, and a preference control is not. */}
+          <HeaderThemeToggle />
           <Sidenav categories={categories} />
         </div>
       </div>
